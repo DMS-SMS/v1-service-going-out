@@ -5,7 +5,7 @@ def register_hooks():
     pass
 
 
-def register_presentations(app):
+def register_servicers(app):
     pass
 
 
