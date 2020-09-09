@@ -2,6 +2,7 @@ import grpc
 from concurrent import futures
 
 from presentation.config import gRPCAppConfig
+from presentation.servicers import register_outing_servicers
 
 
 def register_hooks(app):
@@ -9,7 +10,7 @@ def register_hooks(app):
 
 
 def register_servicers(app):
-    pass
+    register_outing_servicers(app)
 
 
 def create_app():
