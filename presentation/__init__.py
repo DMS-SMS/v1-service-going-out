@@ -1,7 +1,10 @@
 import grpc
+from concurrent import futures
+
+from presentation.config import gRPCAppConfig
 
 
-def register_hooks():
+def register_hooks(app):
     pass
 
 
@@ -10,7 +13,10 @@ def register_servicers(app):
 
 
 def create_app():
-    app = grpc
+    config = gRPCAppConfig()
+    app = grpc.server(futures.ThreadPoolExecutor(max_workers=config.max_workers))
 
-    register_presentations(app)
+    register_servicers(app)
+    register_hooks(app)
+
     return app
