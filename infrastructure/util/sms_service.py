@@ -1,12 +1,11 @@
 from domain.entity.outing import Outing
 from domain.entity.student import Student
 
-from infrastructure.repository.outing_repository_impl import OutingRepositoryImpl
-from infrastructure.repository.student_repository_impl import StudentRepositoryImpl
+from infrastructure.repository import OutingRepositoryImpl, StudentRepositoryImpl
 from infrastructure.util.redis_service import delete_outing_code
 
 
-def send_to_parents(oid, o_code):
+def send_to_parents(oid: str, o_code: str):
     outing: Outing = OutingRepositoryImpl().get_outing_by_oid(oid)
     student: Student = StudentRepositoryImpl().get_student_by_uuid(outing._student_uuid)
 

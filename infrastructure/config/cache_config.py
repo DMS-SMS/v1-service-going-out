@@ -9,17 +9,17 @@ class CacheConfig:
         self._db: int = 1
 
     @property
-    def host(self):
+    def host(self) -> str:
         return self._host
 
     @property
-    def port(self):
+    def port(self) -> int:
         return self._port
 
     @property
-    def password(self):
+    def password(self) -> Optional[str]:
         return self._password
 
     @property
-    def db(self):
+    def db(self) -> int:
         return self._db

@@ -1,5 +1,5 @@
 class OutingExist(Exception):
     def __init__(self):
-        self.status = 409
-        self.code = -1001
-        self.msg = "Outing is exist"
+        self.status: int = 409
+        self.code: int = -1001
+        self.msg: str = "Outing is exist"

@@ -19,8 +19,8 @@ class OutingService:
         response = outing_student_pb2.CreateOutingResponse
 
         try:
-            oid = repository.save_and_get_oid(entity)
-            o_code = repository.set_and_get_parents_outing_code(oid)
+            oid: str = repository.save_and_get_oid(entity)
+            o_code: str = repository.set_and_get_parents_outing_code(oid)
             send_to_parents(oid, o_code)
 
         except OutingExist as e:

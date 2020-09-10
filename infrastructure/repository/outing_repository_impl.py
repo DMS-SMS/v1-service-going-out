@@ -29,7 +29,7 @@ class OutingRepositoryImpl(OutingRepository):
         return outing_uuid
 
     @classmethod
-    def set_and_get_parents_outing_code(cls, oid) -> str:
+    def set_and_get_parents_outing_code(cls, oid: str) -> str:
         o_code = random_key_generate(20)
 
         while get_oid_by_parents_outing_code(o_code):
@@ -40,5 +40,5 @@ class OutingRepositoryImpl(OutingRepository):
         return o_code
 
     @classmethod
-    def get_outing_by_oid(cls, oid) -> Outing:
+    def get_outing_by_oid(cls, oid: str) -> Outing:
         return get_outing_mapper(db_session.query(OutingModel).filter(OutingModel.uuid == oid).first())

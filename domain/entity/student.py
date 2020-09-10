@@ -8,10 +8,10 @@ class Student:
                  phone_number=None,
                  profile_uri=None
     ):
-        self._stuent_uuid = student_uuid
-        self._grade = grade
-        self._class = class_
-        self._student_number = student_number
-        self._name = name
-        self._phone_number = phone_number
-        self._profile_uri = profile_uri
+        self._stuent_uuid: str = student_uuid
+        self._grade: int = grade
+        self._class: int = class_
+        self._student_number: int = student_number
+        self._name: str = name
+        self._phone_number: str = phone_number
+        self._profile_uri: str = profile_uri
