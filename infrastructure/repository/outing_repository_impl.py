@@ -27,3 +27,6 @@ class OutingRepositoryImpl(OutingRepository):
         db_session.commit()
 
         return outing_uuid
+    @classmethod
+    def get_outing_by_oid(cls, oid) -> Outing:
+        return get_outing_mapper(db_session.query(OutingModel).filter(OutingModel.uuid == oid).first())
