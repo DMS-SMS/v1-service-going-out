@@ -16,6 +16,7 @@ def register_servicers(app):
 def create_app():
     config = gRPCAppConfig()
     app = grpc.server(futures.ThreadPoolExecutor(max_workers=config.max_workers))
+    app.add_insecure_port(config.address)
 
     register_servicers(app)
     register_hooks(app)
