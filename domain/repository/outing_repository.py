@@ -3,7 +3,7 @@ from domain.entity.outing import Outing
 
 
 class OutingRepository(metaclass=ABCMeta):
-    @abstractmethod
     @classmethod
-    def save(cls, outing: Outing):
+    @abstractmethod
+    def save_and_get_oid(cls, outing: Outing) -> int:
         pass
