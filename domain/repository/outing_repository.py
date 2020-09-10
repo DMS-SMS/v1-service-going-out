@@ -11,3 +11,8 @@ class OutingRepository(metaclass=ABCMeta):
     @abstractmethod
     def set_and_get_parents_outing_code(cls, oid) -> str:
         pass
+
+    @classmethod
+    @abstractmethod
+    def get_outing_by_oid(cls, oid) -> Outing:
+        pass
