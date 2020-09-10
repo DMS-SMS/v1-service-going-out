@@ -1,12 +1,13 @@
 from proto.python.outing import outing_student_pb2
 
 from application.mapper import create_outing_mapper
-from infrastructure.exception import OutingExist
 
 from domain.repository.outing_repository import OutingRepository
 from domain.entity.outing import Outing
 
 from infrastructure.repository.outing_repository_impl import OutingRepositoryImpl
+from infrastructure.util.sms_service import send_to_parents
+from infrastructure.exception import OutingExist
 
 
 class OutingService:
@@ -19,6 +20,9 @@ class OutingService:
 
         try:
             oid = repository.save_and_get_oid(entity)
+            o_code = repository.set_and_get_parents_outing_code(oid)
+            send_to_parents(oid, o_code)
+
         except OutingExist as e:
             return response(status=e.status, code=e.code, msg=e.msg)
 
