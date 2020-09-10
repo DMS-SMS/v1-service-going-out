@@ -8,7 +8,7 @@ from infrastructure.config import DatabaseConfig
 def register_db():
     database_config = DatabaseConfig()
 
-    engine = create_engine(database_config.address, echo=True)
+    engine = create_engine(database_config.address, encoding="utf-8")
     db_session = scoped_session(sessionmaker(
         autocommit=database_config.autocommit, autoflush=database_config.autoflush, bind=engine))
 
