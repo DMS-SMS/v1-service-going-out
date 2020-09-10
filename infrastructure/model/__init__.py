@@ -1,0 +1,1 @@
+from infrastructure.model.outing_model import OutingModel
