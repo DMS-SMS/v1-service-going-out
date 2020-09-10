@@ -2,10 +2,10 @@ from proto.python.outing import outing_student_pb2
 
 from application.mapper import create_outing_mapper
 
-from domain.repository.outing_repository import OutingRepository
+from domain.repository import OutingRepository
 from domain.entity.outing import Outing
 
-from infrastructure.repository.outing_repository_impl import OutingRepositoryImpl
+from infrastructure.repository import OutingRepositoryImpl
 from infrastructure.util.sms_service import send_to_parents
 from infrastructure.exception import OutingExist
 
