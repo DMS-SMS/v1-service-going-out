@@ -1,4 +1,4 @@
-from infrastructure.extension.db import register_db
+from infrastructure.extension.database import register_db
 from infrastructure.extension.redis_register import register_redis
 
 
