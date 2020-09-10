@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class DatabaseConfig:
     def __init__(self):
         self._sql: str = "mysql"
@@ -11,7 +14,7 @@ class DatabaseConfig:
 
     @property
     def address(self):
-        return str(self._sql+"://"+self._user+":"+self._password+"@"+self._host+"/"+self._db)
+        return str(f"{self._sql}://{self._user}:{self._password}@{self._host}/{self._db}?charset=utf8")
 
     @property
     def autocommit(self):
