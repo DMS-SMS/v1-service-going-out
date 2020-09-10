@@ -1,9 +1,11 @@
-from proto.python.outing import outing_student_pb2_grpc
+from application.service.outing_service import OutingService
+
+from proto.python.outing import outing_student_pb2_grpc, outing_student_pb2
 
 
 class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
     def CreateOuting(self, request, context):
-        pass
+        return OutingService().create_outing(request)
 
     def GetCardAboutOuting(self, request, context):
         pass
