@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 .idea/
 
+# Custom
+client.py
+local.py
+
 # C extensions
 *.so
 
