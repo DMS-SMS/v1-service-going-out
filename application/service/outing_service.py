@@ -1,7 +1,7 @@
 from proto.python.outing import outing_student_pb2
 
 from application.mapper import create_outing_mapper
-from application.exception import OutingExist
+from infrastructure.exception import OutingExist
 
 from domain.repository.outing_repository import OutingRepository
 from domain.entity.outing import Outing
@@ -18,7 +18,7 @@ class OutingService:
         response = outing_student_pb2.CreateOutingResponse
 
         try:
-            oid = repository.save(entity)
+            oid = repository.save_and_get_oid(entity)
         except OutingExist as e:
             return response(status=e.status, code=e.code, msg=e.msg)
 
