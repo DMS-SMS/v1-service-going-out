@@ -5,7 +5,8 @@ from domain.entity.outing import Outing
 class OutingRepository(metaclass=ABCMeta):
     @classmethod
     @abstractmethod
-    def save_and_get_oid(cls, outing: Outing) -> int:
+    def save_and_get_oid(cls, outing: Outing) -> str:
+        pass
 
     @classmethod
     @abstractmethod
