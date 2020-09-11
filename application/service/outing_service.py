@@ -46,3 +46,20 @@ class OutingService:
         response.msg = "OK"
 
         return response
+
+    @classmethod
+    def get_outing_inform(cls, request):
+        repository: OutingRepository = OutingRepositoryImpl()
+        outing: Outing = repository.get_outing_by_oid(request.oid)
+
+        return proto.GetOutingInformResponse(
+            status=200,
+            msg="OK",
+            place=outing._place,
+            reason=outing._reason,
+            date=outing._date,
+            start_time=outing._start_time,
+            end_time=outing._end_time,
+            o_status=outing._status,
+            o_situation=outing._situation
+        )
