@@ -1,1 +1,2 @@
 from infrastructure.exception.outing_exist import OutingExist
+from infrastructure.exception.unauthorized import Unauthorized
