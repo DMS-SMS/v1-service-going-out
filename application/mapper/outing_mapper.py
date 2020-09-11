@@ -4,7 +4,6 @@ from domain.entity.outing import Outing
 from proto.python.outing.outing_student_pb2 import Outing as ProtoOuting
 
 
-
 def create_outing_mapper(request):
     entity: Outing = Outing(
         student_uuid=request.uuid,
@@ -20,8 +19,6 @@ def get_outings_mapper(outing_entities: List["Outing"]) -> List["ProtoOuting"]:
     outings = list()
 
     for outing_entity in outing_entities:
-        print(outing_entity._date)
-
         outing = ProtoOuting()
         outing.place = outing_entity._place
         outing.reason = outing_entity._reason
