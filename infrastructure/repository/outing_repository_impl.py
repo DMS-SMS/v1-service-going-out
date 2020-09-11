@@ -1,10 +1,11 @@
 from sqlalchemy import and_
+from typing import List
 
 from infrastructure.model import OutingModel
 from infrastructure.extension import db_session
 from infrastructure.util.random_key import random_key_generate
-from infrastructure.mapper.outing_repository_mapper import create_outing_mapper, get_outing_mapper
-from infrastructure.exception import OutingExist
+from infrastructure.mapper.outing_repository_mapper import create_outing_mapper, get_outing_mapper, get_outings_mapper
+from infrastructure.exception import OutingExist, NotFound
 from infrastructure.util.redis_service import get_oid_by_parents_outing_code, save_parents_outing_code
 
 from domain.repository.outing_repository import OutingRepository
@@ -42,3 +43,12 @@ class OutingRepositoryImpl(OutingRepository):
     @classmethod
     def get_outing_by_oid(cls, oid: str) -> Outing:
         return get_outing_mapper(db_session.query(OutingModel).filter(OutingModel.uuid == oid).first())
+
+    @classmethod
+    def get_outings_by_student_id(cls, sid: str) -> List["Outing"]:
+        outings = get_outings_mapper(db_session.query(OutingModel).filter(OutingModel.student_uuid == sid)
+                           .order_by(OutingModel.date.desc()).all())
+
+        if not outings: raise NotFound
+
+        return outings
