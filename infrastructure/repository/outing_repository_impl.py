@@ -13,7 +13,7 @@ from domain.entity.outing import Outing
 
 class OutingRepositoryImpl(OutingRepository):
     @classmethod
-    def save_and_get_oid(cls, outing: Outing) -> int:
+    def save_and_get_oid(cls, outing: Outing) -> str:
         outing_uuid = random_key_generate(20)
 
         while db_session.query(OutingModel).filter(OutingModel.uuid == outing_uuid).first():
