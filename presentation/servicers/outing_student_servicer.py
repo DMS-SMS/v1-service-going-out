@@ -8,7 +8,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
         return OutingService().create_outing(request)
 
     def GetCardAboutOuting(self, request, context):
-        pass
+        return OutingService().get_card_about_outing(request)
 
     def GetOutingInform(self, request, context):
         return OutingService().get_outing_inform(request)
