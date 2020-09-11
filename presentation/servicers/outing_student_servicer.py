@@ -14,4 +14,4 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
         pass
 
     def GetStudentOutings(self, request, context):
-        pass
+        return OutingService().get_student_outings(request)

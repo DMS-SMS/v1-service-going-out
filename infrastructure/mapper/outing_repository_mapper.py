@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from domain.entity.outing import Outing
 
@@ -33,3 +34,24 @@ def get_outing_mapper(outing_model: OutingModel) -> Outing:
         arrival_date=outing_model.arrival_date,
         arrival_time=outing_model.arrival_time
     )
+
+def get_outings_mapper(outing_models: List["OutingModel"]) -> List["Outing"]:
+    outings = list()
+
+    for outing_model in outing_models:
+        outings.append(Outing(
+            outing_uuid=outing_model.uuid,
+            student_uuid=outing_model.student_uuid,
+            status=outing_model.status,
+            situation=outing_model.situation,
+            accept_teacher=outing_model.accepted_teacher,
+            date=str(outing_model.date)[:10],
+            start_time=outing_model.start_time,
+            end_time=outing_model.end_time,
+            place=outing_model.place,
+            reason=outing_model.reason,
+            arrival_date=outing_model.arrival_date,
+            arrival_time=outing_model.arrival_time
+        ))
+
+    return outings

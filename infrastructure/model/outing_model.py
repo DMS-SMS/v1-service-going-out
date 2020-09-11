@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, TIMESTAMP, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, DateTime, Enum
 
 from infrastructure.extension import Base
 
