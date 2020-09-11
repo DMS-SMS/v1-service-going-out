@@ -5,11 +5,11 @@ from proto.python.outing import outing_student_pb2 as proto
 from application.mapper import create_outing_mapper, get_outings_mapper
 from application.decorator.error_handling import error_handling
 
-from domain.repository import OutingRepository
-from domain.entity.outing import Outing
+from domain.repository import OutingRepository, StudentRepository
+from domain.entity import Outing, Student
 from domain.service.outing_domain_service import OutingDomainService
 
-from infrastructure.repository import OutingRepositoryImpl
+from infrastructure.repository import OutingRepositoryImpl, StudentRepositoryImpl
 from infrastructure.util.sms_service import send_to_parents
 from infrastructure.service.OutingDomainServiceImpl import OutingDomainServiceImpl
 
@@ -62,4 +62,27 @@ class OutingService:
             end_time=outing._end_time,
             o_status=outing._status,
             o_situation=outing._situation
+        )
+
+    @classmethod
+    def get_card_about_outing(cls, request):
+        outing_repository: OutingRepository = OutingRepositoryImpl()
+        student_repository: StudentRepository = StudentRepositoryImpl()
+
+        outing: Outing = outing_repository.get_outing_by_oid(request.oid)
+        student: Student = student_repository.get_student_by_uuid(outing._student_uuid)
+
+        return proto.GetCardAboutOutingResponse(
+            status=200,
+            msg="OK",
+            place=outing._place,
+            date=outing._date,
+            start_time=outing._start_time,
+            end_time=outing._end_time,
+            o_status=outing._status,
+            name=student._name,
+            grade=student._grade,
+            class_=student._class,
+            number=student._student_number,
+            image_url=student._profile_uri
         )
