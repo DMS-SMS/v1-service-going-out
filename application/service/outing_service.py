@@ -48,9 +48,14 @@ class OutingService:
         return response
 
     @classmethod
+    @error_handling(proto.GetOutingInformResponse)
     def get_outing_inform(cls, request):
         repository: OutingRepository = OutingRepositoryImpl()
+        domain_service: OutingDomainService = OutingDomainServiceImpl()
+
         outing: Outing = repository.get_outing_by_oid(request.oid)
+
+        domain_service.compare_uuid_and_sid(request.uuid, outing._student_uuid)
 
         return proto.GetOutingInformResponse(
             status=200,
