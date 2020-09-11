@@ -26,7 +26,7 @@ def get_outing_mapper(outing_model: OutingModel) -> Outing:
         status=outing_model.status,
         situation=outing_model.situation,
         accept_teacher=outing_model.accepted_teacher,
-        date=outing_model.date,
+        date=str(outing_model.date)[:10],
         start_time=outing_model.start_time,
         end_time=outing_model.end_time,
         place=outing_model.place,
