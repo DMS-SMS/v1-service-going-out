@@ -56,3 +56,10 @@ class OutingRepositoryImpl(OutingRepository):
         if not outings: raise NotFound
 
         return get_outings_mapper(outings)
+    @classmethod
+    def approve_by_outing_for_teacher(cls, oid: str) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+        if not outing.status == "1": raise NotApprovedByParents
+
+        outing.status = "2"
+        db_session.commit()
