@@ -70,12 +70,17 @@ class OutingService:
         )
 
     @classmethod
+    @error_handling(proto.GetCardAboutOutingResponse)
     def get_card_about_outing(cls, request):
         outing_repository: OutingRepository = OutingRepositoryImpl()
         student_repository: StudentRepository = StudentRepositoryImpl()
 
+        domain_service: OutingDomainService = OutingDomainServiceImpl()
+
         outing: Outing = outing_repository.get_outing_by_oid(request.oid)
         student: Student = student_repository.get_student_by_uuid(outing._student_uuid)
+
+        domain_service.compare_uuid_and_sid(request.uuid, outing._student_uuid)
 
         return proto.GetCardAboutOutingResponse(
             status=200,
