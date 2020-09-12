@@ -1,5 +1,7 @@
 from proto.python.outing import outing_teacher_pb2_grpc
 
+from application.service.teacher_outing_service import TeacherOutingService
+
 
 class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
     def GetOutingWithFilter(self, request, context):
@@ -12,7 +14,7 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
         pass
 
     def ApproveOuting(self, request, context):
-        pass
+        return TeacherOutingService().approve_outing(request)
 
     def RejectOuting(self, request, context):
         pass
