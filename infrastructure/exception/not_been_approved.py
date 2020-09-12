@@ -1,0 +1,8 @@
+from infrastructure.exception.business_exception import BusinessException
+
+
+class NotApprovedByParents(BusinessException):
+    def __init__(self):
+        self.status: int = 407
+        self.code: int = -1201
+        self.msg: str = "It has not been approved by parents yet"
