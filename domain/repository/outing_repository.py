@@ -24,3 +24,8 @@ class OutingRepository(metaclass=ABCMeta):
     @abstractmethod
     def get_outings_by_student_id(cls, oid: str) -> List["Outing"]:
         pass
+
+    @classmethod
+    @abstractmethod
+    def approve_by_outing_for_teacher(cls, oid:str) -> None:
+        pass
