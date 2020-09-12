@@ -1,7 +1,7 @@
 from typing import List
 
 from domain.entity.outing import Outing
-from proto.python.outing.outing_student_pb2 import Outing as ProtoOuting
+from proto.python.outing.outing_student_pb2 import StudentOuting as ProtoOuting
 
 
 def create_outing_mapper(request):
