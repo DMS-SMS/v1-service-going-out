@@ -1,0 +1,2 @@
+class TeacherOutingService:
+    pass
