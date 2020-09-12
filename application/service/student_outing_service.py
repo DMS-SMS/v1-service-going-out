@@ -14,7 +14,7 @@ from infrastructure.util.sms_service import send_to_parents
 from infrastructure.service.OutingDomainServiceImpl import OutingDomainServiceImpl
 
 
-class OutingService:
+class StudentOutingService:
     @classmethod
     @error_handling(proto.CreateOutingResponse)
     def create_outing(cls, request):
