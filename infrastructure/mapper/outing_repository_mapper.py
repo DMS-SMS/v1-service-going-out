@@ -10,7 +10,7 @@ def create_outing_mapper(outing: Outing, uuid) -> OutingModel:
     return OutingModel(
         uuid = uuid,
         student_uuid = outing._student_uuid,
-        status = "0",
+        status = "1" if outing._situation == "EMERGENCY" else "0",
         situation = outing._situation,
         date = datetime(year=int(outing._date[0:4]), month=int(outing._date[5:7]), day=int(outing._date[8:10])),
         start_time = outing._start_time,
