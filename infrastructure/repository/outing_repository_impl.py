@@ -1,4 +1,4 @@
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from typing import List
 
 from infrastructure.model import OutingModel
@@ -21,7 +21,7 @@ class OutingRepositoryImpl(OutingRepository):
             outing_uuid = random_key_generate(20)
 
         if db_session.query(OutingModel)\
-            .filter(and_(OutingModel.student_uuid == outing._student_uuid,
+            .filter(and_(OutingModel.student_uuid == func.binary(outing._student_uuid),
                          OutingModel.date == outing._date)).all(): raise OutingExist
 
 
@@ -42,13 +42,17 @@ class OutingRepositoryImpl(OutingRepository):
 
     @classmethod
     def get_outing_by_oid(cls, oid: str) -> Outing:
-        return get_outing_mapper(db_session.query(OutingModel).filter(OutingModel.uuid == oid).first())
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing: raise NotFound
+
+        return get_outing_mapper(outing)
 
     @classmethod
     def get_outings_by_student_id(cls, sid: str) -> List["Outing"]:
-        outings = get_outings_mapper(db_session.query(OutingModel).filter(OutingModel.student_uuid == sid)
-                           .order_by(OutingModel.date.desc()).all())
+        outings = db_session.query(OutingModel).filter(OutingModel.student_uuid == func.binary(sid))\
+            .order_by(OutingModel.date.desc()).all()
 
         if not outings: raise NotFound
 
-        return outings
+        return get_outings_mapper(outings)
