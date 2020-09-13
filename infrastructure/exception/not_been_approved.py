@@ -6,3 +6,8 @@ class NotApprovedByParents(BusinessException):
         self.status: int = 407
         self.code: int = -1201
         self.msg: str = "It has not been approved by parents yet"
+class AlreadyApprovedByParents(BusinessException):
+    def __init__(self):
+        self.status: int = 407
+        self.code: int = -1203
+        self.msg: str = "It has been approved by parents"
