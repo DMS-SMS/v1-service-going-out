@@ -99,6 +99,15 @@ class StudentOutingService:
 
     @classmethod
     @error_handling(proto.GoOutResponse)
+    def go_out(cls, request):
+        repository: OutingRepository = OutingRepositoryImpl()
+
+        repository.go_out(request.oid)
+
+        return proto.GoOutResponse(status=200)
+
+    @classmethod
+    @error_handling(proto.GoOutResponse)
     def finish_go_out(cls, request):
         repository: OutingRepository = OutingRepositoryImpl()
 
