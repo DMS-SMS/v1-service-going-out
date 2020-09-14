@@ -17,7 +17,7 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
         return TeacherOutingService().approve_outing(request)
 
     def RejectOuting(self, request, context):
-        pass
+        return TeacherOutingService().reject_outing(request)
 
     def CertifyOuting(self, request, context):
         pass
