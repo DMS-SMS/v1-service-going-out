@@ -17,3 +17,6 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
 
     def GoOut(self, request, context):
         return StudentOutingService().go_out(request)
+
+    def FinishGoOut(self, request, context):
+        return StudentOutingService().finish_go_out(request)
