@@ -96,3 +96,13 @@ class OutingRepositoryImpl(OutingRepository):
 
         outing.status = "5"
         db_session.commit()
+
+    @classmethod
+    def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
+        query = db_session.query(OutingModel).join(StudentInformsModel)
+        if status: query = query.filter(OutingModel.status == func.binary(status))
+        if grade: query = query.filter(StudentInformsModel.grade == grade)
+        if class_: query = query.filter(StudentInformsModel.class_ == class_)
+
+        outings = query.order_by(OutingModel.date.desc()).all()
+        return get_outings_mapper(outings)
