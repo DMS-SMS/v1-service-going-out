@@ -14,5 +14,4 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
         return TeacherOutingService().reject_outing(request)
 
     def CertifyOuting(self, request, context):
-        # TODO
-        pass
+        return TeacherOutingService().certify_outing(request)
