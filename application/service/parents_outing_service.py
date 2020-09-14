@@ -13,6 +13,15 @@ class ParentsOutingService:
     def approve_outing(cls, request):
         repository: OutingRepository = OutingRepositoryImpl()
 
-        repository.approve_by_outing_for_parent(request.o_code)
+        repository.approve_by_outing_for_parents(request.o_code)
+
+        return proto.ConfirmOutingByOCodeResponse(status=200)
+
+    @classmethod
+    @error_handling(proto.ConfirmOutingByOCodeResponse)
+    def reject_outing(cls, request):
+        repository: OutingRepository = OutingRepositoryImpl()
+
+        repository.reject_by_outing_for_parents(request.o_code)
 
         return proto.ConfirmOutingByOCodeResponse(status=200)
