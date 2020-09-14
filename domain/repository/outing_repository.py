@@ -45,3 +45,7 @@ class OutingRepository(metaclass=ABCMeta):
     @abstractmethod
     def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
         pass
+    @classmethod
+    @abstractmethod
+    def get_is_late(cls, oid) -> bool:
+        pass
