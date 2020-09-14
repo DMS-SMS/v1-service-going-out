@@ -78,3 +78,12 @@ class OutingRepositoryImpl(OutingRepository):
         db_session.commit()
 
         delete_outing_code(o_code)
+
+    @classmethod
+    def reject_by_outing_for_teacher(cls, oid: str) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing.status == "1": raise NotApprovedByParents
+
+        outing.status = "-2"
+        db_session.commit()
