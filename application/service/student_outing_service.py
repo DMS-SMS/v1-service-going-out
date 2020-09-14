@@ -96,3 +96,12 @@ class StudentOutingService:
             number=student._student_number,
             image_url=student._profile_uri
         )
+
+    @classmethod
+    @error_handling(proto.GoOutResponse)
+    def finish_go_out(cls, request):
+        repository: OutingRepository = OutingRepositoryImpl()
+
+        repository.finish_go_out(request.oid)
+
+        return proto.GoOutResponse(status=200)
