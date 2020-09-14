@@ -22,7 +22,7 @@ class OutingRepository(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def get_outings_by_student_id(cls, oid: str) -> List["Outing"]:
+    def get_outings_by_student_id(cls, sid: str) -> List["Outing"]:
         pass
 
     @classmethod
@@ -32,13 +32,15 @@ class OutingRepository(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def approve_by_outing_for_parent(cls, o_code) -> None:
+    def approve_by_outing_for_parents(cls, o_code) -> None:
         pass
 
     @classmethod
+    @abstractmethod
     def reject_by_outing_for_teacher(cls, oid: str) -> None:
         pass
     @classmethod
+    @abstractmethod
     def certify_by_outing_for_teacher(cls, oid) -> None:
         pass
     @classmethod
