@@ -27,7 +27,6 @@ class StudentOutingService:
 
         return proto.CreateOutingResponse(status=201, msg="Created", oid=oid)
 
-
     @classmethod
     @error_handling(proto.GetStudentOutingsResponse)
     def get_student_outings(cls, request):
@@ -39,7 +38,10 @@ class StudentOutingService:
         domain_service.compare_uuid_and_sid(request.uuid, request.sid)
 
         outings_entity: List["Outing"] = domain_service.paging_outings(
-            repository.get_outings_by_student_id(request.sid), request.start, request.count)
+            repository.get_outings_by_student_id(request.sid),
+            request.start,
+            request.count,
+        )
 
         response.outing.extend(get_outings_mapper(outings_entity))
         response.status = 201
@@ -66,7 +68,7 @@ class StudentOutingService:
             start_time=outing._start_time,
             end_time=outing._end_time,
             o_status=outing._status,
-            o_situation=outing._situation
+            o_situation=outing._situation,
         )
 
     @classmethod
@@ -94,7 +96,7 @@ class StudentOutingService:
             grade=student._grade,
             class_=student._class,
             number=student._student_number,
-            image_url=student._profile_uri
+            image_url=student._profile_uri,
         )
 
     @classmethod

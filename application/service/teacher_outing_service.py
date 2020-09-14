@@ -45,10 +45,13 @@ class TeacherOutingService:
         repository: OutingRepository = OutingRepositoryImpl()
         domain_service: OutingDomainService = OutingDomainServiceImpl()
 
-
         outings = domain_service.paging_outings(
-            repository.get_outings_with_filter(request.status, request.grade, request.class_), request.start, request.count)
-
+            repository.get_outings_with_filter(
+                request.status, request.grade, request.class_
+            ),
+            request.start,
+            request.count,
+        )
 
         response.status = 200
         response.outing.extend(get_outings_for_teacher_mapper(outings))

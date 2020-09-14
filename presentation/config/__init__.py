@@ -10,5 +10,4 @@ class gRPCAppConfig:
 
     @property
     def address(self):
-        return str(self._host+":"+str(self._port))
-
+        return str(self._host + ":" + str(self._port))

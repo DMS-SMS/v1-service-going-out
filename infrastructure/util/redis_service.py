@@ -18,5 +18,3 @@ def get_oid_by_parents_outing_code(o_code: str) -> Optional[str]:
 
 def delete_outing_code(o_code: str):
     redis.delete(o_code)
-
-
