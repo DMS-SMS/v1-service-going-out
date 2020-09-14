@@ -5,13 +5,7 @@ from application.service.teacher_outing_service import TeacherOutingService
 
 class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
     def GetOutingWithFilter(self, request, context):
-        pass
-
-    def GetOutingStudentWithSN(self, request, context):
-        pass
-
-    def GetOutingStudentWithFloor(self, request, context):
-        pass
+        return TeacherOutingService().get_outings_with_filter(request)
 
     def ApproveOuting(self, request, context):
         return TeacherOutingService().approve_outing(request)
@@ -20,4 +14,5 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
         return TeacherOutingService().reject_outing(request)
 
     def CertifyOuting(self, request, context):
+        # TODO
         pass
