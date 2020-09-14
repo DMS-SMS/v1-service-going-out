@@ -1,6 +1,7 @@
 from proto.python.outing import outing_teacher_pb2 as proto
 
 from application.decorator.error_handling import error_handling
+from application.mapper.outing_mapper import get_outings_for_teacher_mapper
 
 from domain.repository.outing_repository import OutingRepository
 
@@ -34,3 +35,16 @@ class TeacherOutingService:
         repository.certify_by_outing_for_teacher(request.oid)
 
         return proto.ConfirmOutingResponse(status=200)
+
+    @classmethod
+    @error_handling(proto.OutingResponse)
+    def get_outings_with_filter(cls, request):
+        response = proto.OutingResponse()
+        repository: OutingRepository = OutingRepositoryImpl()
+
+        outings = repository.get_outings_with_filter(request.status, request.grade, request.class_)
+
+        response.status = 200
+        response.outing.extend(get_outings_for_teacher_mapper(outings))
+
+        return response
