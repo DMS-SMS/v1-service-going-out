@@ -41,3 +41,7 @@ class OutingRepository(metaclass=ABCMeta):
     @classmethod
     def certify_by_outing_for_teacher(cls, oid) -> None:
         pass
+    @classmethod
+    @abstractmethod
+    def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
+        pass
