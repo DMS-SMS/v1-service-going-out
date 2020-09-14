@@ -10,7 +10,7 @@ from infrastructure.repository.outing_repository_impl import OutingRepositoryImp
 class ParentsOutingService:
     @classmethod
     @error_handling(proto.ApproveOutingByOCodeResponse)
-    def approve_outing(self, request):
+    def approve_outing(cls, request):
         repository: OutingRepository = OutingRepositoryImpl()
 
         repository.approve_by_outing_for_parent(request.o_code)
