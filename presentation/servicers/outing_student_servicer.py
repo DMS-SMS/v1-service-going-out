@@ -1,17 +1,16 @@
-from application.service.outing_service import OutingService
-
-from proto.python.outing import outing_student_pb2_grpc, outing_student_pb2
+from application.service.student_outing_service import StudentOutingService
+from proto.python.outing import outing_student_pb2_grpc
 
 
 class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
     def CreateOuting(self, request, context):
-        return OutingService().create_outing(request)
+        return StudentOutingService().create_outing(request)
 
     def GetCardAboutOuting(self, request, context):
-        pass
+        return StudentOutingService().get_card_about_outing(request)
 
     def GetOutingInform(self, request, context):
-        pass
+        return StudentOutingService().get_outing_inform(request)
 
     def GetStudentOutings(self, request, context):
-        return OutingService().get_student_outings(request)
+        return StudentOutingService().get_student_outings(request)

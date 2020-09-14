@@ -1,12 +1,12 @@
-from sqlalchemy import and_
-from typing import List
+from sqlalchemy import and_, func
+from typing import List, Optional
 
-from infrastructure.model import OutingModel
+from infrastructure.model import OutingModel, StudentInformsModel
 from infrastructure.extension import db_session
 from infrastructure.util.random_key import random_key_generate
 from infrastructure.mapper.outing_repository_mapper import create_outing_mapper, get_outing_mapper, get_outings_mapper
-from infrastructure.exception import OutingExist, NotFound
-from infrastructure.util.redis_service import get_oid_by_parents_outing_code, save_parents_outing_code
+from infrastructure.exception import OutingExist, NotFound, NotApprovedByParents, AlreadyApprovedByParents, StillOut
+from infrastructure.util.redis_service import get_oid_by_parents_outing_code, save_parents_outing_code, delete_outing_code
 
 from domain.repository.outing_repository import OutingRepository
 from domain.entity.outing import Outing
@@ -21,7 +21,7 @@ class OutingRepositoryImpl(OutingRepository):
             outing_uuid = random_key_generate(20)
 
         if db_session.query(OutingModel)\
-            .filter(and_(OutingModel.student_uuid == outing._student_uuid,
+            .filter(and_(OutingModel.student_uuid == func.binary(outing._student_uuid),
                          OutingModel.date == outing._date)).all(): raise OutingExist
 
 
@@ -42,13 +42,93 @@ class OutingRepositoryImpl(OutingRepository):
 
     @classmethod
     def get_outing_by_oid(cls, oid: str) -> Outing:
-        return get_outing_mapper(db_session.query(OutingModel).filter(OutingModel.uuid == oid).first())
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing: raise NotFound
+
+        return get_outing_mapper(outing)
 
     @classmethod
     def get_outings_by_student_id(cls, sid: str) -> List["Outing"]:
-        outings = get_outings_mapper(db_session.query(OutingModel).filter(OutingModel.student_uuid == sid)
-                           .order_by(OutingModel.date.desc()).all())
+        outings = db_session.query(OutingModel).filter(OutingModel.student_uuid == func.binary(sid))\
+            .order_by(OutingModel.date.desc()).all()
 
         if not outings: raise NotFound
 
-        return outings
+        return get_outings_mapper(outings)
+
+    @classmethod
+    def approve_by_outing_for_teacher(cls, oid: str) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+        if not outing.status == "1": raise NotApprovedByParents
+
+        outing.status = "2"
+        db_session.commit()
+
+    @classmethod
+    def approve_by_outing_for_parents(cls, o_code: str) -> None:
+        oid = get_oid_by_parents_outing_code(o_code)
+
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing: raise NotFound
+        if not outing.status == "0": raise AlreadyApprovedByParents
+
+        outing.status = "1"
+        db_session.commit()
+
+        delete_outing_code(o_code)
+
+    @classmethod
+    def reject_by_outing_for_teacher(cls, oid: str) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing.status == "1": raise NotApprovedByParents
+
+        outing.status = "-2"
+        db_session.commit()
+
+    @classmethod
+    def reject_by_outing_for_parents(cls, o_code):
+        oid = get_oid_by_parents_outing_code(o_code)
+
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing: raise NotFound
+        if not outing.status == "0": raise AlreadyApprovedByParents
+
+        outing.status = "-1"
+        db_session.commit()
+
+        delete_outing_code(o_code)
+
+    @classmethod
+    def certify_by_outing_for_teacher(cls, oid) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing.status == "4": raise StillOut
+
+        outing.status = "5"
+        db_session.commit()
+
+    @classmethod
+    def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
+        query = db_session.query(OutingModel).join(StudentInformsModel)
+        if status: query = query.filter(OutingModel.status == func.binary(status))
+        if grade: query = query.filter(StudentInformsModel.grade == grade)
+        if class_: query = query.filter(StudentInformsModel.class_ == class_)
+
+        outings = query.order_by(OutingModel.date.desc()).all()
+
+        return get_outings_mapper(outings)
+
+    @classmethod
+    def get_is_late(cls, oid) -> Optional[bool]:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        print(outing.arrival_time, outing.arrival_time)
+
+        if outing.arrival_time is None and outing.arrival_date is None: return None
+        if outing.arrival_date == outing.date and int(outing.arrival_time) < int(outing.end_time):
+            return False
+        return True
