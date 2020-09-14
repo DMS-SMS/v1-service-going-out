@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from infrastructure.model import OutingModel, StudentInformsModel
 from infrastructure.extension import db_session
-from infrastructure.util.random_key import random_key_generate
+from infrastructure.util.random_key import generate_outing_uuid, generate_random_key
 from infrastructure.mapper.outing_repository_mapper import (
     create_outing_mapper,
     get_outing_mapper,
@@ -32,14 +32,14 @@ from domain.entity.outing import Outing
 class OutingRepositoryImpl(OutingRepository):
     @classmethod
     def save_and_get_oid(cls, outing: Outing) -> str:
-        outing_uuid = random_key_generate(20)
+        outing_uuid = generate_outing_uuid()
 
         while (
             db_session.query(OutingModel)
             .filter(OutingModel.uuid == outing_uuid)
             .first()
         ):
-            outing_uuid = random_key_generate(20)
+            outing_uuid = generate_outing_uuid()
 
         if (
             db_session.query(OutingModel)
@@ -59,10 +59,10 @@ class OutingRepositoryImpl(OutingRepository):
 
     @classmethod
     def set_and_get_parents_outing_code(cls, oid: str) -> str:
-        o_code = random_key_generate(20)
+        o_code = generate_random_key(20)
 
         while get_oid_by_parents_outing_code(o_code):
-            o_code = random_key_generate(20)
+            o_code = generate_random_key(20)
 
         save_parents_outing_code(oid, o_code)
 
