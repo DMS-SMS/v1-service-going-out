@@ -34,3 +34,7 @@ class OutingRepository(metaclass=ABCMeta):
     @abstractmethod
     def approve_by_outing_for_parent(cls, o_code) -> None:
         pass
+
+    @classmethod
+    def reject_by_outing_for_teacher(cls, oid: str) -> None:
+        pass
