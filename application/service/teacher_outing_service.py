@@ -25,3 +25,12 @@ class TeacherOutingService:
         repository.reject_by_outing_for_teacher(request.oid)
 
         return proto.ConfirmOutingResponse(status=200)
+
+    @classmethod
+    @error_handling(proto.ConfirmOutingResponse)
+    def certify_outing(cls, request):
+        repository: OutingRepository = OutingRepositoryImpl()
+
+        repository.certify_by_outing_for_teacher(request.oid)
+
+        return proto.ConfirmOutingResponse(status=200)
