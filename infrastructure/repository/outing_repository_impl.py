@@ -105,4 +105,16 @@ class OutingRepositoryImpl(OutingRepository):
         if class_: query = query.filter(StudentInformsModel.class_ == class_)
 
         outings = query.order_by(OutingModel.date.desc()).all()
+
         return get_outings_mapper(outings)
+
+    @classmethod
+    def get_is_late(cls, oid) -> Optional[bool]:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        print(outing.arrival_time, outing.arrival_time)
+
+        if outing.arrival_time is None and outing.arrival_date is None: return None
+        if outing.arrival_date == outing.date and int(outing.arrival_time) < int(outing.end_time):
+            return False
+        return True
