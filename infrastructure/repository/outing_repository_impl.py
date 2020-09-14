@@ -89,6 +89,20 @@ class OutingRepositoryImpl(OutingRepository):
         db_session.commit()
 
     @classmethod
+    def reject_by_outing_for_parents(cls, o_code):
+        oid = get_oid_by_parents_outing_code(o_code)
+
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing: raise NotFound
+        if not outing.status == "0": raise AlreadyApprovedByParents
+
+        outing.status = "-1"
+        db_session.commit()
+
+        delete_outing_code(o_code)
+
+    @classmethod
     def certify_by_outing_for_teacher(cls, oid) -> None:
         outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
 
