@@ -1,7 +1,7 @@
 from sqlalchemy import and_, func
-from typing import List
+from typing import List, Optional
 
-from infrastructure.model import OutingModel
+from infrastructure.model import OutingModel, StudentInformsModel
 from infrastructure.extension import db_session
 from infrastructure.util.random_key import random_key_generate
 from infrastructure.mapper.outing_repository_mapper import create_outing_mapper, get_outing_mapper, get_outings_mapper
@@ -66,7 +66,7 @@ class OutingRepositoryImpl(OutingRepository):
         db_session.commit()
 
     @classmethod
-    def approve_by_outing_for_parent(cls, o_code: str) -> None:
+    def approve_by_outing_for_parents(cls, o_code: str) -> None:
         oid = get_oid_by_parents_outing_code(o_code)
 
         outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
