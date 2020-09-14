@@ -60,3 +60,13 @@ class OutingRepository(metaclass=ABCMeta):
     def get_is_late(cls, oid) -> bool:
         pass
 
+    @classmethod
+    @abstractmethod
+    def go_out(cls, oid) -> None:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def finish_go_out(cls, oid) -> None:
+        pass
+

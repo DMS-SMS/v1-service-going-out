@@ -1,3 +1,6 @@
+import time
+
+from datetime import datetime
 from sqlalchemy import and_, func
 from typing import List, Optional
 
@@ -126,9 +129,33 @@ class OutingRepositoryImpl(OutingRepository):
     def get_is_late(cls, oid) -> Optional[bool]:
         outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
 
-        print(outing.arrival_time, outing.arrival_time)
-
         if outing.arrival_time is None and outing.arrival_date is None: return None
         if outing.arrival_date == outing.date and int(outing.arrival_time) < int(outing.end_time):
             return False
         return True
+
+
+    @classmethod
+    def go_out(cls, oid) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing.status == "2": raise StillOut
+
+        outing.status = "3"
+        db_session.commit()
+
+
+    @classmethod
+    def finish_go_out(cls, oid) -> None:
+        outing = db_session.query(OutingModel).filter(OutingModel.uuid == func.binary(oid)).first()
+
+        if not outing.status == "3": raise StillOut
+
+        now = time.gmtime(time.time())
+
+        outing.status = "4"
+
+        outing.arrival_date = datetime(year=now.tm_year, month=now.tm_mon, day=now.tm_mday)
+        outing.arrival_time = str(now.tm_hour).zfill(2)+str(now.tm_min).zfill(2)
+
+        db_session.commit()

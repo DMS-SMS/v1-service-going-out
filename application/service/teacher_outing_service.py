@@ -4,8 +4,10 @@ from application.decorator.error_handling import error_handling
 from application.mapper.outing_mapper import get_outings_for_teacher_mapper
 
 from domain.repository.outing_repository import OutingRepository
+from domain.service.outing_domain_service import OutingDomainService
 
 from infrastructure.repository.outing_repository_impl import OutingRepositoryImpl
+from infrastructure.service.OutingDomainServiceImpl import OutingDomainServiceImpl
 
 
 class TeacherOutingService:
@@ -41,8 +43,12 @@ class TeacherOutingService:
     def get_outings_with_filter(cls, request):
         response = proto.OutingResponse()
         repository: OutingRepository = OutingRepositoryImpl()
+        domain_service: OutingDomainService = OutingDomainServiceImpl()
 
-        outings = repository.get_outings_with_filter(request.status, request.grade, request.class_)
+
+        outings = domain_service.paging_outings(
+            repository.get_outings_with_filter(request.status, request.grade, request.class_), request.start, request.count)
+
 
         response.status = 200
         response.outing.extend(get_outings_for_teacher_mapper(outings))
