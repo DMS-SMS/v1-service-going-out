@@ -31,7 +31,7 @@ class StudentOutingService:
 
     @error_handling(proto.GetStudentOutingsResponse)
     def get_student_outings(self, request):
-        response = proto.GetStudentOutingsResponse()
+        response = proto.GetStudentOutingsResponse(status=200)
 
         self.outing_domain_service.compare_uuid_and_sid(request.uuid, request.sid)
 
@@ -42,7 +42,6 @@ class StudentOutingService:
         )
 
         response.outing.extend(get_outings_mapper(outings_entity))
-        response.status = 201
 
         return response
 
@@ -56,7 +55,6 @@ class StudentOutingService:
 
         return proto.GetOutingInformResponse(
             status=200,
-            msg="OK",
             place=outing._place,
             reason=outing._reason,
             date=outing._date,
@@ -79,7 +77,6 @@ class StudentOutingService:
 
         return proto.GetCardAboutOutingResponse(
             status=200,
-            msg="OK",
             place=outing._place,
             date=outing._date,
             start_time=outing._start_time,
@@ -89,7 +86,7 @@ class StudentOutingService:
             grade=student._grade,
             class_=student._class,
             number=student._student_number,
-            image_url=student._profile_uri,
+            profile_image_uri=student._profile_image_uri,
         )
 
     @error_handling(proto.GoOutResponse)
