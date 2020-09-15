@@ -6,7 +6,7 @@ from proto.python.outing import (
 
 from presentation.servicers.outing_student_servicer import StudentOutingServicer
 from presentation.servicers.outing_teacher_servicer import TeacherOutingServicer
-from presentation.servicers.outing_parent_servicer import ParentsOutingServicer
+from presentation.servicers.outing_parents_servicer import ParentsOutingServicer
 
 
 def register_outing_servicers(app):
