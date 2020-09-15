@@ -27,7 +27,7 @@ class OutingRepository(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def approve_by_outing_for_teacher(cls, oid:str) -> None:
+    def approve_by_outing_for_teacher(cls, oid: str) -> None:
         pass
 
     @classmethod
@@ -69,4 +69,3 @@ class OutingRepository(metaclass=ABCMeta):
     @abstractmethod
     def finish_go_out(cls, oid) -> None:
         pass
-

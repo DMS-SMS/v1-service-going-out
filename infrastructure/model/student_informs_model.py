@@ -13,4 +13,3 @@ class StudentInformsModel(Base):
     name = Column(String(4))
     phone_number = Column(String(11))
     profile_uri = Column(String(150))
-

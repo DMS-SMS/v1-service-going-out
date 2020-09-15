@@ -11,5 +11,5 @@ def get_student_mapper(student_model: StudentInformsModel) -> Student:
         student_number=student_model.student_number,
         name=student_model.name,
         phone_number=student_model.phone_number,
-        profile_uri=student_model.profile_uri
+        profile_uri=student_model.profile_uri,
     )
