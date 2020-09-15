@@ -7,7 +7,7 @@ class Student:
         student_number=None,
         name=None,
         phone_number=None,
-        profile_uri=None,
+        profile_image_uri=None,
     ):
         self._stuent_uuid: str = student_uuid
         self._grade: int = grade
@@ -15,4 +15,4 @@ class Student:
         self._student_number: int = student_number
         self._name: str = name
         self._phone_number: str = phone_number
-        self._profile_uri: str = profile_uri
+        self._profile_image_uri: str = profile_image_uri
