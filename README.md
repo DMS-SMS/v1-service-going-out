@@ -1,4 +1,8 @@
 # v1-outing-service
+## How to run
+```bash
+$ python3 run.py
+```
 ## Components
 ### Presentation
 - servicers (gRPC)
