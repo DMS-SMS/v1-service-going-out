@@ -1,7 +1,11 @@
 # v1-outing-service
-## How to run
+## Run
 ```bash
 $ python3 run.py
+```
+## Test
+```bash
+$ pytest
 ```
 ## Components
 ### Presentation
