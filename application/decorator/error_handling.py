@@ -13,4 +13,5 @@ def error_handling(response):
                 return response(status=e.status, code=e.code, msg=e.msg)
 
         return wrapper
+
     return decorator

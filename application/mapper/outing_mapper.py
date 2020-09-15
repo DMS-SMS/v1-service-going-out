@@ -20,8 +20,10 @@ def create_outing_mapper(request):
         start_time=request.start_time,
         end_time=request.end_time,
         place=request.place,
-        reason=request.reason)
+        reason=request.reason,
+    )
     return entity
+
 
 def get_outings_mapper(outing_entities: List["Outing"]) -> List["StudentOuting"]:
     outings = list()
@@ -41,7 +43,10 @@ def get_outings_mapper(outing_entities: List["Outing"]) -> List["StudentOuting"]
 
     return outings
 
-def get_outings_for_teacher_mapper(outing_entities: List["Outing"]) -> List["TeacherOuting"]:
+
+def get_outings_for_teacher_mapper(
+    outing_entities: List["Outing"],
+) -> List["TeacherOuting"]:
     outings = list()
     student_repository: StudentRepository = StudentRepositoryImpl()
     outing_repository: OutingRepository = OutingRepositoryImpl()

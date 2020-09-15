@@ -9,53 +9,50 @@ from domain.repository import OutingRepository, StudentRepository
 from domain.entity import Outing, Student
 from domain.service.outing_domain_service import OutingDomainService
 
-from infrastructure.repository import OutingRepositoryImpl, StudentRepositoryImpl
-from infrastructure.util.sms_service import send_to_parents
-from infrastructure.service.OutingDomainServiceImpl import OutingDomainServiceImpl
-
 
 class StudentOutingService:
-    @classmethod
+    def __init__(self, outing_repository, student_repository, outing_domain_service, sms_service):
+        self.outing_repository: OutingRepository = outing_repository
+        self.student_repository: StudentRepository = student_repository
+
+        self.outing_domain_service: OutingDomainService = outing_domain_service
+
+        self.sms_service = sms_service
+
     @error_handling(proto.CreateOutingResponse)
-    def create_outing(cls, request):
-        repository: OutingRepository = OutingRepositoryImpl()
+    def create_outing(self, request):
         entity: Outing = create_outing_mapper(request)
 
-        oid: str = repository.save_and_get_oid(entity)
-        o_code: str = repository.set_and_get_parents_outing_code(oid)
-        send_to_parents(oid, o_code)
+        oid: str = self.outing_repository.save_and_get_oid(entity)
+        o_code: str = self.outing_repository.set_and_get_parents_outing_code(oid)
+        self.sms_service.send_to_parents(oid, o_code)
 
-        return proto.CreateOutingResponse(status=201, msg="Created", oid=oid)
+        return proto.CreateOutingResponse(status=201, oid=oid)
 
-
-    @classmethod
     @error_handling(proto.GetStudentOutingsResponse)
-    def get_student_outings(cls, request):
+    def get_student_outings(self, request):
         response = proto.GetStudentOutingsResponse()
 
-        repository: OutingRepository = OutingRepositoryImpl()
-        domain_service: OutingDomainService = OutingDomainServiceImpl()
+        self.outing_domain_service.compare_uuid_and_sid(request.uuid, request.sid)
 
-        domain_service.compare_uuid_and_sid(request.uuid, request.sid)
-
-        outings_entity: List["Outing"] = domain_service.paging_outings(
-            repository.get_outings_by_student_id(request.sid), request.start, request.count)
+        outings_entity: List["Outing"] = self.outing_domain_service.paging_outings(
+            self.outing_repository.get_outings_by_student_id(request.sid),
+            request.start,
+            request.count,
+        )
 
         response.outing.extend(get_outings_mapper(outings_entity))
         response.status = 201
-        response.msg = "OK"
 
         return response
 
-    @classmethod
     @error_handling(proto.GetOutingInformResponse)
-    def get_outing_inform(cls, request):
-        repository: OutingRepository = OutingRepositoryImpl()
-        domain_service: OutingDomainService = OutingDomainServiceImpl()
+    def get_outing_inform(self, request):
+        outing: Outing = self.outing_repository.get_outing_by_oid(request.oid)
 
-        outing: Outing = repository.get_outing_by_oid(request.oid)
-
-        domain_service.compare_uuid_and_sid(request.uuid, outing._student_uuid)
+        self.outing_domain_service.compare_uuid_and_sid(
+            request.uuid, outing._student_uuid
+        )
 
         return proto.GetOutingInformResponse(
             status=200,
@@ -66,21 +63,19 @@ class StudentOutingService:
             start_time=outing._start_time,
             end_time=outing._end_time,
             o_status=outing._status,
-            o_situation=outing._situation
+            o_situation=outing._situation,
         )
 
-    @classmethod
     @error_handling(proto.GetCardAboutOutingResponse)
-    def get_card_about_outing(cls, request):
-        outing_repository: OutingRepository = OutingRepositoryImpl()
-        student_repository: StudentRepository = StudentRepositoryImpl()
+    def get_card_about_outing(self, request):
+        outing: Outing = self.outing_repository.get_outing_by_oid(request.oid)
+        student: Student = self.student_repository.get_student_by_uuid(
+            outing._student_uuid
+        )
 
-        domain_service: OutingDomainService = OutingDomainServiceImpl()
-
-        outing: Outing = outing_repository.get_outing_by_oid(request.oid)
-        student: Student = student_repository.get_student_by_uuid(outing._student_uuid)
-
-        domain_service.compare_uuid_and_sid(request.uuid, outing._student_uuid)
+        self.outing_domain_service.compare_uuid_and_sid(
+            request.uuid, outing._student_uuid
+        )
 
         return proto.GetCardAboutOutingResponse(
             status=200,
@@ -94,23 +89,15 @@ class StudentOutingService:
             grade=student._grade,
             class_=student._class,
             number=student._student_number,
-            image_url=student._profile_uri
+            image_url=student._profile_uri,
         )
 
-    @classmethod
     @error_handling(proto.GoOutResponse)
-    def go_out(cls, request):
-        repository: OutingRepository = OutingRepositoryImpl()
-
-        repository.go_out(request.oid)
-
+    def go_out(self, request):
+        self.outing_repository.go_out(request.oid)
         return proto.GoOutResponse(status=200)
 
-    @classmethod
     @error_handling(proto.GoOutResponse)
-    def finish_go_out(cls, request):
-        repository: OutingRepository = OutingRepositoryImpl()
-
-        repository.finish_go_out(request.oid)
-
+    def finish_go_out(self, request):
+        self.outing_repository.finish_go_out(request.oid)
         return proto.GoOutResponse(status=200)
