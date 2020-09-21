@@ -14,11 +14,13 @@ def create_consul():
 
 
 def register_consul(consul):
-    consul.register(name="Outing",
-                    service_id="aaaa",
-                    address="10.0.0.0",
-                    port=20050,
-                    token="aaaaa")
+    consul_config = ConsulConfig()
+    consul.register(name=consul_config.service_name,
+                    service_id=consul_config.service_id,
+                    address=consul_config.service_host,
+                    port=consul_config.service_port,
+                    token=consul_config.token)
 
 def deregister_consul(consul):
-    consul.deregister("aaaa")
+    consul_config = ConsulConfig()
+    consul.deregister(consul_config.service_id)
