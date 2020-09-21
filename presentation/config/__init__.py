@@ -11,3 +11,22 @@ class gRPCAppConfig:
     @property
     def address(self):
         return str(self._host + ":" + str(self._port))
+
+
+class ConsulConfig:
+    def __init__(self):
+        self._host = "127.0.0.1"
+        self._port = 8500
+        self._token = "12345"
+
+    @property
+    def host(self):
+        return self._host
+
+    @property
+    def port(self):
+        return self._port
+
+    @property
+    def token(self):
+        return self._token
