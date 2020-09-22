@@ -31,7 +31,6 @@ class ConsulService:
 
         self.consul_check.ttl_pass(self.consul_config.check_id)
 
-
     def deregister_consul(self):
         self.consul_check.deregister(self.consul_config.check_id)
         self.consul_service.deregister(self.consul_config.service_id)
@@ -40,6 +39,8 @@ class ConsulService:
         services = self.consul_agent.services()
         for service_id in services:
             if services[service_id]["Service"] == service:
-                return f"{services[service_id]['Address']}:{services[service_id]['Port']}"
+                return (
+                    f"{services[service_id]['Address']}:{services[service_id]['Port']}"
+                )
 
         return None

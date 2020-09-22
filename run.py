@@ -1,18 +1,17 @@
 from presentation import create_app
-from presentation.extensions import consul_service, consul_check
-from presentation.extensions.consul_service import register_consul, deregister_consul
+from presentation.extensions import consul
 
 
-def serve():
+def serve(app):
     try:
-        app = create_app()
         app.start()
         print("* Presentation is served")
-        register_consul(consul_service, consul_check)
+        consul.register_consul()
         app.wait_for_termination()
     except:
-        deregister_consul(consul_service, consul_check)
+        consul.deregister_consul()
 
 
 if __name__ == "__main__":
-    serve()
+    app = create_app()
+    serve(app)
