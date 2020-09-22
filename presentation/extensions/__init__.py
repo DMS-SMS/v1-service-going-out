@@ -1,4 +1,4 @@
-from presentation.extensions.consul_service import create_consul
+from presentation.extensions.consul_service import ConsulService
 
 
-consul_service, consul_check = create_consul()
+consul = ConsulService()
