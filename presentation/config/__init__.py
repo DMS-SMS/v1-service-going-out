@@ -17,11 +17,14 @@ class ConsulConfig:
     def __init__(self):
         self._host = "10.156.145.137"
         self._port = 8500
+
         self._service_host = None
         self._service_port = None
-        self._service_id = "DMS.DSM.v1.service.outing"
-        self._service_name = "DMS.DSM.v1.service.outing"
+        self._service_id = "DMS.SMS.v1.service.outing"
+        self._service_name = "DMS.SMS.v1.service.outing"
         self._token = "temporary_token"
+
+        self._check_id = "DMS.SMS.v1.service.outing"
 
     @property
     def host(self): return self._host
@@ -43,3 +46,6 @@ class ConsulConfig:
 
     @property
     def token(self): return self._token
+
+    @property
+    def check_id(self): return self._check_id
