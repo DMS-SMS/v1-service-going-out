@@ -1,39 +1,45 @@
-from consul import Consul
-from consul import Check
+from typing import Optional
+from consul import Consul, Check
 
 from presentation.config import ConsulConfig
 
 
-def create_consul():
-    consul_config = ConsulConfig()
-    consul = Consul(host=consul_config.host, port=consul_config.port)
+class ConsulService:
+    def __init__(self):
+        self.consul_config = ConsulConfig()
+        self.consul = Consul(host=self.consul_config.host, port=self.consul_config.port)
+        self.consul_agent = self.consul.Agent(self.consul)
+        self.consul_service = self.consul_agent.Service(self.consul)
+        self.consul_check = self.consul_agent.Check(self.consul)
 
-    return consul.Agent(consul).Service(consul), consul.Agent(consul).Check(consul)
+    def register_consul(self):
+        self.consul_service.register(
+            name=self.consul_config.service_name,
+            service_id=self.consul_config.service_id,
+            address=self.consul_config.service_host,
+            port=self.consul_config.service_port,
+            token=self.consul_config.token,
+        )
+
+        self.consul_check.register(
+            name=f"service '{self.consul_config.service_name}' check",
+            check=Check.ttl("10000000s"),
+            check_id=self.consul_config.check_id,
+            service_id=self.consul_config.service_id,
+            token=self.consul_config.token,
+        )
+
+        self.consul_check.ttl_pass(self.consul_config.check_id)
 
 
-def register_consul(consul_service, consul_check):
-    consul_config = ConsulConfig()
-    consul_service.register(
-        name=consul_config.service_name,
-        service_id=consul_config.service_id,
-        address=consul_config.service_host,
-        port=consul_config.service_port,
-        token=consul_config.token,
-    )
+    def deregister_consul(self):
+        self.consul_check.deregister(self.consul_config.check_id)
+        self.consul_service.deregister(self.consul_config.service_id)
 
-    consul_check.register(
-        name=f"service '{consul_config.service_name}' check",
-        check=Check.ttl("10000000s"),
-        check_id=consul_config.check_id,
-        service_id=consul_config.service_id,
-        token=consul_config.token,
-    )
+    def get_address(self, service: str) -> Optional[str]:
+        services = self.consul_agent.services()
+        for service_id in services:
+            if services[service_id]["Service"] == service:
+                return f"{services[service_id]['Address']}:{services[service_id]['Port']}"
 
-    consul_check.ttl_pass(consul_config.check_id)
-
-
-def deregister_consul(consul_service, consul_check):
-    consul_config = ConsulConfig()
-
-    consul_check.deregister(consul_config.check_id)
-    consul_service.deregister(consul_config.service_id)
+        return None
