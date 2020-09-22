@@ -17,7 +17,6 @@ class TestParentsOutingService(TestCase):
 
         self.assertEqual(self.service.approve_outing(request), response)
 
-
     def test_reject_outing(self):
         request = self.proto.ConfirmOutingByOCodeRequest(o_code="outing-aaaabbbbcccc")
         response = self.proto.ConfirmOutingByOCodeResponse(status=200)

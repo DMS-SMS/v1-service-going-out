@@ -4,7 +4,6 @@ from domain.entity.outing import Outing
 from domain.service.outing_domain_service import OutingDomainService
 
 
-
 class MockOutingDomainService(OutingDomainService):
     mock_outing = Outing(
         outing_uuid="outing-aaaabbbbcccc",

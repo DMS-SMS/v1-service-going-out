@@ -27,25 +27,33 @@ class ConsulConfig:
         self._check_id = "DMS.SMS.v1.service.outing"
 
     @property
-    def host(self): return self._host
+    def host(self):
+        return self._host
 
     @property
-    def port(self): return self._port
+    def port(self):
+        return self._port
 
     @property
-    def service_host(self): return self._service_host
+    def service_host(self):
+        return self._service_host
 
     @property
-    def service_port(self): return self._service_port
+    def service_port(self):
+        return self._service_port
 
     @property
-    def service_id(self): return self._service_id
+    def service_id(self):
+        return self._service_id
 
     @property
-    def service_name(self): return self._service_name
+    def service_name(self):
+        return self._service_name
 
     @property
-    def token(self): return self._token
+    def token(self):
+        return self._token
 
     @property
-    def check_id(self): return self._check_id
+    def check_id(self):
+        return self._check_id

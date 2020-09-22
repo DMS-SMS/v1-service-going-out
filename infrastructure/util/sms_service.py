@@ -8,7 +8,9 @@ from infrastructure.util.redis_service import delete_outing_code
 class SMSService:
     def send_to_parents(self, oid: str, o_code: str):
         outing: Outing = OutingRepositoryImpl().get_outing_by_oid(oid)
-        student: Student = StudentRepositoryImpl().get_student_by_uuid(outing._student_uuid)
+        student: Student = StudentRepositoryImpl().get_student_by_uuid(
+            outing._student_uuid
+        )
 
         student_name = student._name
         date = str(outing._date)[0:10]

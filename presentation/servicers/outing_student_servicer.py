@@ -20,7 +20,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
             outing_repository=self.outing_repository,
             student_repository=self.student_repository,
             outing_domain_service=self.outing_domain_service,
-            sms_service=self.sms_service
+            sms_service=self.sms_service,
         )
 
     def CreateOuting(self, request, context):

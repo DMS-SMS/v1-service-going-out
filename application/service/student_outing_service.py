@@ -11,7 +11,9 @@ from domain.service.outing_domain_service import OutingDomainService
 
 
 class StudentOutingService:
-    def __init__(self, outing_repository, student_repository, outing_domain_service, sms_service):
+    def __init__(
+        self, outing_repository, student_repository, outing_domain_service, sms_service
+    ):
         self.outing_repository: OutingRepository = outing_repository
         self.student_repository: StudentRepository = student_repository
 
