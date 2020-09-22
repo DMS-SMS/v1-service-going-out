@@ -22,14 +22,17 @@ def register_consul(consul_service, consul_check):
                     port=consul_config.service_port,
                     token=consul_config.token)
 
-    consul_check.register(name="service 'DMS.SMS.v1.service.outing' check",
-                          check=Check.ttl("10s"),
-                          check_id = "TestCheckId",
+    consul_check.register(name=f"service '{consul_config.service_name}' check",
+                          check=Check.ttl("10000000s"),
+                          check_id = consul_config.check_id,
                           service_id = consul_config.service_id,
                           token=consul_config.token
     )
 
+    consul_check.ttl_pass(consul_config.check_id)
+
 def deregister_consul(consul_service, consul_check):
     consul_config = ConsulConfig()
+
+    consul_check.deregister(consul_config.check_id)
     consul_service.deregister(consul_config.service_id)
-    consul_check.deregister("TestCheckId")
