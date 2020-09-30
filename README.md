@@ -1,4 +1,5 @@
 # v1-outing-service
+하 다 갈아 엎고 
 ## Run
 ```bash
 $ python3 run.py
