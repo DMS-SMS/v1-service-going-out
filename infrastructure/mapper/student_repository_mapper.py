@@ -1,15 +1,15 @@
-from infrastructure.model import StudentInformsModel
+from proto.python.auth import auth_student_pb2
 
 from domain.entity.student import Student
 
 
-def get_student_mapper(student_model: StudentInformsModel) -> Student:
+def get_student_mapper(student_uuid, student_model: auth_student_pb2.GetStudentInformWithUUIDResponse) -> Student:
     return Student(
-        student_uuid=student_model.student_uuid,
-        grade=student_model.grade,
-        class_=student_model.class_,
-        student_number=student_model.student_number,
-        name=student_model.name,
-        phone_number=student_model.phone_number,
-        profile_uri=student_model.profile_uri,
+        student_uuid=student_uuid,
+        grade=student_model.Grade,
+        class_=student_model.Class,
+        student_number=student_model.StudentNumber,
+        name=student_model.Name,
+        phone_number=student_model.PhoneNumber,
+        profile_image_uri=student_model.ImageURI,
     )
