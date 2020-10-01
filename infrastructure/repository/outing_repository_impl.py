@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from typing import List, Optional
 
-from infrastructure.auth import AuthService
+from infrastructure.service.auth_service import AuthService
 from infrastructure.model import OutingModel
 from infrastructure.extension import db_session
 from infrastructure.util.random_key import generate_outing_uuid, generate_random_key
@@ -20,7 +20,7 @@ from infrastructure.exception import (
     AlreadyApprovedByParents,
     StillOut,
 )
-from infrastructure.util.redis_service import (
+from infrastructure.service.redis_service import (
     get_oid_by_parents_outing_code,
     save_parents_outing_code,
     delete_outing_code,
