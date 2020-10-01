@@ -2,7 +2,7 @@ from application.service.student_outing_service import StudentOutingService
 
 from infrastructure.repository import OutingRepositoryImpl, StudentRepositoryImpl
 from infrastructure.service.outing_domain_service_impl import OutingDomainServiceImpl
-from infrastructure.util.sms_service import SMSService
+from infrastructure.service.sms_service import SMSService
 
 from proto.python.outing import outing_student_pb2_grpc
 
