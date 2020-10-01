@@ -1,10 +1,10 @@
 from typing import Optional
 from consul import Consul, Check
 
-from presentation.config import ConsulConfig
+from application.config import ConsulConfig
 
 
-class ConsulService:
+class ConsulRegister:
     def __init__(self):
         self.consul_config = ConsulConfig()
         self.consul = Consul(host=self.consul_config.host, port=self.consul_config.port)
