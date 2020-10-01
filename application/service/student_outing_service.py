@@ -29,7 +29,7 @@ class StudentOutingService:
         self.get_outing_inform_usecase: GetOutingInformUseCase = get_outing_inform_usecase
         self.get_card_usecase: GetCardUseCase = get_card_usecase
         self.go_out_usecase: GoOutUseCase = go_out_usecase
-        self.finish_go_out: FinishGoOutUseCase = finish_go_out_usecase
+        self.finish_go_out_usecase: FinishGoOutUseCase = finish_go_out_usecase
 
 
     @error_handling(proto.CreateOutingResponse)
@@ -87,5 +87,5 @@ class StudentOutingService:
 
     @error_handling(proto.GoOutResponse)
     def finish_go_out(self, request):
-        self.finish_go_out.run(request.oid)
+        self.finish_go_out_usecase.run(request.oid)
         return proto.GoOutResponse(status=200)
