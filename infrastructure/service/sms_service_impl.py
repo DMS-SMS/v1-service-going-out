@@ -1,11 +1,12 @@
 from domain.entity.outing import Outing
 from domain.entity.student import Student
+from domain.service.sms_service import SMSService
 
 from infrastructure.repository import OutingRepositoryImpl, StudentRepositoryImpl
-from infrastructure.util.redis_service import delete_outing_code
+from infrastructure.service.redis_service import delete_outing_code
 
 
-class SMSService:
+class SMSServiceImpl(SMSService):
     def send_to_parents(self, oid: str, o_code: str):
         outing: Outing = OutingRepositoryImpl().get_outing_by_oid(oid)
         student: Student = StudentRepositoryImpl().get_student_by_uuid(
