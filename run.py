@@ -1,5 +1,5 @@
-from presentation import create_app
-from presentation.extensions import consul
+from application import create_app
+from infrastructure.extension import consul
 
 
 def serve(app):
