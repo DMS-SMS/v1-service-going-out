@@ -2,7 +2,7 @@ from domain.repository.student_repository import StudentRepository
 from domain.entity.student import Student
 
 from infrastructure.mapper.student_repository_mapper import get_student_mapper
-from infrastructure.auth import AuthService
+from infrastructure.service.auth_service import AuthService
 
 
 class StudentRepositoryImpl(StudentRepository):
