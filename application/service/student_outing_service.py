@@ -1,59 +1,56 @@
 from typing import List
 
+from domain.usecase.create_outing_usecase import CreateOutingUseCase
+from domain.usecase.finish_go_out_usecase import FinishGoOutUseCase
+from domain.usecase.get_card_usecase import GetCardUseCase
+from domain.usecase.get_my_outings_usecase import GetMyOutingsUseCase
+from domain.usecase.get_outing_inform_usecase import GetOutingInformUseCase
+from domain.usecase.go_out_usecase import GoOutUseCase
 from proto.python.outing import outing_student_pb2 as proto
 
 from application.mapper import create_outing_mapper, get_outings_mapper
 from application.decorator.error_handling import error_handling
 
-from domain.repository import OutingRepository, StudentRepository
-from domain.entity import Outing, Student
-from domain.service.outing_domain_service import OutingDomainService
+from domain.entity import Outing
 
 
 class StudentOutingService:
     def __init__(
-        self, outing_repository, student_repository, outing_domain_service, sms_service
+            self,
+            create_outing_usecase,
+            get_my_outings_usecase,
+            get_outing_inform_usecase,
+            get_card_usecase,
+            go_out_usecase,
+            finish_go_out_usecase
     ):
-        self.outing_repository: OutingRepository = outing_repository
-        self.student_repository: StudentRepository = student_repository
+        self.create_outing_usecase: CreateOutingUseCase = create_outing_usecase
+        self.get_my_outings_usecase: GetMyOutingsUseCase = get_my_outings_usecase
+        self.get_outing_inform_usecase: GetOutingInformUseCase = get_outing_inform_usecase
+        self.get_card_usecase: GetCardUseCase = get_card_usecase
+        self.go_out_usecase: GoOutUseCase = go_out_usecase
+        self.finish_go_out: FinishGoOutUseCase = finish_go_out_usecase
 
-        self.outing_domain_service: OutingDomainService = outing_domain_service
-
-        self.sms_service = sms_service
 
     @error_handling(proto.CreateOutingResponse)
     def create_outing(self, request):
         entity: Outing = create_outing_mapper(request)
-
-        oid: str = self.outing_repository.save_and_get_oid(entity)
-        o_code: str = self.outing_repository.set_and_get_parents_outing_code(oid)
-        self.sms_service.send_to_parents(oid, o_code)
-
+        oid = self.create_outing_usecase.run(entity)
         return proto.CreateOutingResponse(status=201, oid=oid)
+
 
     @error_handling(proto.GetStudentOutingsResponse)
     def get_student_outings(self, request):
+        outings = self.get_my_outings_usecase.run(request.uuid, request.sid, request.start, request.count)
+
         response = proto.GetStudentOutingsResponse(status=200)
-
-        self.outing_domain_service.compare_uuid_and_sid(request.uuid, request.sid)
-
-        outings_entity: List["Outing"] = self.outing_domain_service.paging_outings(
-            self.outing_repository.get_outings_by_student_id(request.sid),
-            request.start,
-            request.count,
-        )
-
-        response.outing.extend(get_outings_mapper(outings_entity))
+        response.outing.extend(get_outings_mapper(outings))
 
         return response
 
     @error_handling(proto.GetOutingInformResponse)
     def get_outing_inform(self, request):
-        outing: Outing = self.outing_repository.get_outing_by_oid(request.oid)
-
-        self.outing_domain_service.compare_uuid_and_sid(
-            request.uuid, outing._student_uuid
-        )
+        outing = self.get_outing_inform_usecase.run(request.uuid, request.oid)
 
         return proto.GetOutingInformResponse(
             status=200,
@@ -68,15 +65,7 @@ class StudentOutingService:
 
     @error_handling(proto.GetCardAboutOutingResponse)
     def get_card_about_outing(self, request):
-        outing: Outing = self.outing_repository.get_outing_by_oid(request.oid)
-        student: Student = self.student_repository.get_student_by_uuid(
-            outing._student_uuid
-        )
-
-        self.outing_domain_service.compare_uuid_and_sid(
-            request.uuid, outing._student_uuid
-        )
-
+        outing, student = self.get_card_usecase.run(request.uuid, request.oid)
         return proto.GetCardAboutOutingResponse(
             status=200,
             place=outing._place,
@@ -93,10 +82,10 @@ class StudentOutingService:
 
     @error_handling(proto.GoOutResponse)
     def go_out(self, request):
-        self.outing_repository.go_out(request.oid)
+        self.go_out_usecase.run(request.oid)
         return proto.GoOutResponse(status=200)
 
     @error_handling(proto.GoOutResponse)
     def finish_go_out(self, request):
-        self.outing_repository.finish_go_out(request.oid)
+        self.finish_go_out.run(request.oid)
         return proto.GoOutResponse(status=200)
