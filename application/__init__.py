@@ -1,7 +1,7 @@
 import grpc
 from concurrent import futures
 
-from application.config import gRPCAppConfig
+from infrastructure.config.grpc_config import gRPCAppConfig
 from application.servicers import register_outing_servicers
 
 
