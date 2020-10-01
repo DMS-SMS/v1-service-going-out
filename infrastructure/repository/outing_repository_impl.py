@@ -4,7 +4,8 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from typing import List, Optional
 
-from infrastructure.model import OutingModel, StudentInformsModel
+from infrastructure.auth import AuthService
+from infrastructure.model import OutingModel
 from infrastructure.extension import db_session
 from infrastructure.util.random_key import generate_outing_uuid, generate_random_key
 from infrastructure.mapper.outing_repository_mapper import (
@@ -178,15 +179,24 @@ class OutingRepositoryImpl(OutingRepository):
 
     @classmethod
     def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
-        query = db_session.query(OutingModel).join(StudentInformsModel)
+        auth_service = AuthService()
+        query = db_session.query(OutingModel)
         if status:
             query = query.filter(OutingModel.status == func.binary(status))
-        if grade:
-            query = query.filter(StudentInformsModel.grade == grade)
-        if class_:
-            query = query.filter(StudentInformsModel.class_ == class_)
 
         outings = query.order_by(OutingModel.date.desc()).all()
+
+        if grade or class_:
+            for outing in outings[:]:
+                student = auth_service.get_student_inform(outing.student_uuid, outing.student_uuid)
+                if grade and class_:
+                    if student.Grade != grade: outings.remove(outing)
+                    elif student.Class != class_: outings.remove(outing)
+                elif grade:
+                    if student.Grade != grade: outings.remove(outing)
+                else:
+                    if student.Class != class_: outings.remove(outing)
+
 
         return get_outings_mapper(outings)
 
