@@ -1,7 +1,6 @@
 from typing import Optional
 
 from infrastructure.extension import redis
-from infrastructure.exception.not_found import NotFound
 
 
 def save_parents_outing_code(oid: str, o_code: str):

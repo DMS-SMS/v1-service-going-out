@@ -1,7 +1,7 @@
 class DatabaseConfig:
     def __init__(self):
         self._sql: str = "mysql"
-        self._db: str = "sms"
+        self._db: str = "SMS_Outing_DB"
         self._host: str = "127.0.0.1"
         self._user: str = "root"
         self._password: str = "mingi0130"
