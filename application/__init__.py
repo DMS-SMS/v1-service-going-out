@@ -2,7 +2,6 @@ import grpc
 from concurrent import futures
 
 from infrastructure.extension import Base, engine
-from infrastructure.model import OutingModel
 from infrastructure.config.grpc_config import gRPCAppConfig
 from application.servicers import register_outing_servicers
 
