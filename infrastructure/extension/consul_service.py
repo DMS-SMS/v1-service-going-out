@@ -1,3 +1,5 @@
+import json
+
 from typing import Optional
 from consul import Consul, Check
 
@@ -44,3 +46,6 @@ class ConsulService:
                 )
 
         return None
+
+    def get_db_info(self) -> dict:
+        return json.loads(self.consul.kv.get("db/outing/local")[1]["Value"].decode())
