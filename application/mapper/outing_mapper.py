@@ -58,7 +58,7 @@ def get_outings_for_teacher_mapper(
 
         outing.name = student._name
         outing.grade = student._grade
-        outing.class_ = student._class
+        outing.group = student._group
         outing.number = student._student_number
 
         outing.place = outing_entity._place

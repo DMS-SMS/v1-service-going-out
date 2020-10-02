@@ -39,7 +39,7 @@ class TeacherOutingService:
     @error_handling(proto.OutingResponse)
     def get_outings_with_filter(self, request):
         outings = self.get_outings_with_filter_usecase.run(
-            request.status, request.grade, request.class_, request.start, request.count)
+            request.status, request.grade, request.group, request.start, request.count)
 
         response = proto.OutingResponse()
         response.status = 200

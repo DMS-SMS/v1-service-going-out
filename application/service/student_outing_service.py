@@ -75,7 +75,7 @@ class StudentOutingService:
             o_status=outing._status,
             name=student._name,
             grade=student._grade,
-            class_=student._class,
+            group=student._group,
             number=student._student_number,
             profile_image_uri=student._profile_image_uri,
         )

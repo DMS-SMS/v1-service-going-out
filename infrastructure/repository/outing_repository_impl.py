@@ -178,7 +178,7 @@ class OutingRepositoryImpl(OutingRepository):
         db_session.commit()
 
     @classmethod
-    def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
+    def get_outings_with_filter(cls, status, grade, group) -> List["Outing"]:
         auth_service = AuthService()
         query = db_session.query(OutingModel)
         if status:
@@ -186,16 +186,16 @@ class OutingRepositoryImpl(OutingRepository):
 
         outings = query.order_by(OutingModel.date.desc()).all()
 
-        if grade or class_:
+        if grade or group:
             for outing in outings[:]:
                 student = auth_service.get_student_inform(outing.student_uuid, outing.student_uuid)
-                if grade and class_:
+                if grade and group:
                     if student.Grade != grade: outings.remove(outing)
-                    elif student.Class != class_: outings.remove(outing)
+                    elif student.Group != group: outings.remove(outing)
                 elif grade:
                     if student.Grade != grade: outings.remove(outing)
                 else:
-                    if student.Class != class_: outings.remove(outing)
+                    if student.Group != group: outings.remove(outing)
 
 
         return get_outings_mapper(outings)

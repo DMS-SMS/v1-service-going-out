@@ -7,7 +7,7 @@ def get_student_mapper(student_uuid, student_model: auth_student_pb2.GetStudentI
     return Student(
         student_uuid=student_uuid,
         grade=student_model.Grade,
-        class_=student_model.Class,
+        group=student_model.Group,
         student_number=student_model.StudentNumber,
         name=student_model.Name,
         phone_number=student_model.PhoneNumber,

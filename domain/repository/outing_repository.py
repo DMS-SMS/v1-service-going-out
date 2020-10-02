@@ -52,7 +52,7 @@ class OutingRepository(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
+    def get_outings_with_filter(cls, status, grade, group) -> List["Outing"]:
         pass
 
     @classmethod
