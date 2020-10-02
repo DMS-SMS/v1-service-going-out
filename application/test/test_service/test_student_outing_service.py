@@ -3,7 +3,12 @@ from unittest import TestCase
 from proto.python.outing import outing_student_pb2
 
 from application.service.student_outing_service import StudentOutingService
-from application.test.test_service.mock import MockOutingRepository, MockStudentRepository, MockOutingDomainService, MockSMSService
+from application.test.test_service.mock import (
+    MockOutingRepository,
+    MockStudentRepository,
+    MockOutingDomainService,
+    MockSMSService,
+)
 
 
 class TestStudentOutingService(TestCase):
@@ -12,7 +17,7 @@ class TestStudentOutingService(TestCase):
             outing_repository=MockOutingRepository(),
             student_repository=MockStudentRepository(),
             outing_domain_service=MockOutingDomainService(),
-            sms_service=MockSMSService()
+            sms_service=MockSMSService(),
         )
         self.proto = outing_student_pb2
 
@@ -34,15 +39,10 @@ class TestStudentOutingService(TestCase):
 
     def test_get_student_outings(self):
         request = self.proto.GetStudentOutingsRequest(
-            uuid="student-aaaabbbbcccc",
-            sid="student-aaaabbbbcccc",
-            start=0,
-            count=1
+            uuid="student-aaaabbbbcccc", sid="student-aaaabbbbcccc", start=0, count=1
         )
 
-        response = self.proto.GetStudentOutingsResponse(
-            status=200
-        )
+        response = self.proto.GetStudentOutingsResponse(status=200)
 
         outing = self.proto.StudentOuting()
 
@@ -71,15 +71,14 @@ class TestStudentOutingService(TestCase):
             start_time="1111",
             end_time="1111",
             o_status="0",
-            o_situation="NORMAL"
+            o_situation="NORMAL",
         )
 
         self.assertEqual(self.service.get_outing_inform(request), response)
 
     def test_get_card_about_outing(self):
         request = self.proto.GetCardAboutOutingRequest(
-            uuid="student-aaaabbbbcccc",
-            oid="outing-aaaabbbbcccc"
+            uuid="student-aaaabbbbcccc", oid="outing-aaaabbbbcccc"
         )
 
         response = self.proto.GetCardAboutOutingResponse(
@@ -93,19 +92,23 @@ class TestStudentOutingService(TestCase):
             grade=1,
             class_=1,
             number=11,
-            profile_image_uri="/swings-pork-cutlet"
+            profile_image_uri="/swings-pork-cutlet",
         )
 
         self.assertEqual(self.service.get_card_about_outing(request), response)
 
     def test_go_out(self):
-        request = self.proto.GoOutRequest(uuid="student-aaaabbbbcccc", oid="outing-aaaabbbbcccc")
+        request = self.proto.GoOutRequest(
+            uuid="student-aaaabbbbcccc", oid="outing-aaaabbbbcccc"
+        )
         response = self.proto.GoOutResponse(status=200)
 
         self.assertEqual(self.service.go_out(request), response)
 
     def test_finish_go_out(self):
-        request = self.proto.GoOutRequest(uuid="student-aaaabbbbcccc", oid="outing-aaaabbbbcccc")
+        request = self.proto.GoOutRequest(
+            uuid="student-aaaabbbbcccc", oid="outing-aaaabbbbcccc"
+        )
         response = self.proto.GoOutResponse(status=200)
 
         self.assertEqual(self.service.finish_go_out(request), response)

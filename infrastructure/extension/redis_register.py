@@ -1,6 +1,6 @@
 from redis import StrictRedis
 
-from infrastructure.config import CacheConfig
+from infrastructure.config.cache_config import CacheConfig
 
 
 def register_redis():

@@ -4,7 +4,8 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from typing import List, Optional
 
-from infrastructure.model import OutingModel, StudentInformsModel
+from infrastructure.service.auth_service import AuthService
+from infrastructure.model import OutingModel
 from infrastructure.extension import db_session
 from infrastructure.util.random_key import generate_outing_uuid, generate_random_key
 from infrastructure.mapper.outing_repository_mapper import (
@@ -19,7 +20,7 @@ from infrastructure.exception import (
     AlreadyApprovedByParents,
     StillOut,
 )
-from infrastructure.util.redis_service import (
+from infrastructure.service.redis_service import (
     get_oid_by_parents_outing_code,
     save_parents_outing_code,
     delete_outing_code,
@@ -177,16 +178,25 @@ class OutingRepositoryImpl(OutingRepository):
         db_session.commit()
 
     @classmethod
-    def get_outings_with_filter(cls, status, grade, class_) -> List["Outing"]:
-        query = db_session.query(OutingModel).join(StudentInformsModel)
+    def get_outings_with_filter(cls, status, grade, group) -> List["Outing"]:
+        auth_service = AuthService()
+        query = db_session.query(OutingModel)
         if status:
             query = query.filter(OutingModel.status == func.binary(status))
-        if grade:
-            query = query.filter(StudentInformsModel.grade == grade)
-        if class_:
-            query = query.filter(StudentInformsModel.class_ == class_)
 
         outings = query.order_by(OutingModel.date.desc()).all()
+
+        if grade or group:
+            for outing in outings[:]:
+                student = auth_service.get_student_inform(outing.student_uuid, outing.student_uuid)
+                if grade and group:
+                    if student.Grade != grade: outings.remove(outing)
+                    elif student.Group != group: outings.remove(outing)
+                elif grade:
+                    if student.Grade != grade: outings.remove(outing)
+                else:
+                    if student.Group != group: outings.remove(outing)
+
 
         return get_outings_mapper(outings)
 
