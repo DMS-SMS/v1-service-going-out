@@ -1,9 +1,13 @@
+from infrastructure.extension import consul
+
+
 class DatabaseConfig:
     def __init__(self):
-        self._sql: str = "mysql"
-        self._db: str = "SMS_Outing_DB"
-        self._host: str = "127.0.0.1"
-        self._user: str = "root"
+        self._db_info = consul.get_db_info()
+        self._sql: str = self._db_info["dialect"]
+        self._db: str = self._db_info["db"]
+        self._host: str = self._db_info["host"]
+        self._user: str = self._db_info["user"]
         self._password: str = "mingi0130"
 
         self._autocommit: bool = False
