@@ -1,5 +1,9 @@
 from unittest import TestCase
 
+from domain.usecase.approve_outing_teacher_usecase import ApproveOutingTeacherUseCase
+from domain.usecase.certify_outing_usecase import CertifyOutingUseCase
+from domain.usecase.get_outings_with_filter_usecase import GetOutingsWithFilterUseCase
+from domain.usecase.reject_outing_teacher_usecase import RejectOutingTeacherUseCase
 from proto.python.outing import outing_teacher_pb2
 
 from application.service.teacher_outing_service import TeacherOutingService
@@ -11,8 +15,23 @@ from application.test.test_service.mock import (
 
 class TestTeacherOutingService(TestCase):
     def setUp(self) -> None:
+        self.outing_repository = MockOutingRepository()
+        self.outing_domain_service = MockOutingDomainService()
+
         self.service = TeacherOutingService(
-            MockOutingRepository(), MockOutingDomainService()
+            approve_outing_teacher_usecase=ApproveOutingTeacherUseCase(
+                self.outing_repository
+            ),
+            reject_outing_teacher_usecase=RejectOutingTeacherUseCase(
+                self.outing_repository
+            ),
+            certify_outing_usecase=CertifyOutingUseCase(
+                self.outing_repository
+            ),
+            get_outings_with_filter_usecase=GetOutingsWithFilterUseCase(
+                self.outing_repository,
+                self.outing_domain_service
+            )
         )
         self.proto = outing_teacher_pb2
 
@@ -42,14 +61,14 @@ class TestTeacherOutingService(TestCase):
 
     def get_outings_with_filter(self):
         request = self.proto.GetOutingWithFilterRequest(
-            uuid="student-aaaabbbbcccc", status="0", grade=1, class_=1
+            uuid="student-aaaabbbbcccc", status="0", grade=1, group=1
         )
 
         outing = self.proto.Outing()
 
         outing.name = "스윙스"
         outing.grade = 1
-        outing.class_ = 1
+        outing.group = 1
         outing.number = 11
         outing.place = "홍대"
         outing.reason = "스윙스랑 돈까스 먹으러감"
