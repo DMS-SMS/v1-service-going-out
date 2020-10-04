@@ -1,2 +1,1 @@
 from infrastructure.model.outing_model import OutingModel
-from infrastructure.model.student_informs_model import StudentInformsModel

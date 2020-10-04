@@ -3,7 +3,7 @@ class Student:
         self,
         student_uuid=None,
         grade=None,
-        class_=None,
+        group=None,
         student_number=None,
         name=None,
         phone_number=None,
@@ -11,7 +11,7 @@ class Student:
     ):
         self._stuent_uuid: str = student_uuid
         self._grade: int = grade
-        self._class: int = class_
+        self._group: int = group
         self._student_number: int = student_number
         self._name: str = name
         self._phone_number: str = phone_number
