@@ -1,4 +1,6 @@
 from application.service.student_outing_service import StudentOutingService
+from application.decorator.metadata import jagger_enable
+
 from domain.usecase.create_outing_usecase import CreateOutingUseCase
 from domain.usecase.finish_go_out_usecase import FinishGoOutUseCase
 from domain.usecase.get_card_usecase import GetCardUseCase
@@ -47,20 +49,26 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
             )
         )
 
+    @jagger_enable
     def CreateOuting(self, request, context):
         return self.service.create_outing(request)
 
+    @jagger_enable
     def GetCardAboutOuting(self, request, context):
         return self.service.get_card_about_outing(request)
 
+    @jagger_enable
     def GetOutingInform(self, request, context):
         return self.service.get_outing_inform(request)
 
+    @jagger_enable
     def GetStudentOutings(self, request, context):
         return self.service.get_student_outings(request)
 
+    @jagger_enable
     def GoOut(self, request, context):
         return self.service.go_out(request)
 
+    @jagger_enable
     def FinishGoOut(self, request, context):
         return self.service.finish_go_out(request)

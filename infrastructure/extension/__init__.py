@@ -6,3 +6,6 @@ db_session, Base, engine = register_db()
 
 from infrastructure.extension.redis_register import register_redis
 redis = register_redis()
+
+from infrastructure.open_tracing import reigsterOpenTracing
+open_tracing = reigsterOpenTracing()

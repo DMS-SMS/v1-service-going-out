@@ -4,6 +4,7 @@ from domain.usecase.reject_outing_usecase import RejectOutingUseCase
 from infrastructure.repository import OutingRepositoryImpl
 
 from proto.python.outing import outing_parents_pb2_grpc
+from application.decorator.metadata import jagger_enable
 
 
 class ParentsOutingServicer(outing_parents_pb2_grpc.OutingParentsServicer):
@@ -18,8 +19,10 @@ class ParentsOutingServicer(outing_parents_pb2_grpc.OutingParentsServicer):
             )
         )
 
+    @jagger_enable
     def ApproveOutingByOCode(self, request, context):
         return self.service.approve_outing(request)
 
+    @jagger_enable
     def RejectOutingByOCode(self, request, context):
         return self.service.reject_outing(request)
