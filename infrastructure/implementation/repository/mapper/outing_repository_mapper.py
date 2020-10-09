@@ -3,7 +3,7 @@ from typing import List
 
 from domain.entity.outing import Outing
 
-from infrastructure.model import OutingModel
+from infrastructure.mysql.model.outing_model import OutingModel
 
 
 def create_outing_mapper(outing: Outing, uuid) -> OutingModel:
