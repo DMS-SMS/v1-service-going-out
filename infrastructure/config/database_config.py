@@ -1,9 +1,10 @@
-from infrastructure.extension import consul
+from infrastructure.consul.consul_handler import ConsulHandler
 
 
 class DatabaseConfig:
     def __init__(self):
-        self._db_info = consul.get_db_info()
+        self._consul = ConsulHandler()
+        self._db_info = self._consul.get_db_info()
         self._sql: str = self._db_info["dialect"]
         self._db: str = self._db_info["db"]
         self._host: str = self._db_info["host"]
