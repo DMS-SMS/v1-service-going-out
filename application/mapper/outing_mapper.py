@@ -5,8 +5,8 @@ from domain.entity.outing import Outing
 from domain.repository.student_repository import StudentRepository
 from domain.repository.outing_repository import OutingRepository
 
-from infrastructure.repository.student_repository_impl import StudentRepositoryImpl
-from infrastructure.repository.outing_repository_impl import OutingRepositoryImpl
+from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
+from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
 
 from proto.python.outing.outing_student_pb2 import StudentOuting
 from proto.python.outing.outing_teacher_pb2 import Outing as TeacherOuting
