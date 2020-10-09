@@ -4,7 +4,6 @@ from domain.usecase.get_outings_with_filter_usecase import GetOutingsWithFilterU
 from domain.usecase.reject_outing_teacher_usecase import RejectOutingTeacherUseCase
 from proto.python.outing import outing_teacher_pb2 as proto
 
-from application.decorator.error_handling import error_handling
 from application.mapper.outing_mapper import get_outings_for_teacher_mapper
 
 class TeacherOutingService:
@@ -21,22 +20,18 @@ class TeacherOutingService:
         self.get_outings_with_filter_usecase: GetOutingsWithFilterUseCase = get_outings_with_filter_usecase
 
 
-    @error_handling(proto.ConfirmOutingResponse)
     def approve_outing(self, request):
         self.approve_outing_teacher_usecase.run(request.oid)
         return proto.ConfirmOutingResponse(status=200)
 
-    @error_handling(proto.ConfirmOutingResponse)
     def reject_outing(self, request):
         self.reject_outing_teacher_usecase.run(request.oid)
         return proto.ConfirmOutingResponse(status=200)
 
-    @error_handling(proto.ConfirmOutingResponse)
     def certify_outing(self, request):
         self.certify_outing_usecase.run(request.oid)
         return proto.ConfirmOutingResponse(status=200)
 
-    @error_handling(proto.OutingResponse)
     def get_outings_with_filter(self, request):
         outings = self.get_outings_with_filter_usecase.run(
             request.status, request.grade, request.group, request.start, request.count)

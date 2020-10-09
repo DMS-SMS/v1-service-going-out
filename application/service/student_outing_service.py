@@ -1,5 +1,3 @@
-from typing import List
-
 from domain.usecase.create_outing_usecase import CreateOutingUseCase
 from domain.usecase.finish_go_out_usecase import FinishGoOutUseCase
 from domain.usecase.get_card_usecase import GetCardUseCase
@@ -9,7 +7,6 @@ from domain.usecase.go_out_usecase import GoOutUseCase
 from proto.python.outing import outing_student_pb2 as proto
 
 from application.mapper import create_outing_mapper, get_outings_mapper
-from application.decorator.error_handling import error_handling
 
 from domain.entity import Outing
 
@@ -31,15 +28,11 @@ class StudentOutingService:
         self.go_out_usecase: GoOutUseCase = go_out_usecase
         self.finish_go_out_usecase: FinishGoOutUseCase = finish_go_out_usecase
 
-
-    @error_handling(proto.CreateOutingResponse)
     def create_outing(self, request):
         entity: Outing = create_outing_mapper(request)
         oid = self.create_outing_usecase.run(entity)
         return proto.CreateOutingResponse(status=201, oid=oid)
 
-
-    @error_handling(proto.GetStudentOutingsResponse)
     def get_student_outings(self, request):
         outings = self.get_my_outings_usecase.run(request.uuid, request.sid, request.start, request.count)
 
@@ -48,7 +41,6 @@ class StudentOutingService:
 
         return response
 
-    @error_handling(proto.GetOutingInformResponse)
     def get_outing_inform(self, request):
         outing = self.get_outing_inform_usecase.run(request.uuid, request.oid)
 
@@ -63,7 +55,6 @@ class StudentOutingService:
             o_situation=outing._situation,
         )
 
-    @error_handling(proto.GetCardAboutOutingResponse)
     def get_card_about_outing(self, request):
         outing, student = self.get_card_usecase.run(request.uuid, request.oid)
         return proto.GetCardAboutOutingResponse(
@@ -80,12 +71,10 @@ class StudentOutingService:
             profile_image_uri=student._profile_image_uri,
         )
 
-    @error_handling(proto.GoOutResponse)
     def go_out(self, request):
         self.go_out_usecase.run(request.oid)
         return proto.GoOutResponse(status=200)
 
-    @error_handling(proto.GoOutResponse)
     def finish_go_out(self, request):
         self.finish_go_out_usecase.run(request.oid)
         return proto.GoOutResponse(status=200)
