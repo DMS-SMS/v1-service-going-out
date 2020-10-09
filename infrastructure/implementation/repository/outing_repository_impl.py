@@ -4,46 +4,50 @@ from datetime import datetime
 from sqlalchemy import and_, func
 from typing import List, Optional
 
-from infrastructure.service.auth_service import AuthService
-from infrastructure.model import OutingModel
-from infrastructure.extension import db_session
+from infrastructure.auth.auth_handler import AuthHandler
+from infrastructure.mysql.model.outing_model import OutingModel
+from infrastructure.mysql.mysql_handler import MySQLHandler
 from infrastructure.util.random_key import generate_outing_uuid, generate_random_key
-from infrastructure.mapper.outing_repository_mapper import (
-    create_outing_mapper,
+from infrastructure.implementation.repository.mapper.student_repository_mapper import (
+    get_student_mapper,
+
+)
+from infrastructure.implementation.repository.mapper.outing_repository_mapper import (
     get_outing_mapper,
     get_outings_mapper,
+    create_outing_mapper
 )
-from infrastructure.exception import (
+from domain.exception import (
     OutingExist,
     NotFound,
     NotApprovedByParents,
     AlreadyApprovedByParents,
     StillOut,
 )
-from infrastructure.service.redis_service import (
-    get_oid_by_parents_outing_code,
-    save_parents_outing_code,
-    delete_outing_code,
-)
+from infrastructure.redis.redis_handler import RedisHandler
 
 from domain.repository.outing_repository import OutingRepository
 from domain.entity.outing import Outing
 
 
 class OutingRepositoryImpl(OutingRepository):
+    sql = MySQLHandler()
+    redis = RedisHandler()
+    auth = AuthHandler()
+
     @classmethod
     def save_and_get_oid(cls, outing: Outing) -> str:
         outing_uuid = generate_outing_uuid()
 
         while (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == outing_uuid)
             .first()
         ):
             outing_uuid = generate_outing_uuid()
 
         if (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(
                 and_(
                     OutingModel.student_uuid == func.binary(outing._student_uuid),
@@ -54,25 +58,25 @@ class OutingRepositoryImpl(OutingRepository):
         ):
             raise OutingExist
 
-        db_session.add(create_outing_mapper(outing, outing_uuid))
-        db_session.commit()
+        cls.sql.db_session.add(create_outing_mapper(outing, outing_uuid))
+        cls.sql.db_session.commit()
         return outing_uuid
 
     @classmethod
     def set_and_get_parents_outing_code(cls, oid: str) -> str:
         o_code = generate_random_key(20)
 
-        while get_oid_by_parents_outing_code(o_code):
+        while cls.redis.get_oid_by_parents_outing_code(o_code):
             o_code = generate_random_key(20)
 
-        save_parents_outing_code(oid, o_code)
+        cls.redis.save_parents_outing_code(oid, o_code)
 
         return o_code
 
     @classmethod
     def get_outing_by_oid(cls, oid: str) -> Outing:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -85,7 +89,7 @@ class OutingRepositoryImpl(OutingRepository):
     @classmethod
     def get_outings_by_student_id(cls, sid: str) -> List["Outing"]:
         outings = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.student_uuid == func.binary(sid))
             .order_by(OutingModel.date.desc())
             .all()
@@ -99,7 +103,7 @@ class OutingRepositoryImpl(OutingRepository):
     @classmethod
     def approve_by_outing_for_teacher(cls, oid: str) -> None:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -107,14 +111,14 @@ class OutingRepositoryImpl(OutingRepository):
             raise NotApprovedByParents
 
         outing.status = "2"
-        db_session.commit()
+        cls.sql.db_session.commit()
 
     @classmethod
     def approve_by_outing_for_parents(cls, o_code: str) -> None:
-        oid = get_oid_by_parents_outing_code(o_code)
+        oid = cls.redis.get_oid_by_parents_outing_code(o_code)
 
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -125,14 +129,14 @@ class OutingRepositoryImpl(OutingRepository):
             raise AlreadyApprovedByParents
 
         outing.status = "1"
-        db_session.commit()
+        cls.sql.db_session.commit()
 
-        delete_outing_code(o_code)
+        cls.redis.delete_outing_code(o_code)
 
     @classmethod
     def reject_by_outing_for_teacher(cls, oid: str) -> None:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -141,14 +145,14 @@ class OutingRepositoryImpl(OutingRepository):
             raise NotApprovedByParents
 
         outing.status = "-2"
-        db_session.commit()
+        cls.sql.db_session.commit()
 
     @classmethod
     def reject_by_outing_for_parents(cls, o_code):
-        oid = get_oid_by_parents_outing_code(o_code)
+        oid = cls.redis.get_oid_by_parents_outing_code(o_code)
 
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -159,14 +163,14 @@ class OutingRepositoryImpl(OutingRepository):
             raise AlreadyApprovedByParents
 
         outing.status = "-1"
-        db_session.commit()
+        cls.sql.db_session.commit()
 
-        delete_outing_code(o_code)
+        cls.redis.delete_outing_code(o_code)
 
     @classmethod
     def certify_by_outing_for_teacher(cls, oid) -> None:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -175,12 +179,11 @@ class OutingRepositoryImpl(OutingRepository):
             raise StillOut
 
         outing.status = "5"
-        db_session.commit()
+        cls.sql.db_session.commit()
 
     @classmethod
     def get_outings_with_filter(cls, status, grade, group) -> List["Outing"]:
-        auth_service = AuthService()
-        query = db_session.query(OutingModel)
+        query = cls.sql.db_session.query(OutingModel)
         if status:
             query = query.filter(OutingModel.status == func.binary(status))
 
@@ -188,7 +191,7 @@ class OutingRepositoryImpl(OutingRepository):
 
         if grade or group:
             for outing in outings[:]:
-                student = auth_service.get_student_inform(outing.student_uuid, outing.student_uuid)
+                student = cls.auth.get_student_inform(outing.student_uuid, outing.student_uuid)
                 if grade and group:
                     if student.Grade != grade: outings.remove(outing)
                     elif student.Group != group: outings.remove(outing)
@@ -203,7 +206,7 @@ class OutingRepositoryImpl(OutingRepository):
     @classmethod
     def get_is_late(cls, oid) -> Optional[bool]:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -219,7 +222,7 @@ class OutingRepositoryImpl(OutingRepository):
     @classmethod
     def go_out(cls, oid) -> None:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -228,12 +231,12 @@ class OutingRepositoryImpl(OutingRepository):
             raise StillOut
 
         outing.status = "3"
-        db_session.commit()
+        cls.sql.db_session.commit()
 
     @classmethod
     def finish_go_out(cls, oid) -> None:
         outing = (
-            db_session.query(OutingModel)
+            cls.sql.db_session.query(OutingModel)
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
@@ -250,4 +253,4 @@ class OutingRepositoryImpl(OutingRepository):
         )
         outing.arrival_time = str(now.tm_hour).zfill(2) + str(now.tm_min).zfill(2)
 
-        db_session.commit()
+        cls.sql.db_session.commit()
