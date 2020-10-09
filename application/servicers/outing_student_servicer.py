@@ -1,5 +1,6 @@
 from application.service.student_outing_service import StudentOutingService
 from application.decorator.metadata import jagger_enable
+from application.decorator.error_handling import error_handling
 
 from domain.usecase.create_outing_usecase import CreateOutingUseCase
 from domain.usecase.finish_go_out_usecase import FinishGoOutUseCase
@@ -14,7 +15,7 @@ from infrastructure.implementation.service.paging_service_impl import PagingServ
 from infrastructure.implementation.service.uuid_service_impl import UuidServiceImpl
 from infrastructure.implementation.service.sms_service_impl import SMSServiceImpl
 
-from proto.python.outing import outing_student_pb2_grpc
+from proto.python.outing import outing_student_pb2_grpc, outing_student_pb2
 
 
 class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
@@ -53,26 +54,32 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
             )
         )
 
+    @error_handling(outing_student_pb2.CreateOutingResponse)
     @jagger_enable
     def CreateOuting(self, request, context):
         return self.service.create_outing(request)
 
+    @error_handling(outing_student_pb2.GetCardAboutOutingResponse)
     @jagger_enable
     def GetCardAboutOuting(self, request, context):
         return self.service.get_card_about_outing(request)
 
+    @error_handling(outing_student_pb2.GetOutingInformResponse)
     @jagger_enable
     def GetOutingInform(self, request, context):
         return self.service.get_outing_inform(request)
 
+    @error_handling(outing_student_pb2.GetStudentOutingsResponse)
     @jagger_enable
     def GetStudentOutings(self, request, context):
         return self.service.get_student_outings(request)
 
+    @error_handling(outing_student_pb2.GoOutResponse)
     @jagger_enable
     def GoOut(self, request, context):
         return self.service.go_out(request)
 
+    @error_handling(outing_student_pb2.GoOutResponse)
     @jagger_enable
     def FinishGoOut(self, request, context):
         return self.service.finish_go_out(request)
