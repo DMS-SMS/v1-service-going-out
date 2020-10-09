@@ -6,7 +6,7 @@ from consul import Consul, Check
 from infrastructure.config.consul_config import ConsulConfig
 
 
-class ConsulService:
+class ConsulHandler:
     def __init__(self):
         self.consul_config = ConsulConfig()
         self.consul = Consul(host=self.consul_config.host, port=self.consul_config.port)
