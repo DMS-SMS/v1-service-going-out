@@ -1,12 +1,15 @@
 from typing import Optional
+from infrastructure.consul.consul_handler import ConsulHandler
 
 
 class CacheConfig:
     def __init__(self):
-        self._host: str = "127.0.0.1"
-        self._port: int = 6379
+        self._consul = ConsulHandler()
+        self._redis_info = self._consul.get_redis_info()
+        self._host: str = self._redis_info["host"]
+        self._port: int = self._redis_info["port"]
         self._password: Optional[str] = None
-        self._db: int = 1
+        self._db: int = self._redis_info["db"]
 
     @property
     def host(self) -> str:
