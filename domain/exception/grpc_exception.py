@@ -1,7 +1,7 @@
 from typing import Optional
 
 
-class BusinessException(Exception):
+class gRPCException(Exception):
     def __init__(self):
         self.status: Optional[int] = None
         self.code: Optional[int] = None
