@@ -1,6 +1,6 @@
 from functools import wraps
-from infrastructure.extension import open_tracing
-from infrastructure.open_tracing import openTracing
+from infrastructure.open_tracing import open_tracing
+from infrastructure.open_tracing.open_tracing_handler import openTracing
 
 
 
