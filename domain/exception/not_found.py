@@ -1,4 +1,4 @@
-from infrastructure.exception.business_exception import BusinessException
+from domain.exception.business_exception import BusinessException
 
 
 class NotFound(BusinessException):
