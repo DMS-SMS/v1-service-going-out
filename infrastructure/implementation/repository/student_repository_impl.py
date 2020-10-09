@@ -1,12 +1,12 @@
 from domain.repository.student_repository import StudentRepository
 from domain.entity.student import Student
 
-from infrastructure.mapper.student_repository_mapper import get_student_mapper
-from infrastructure.service.auth_service import AuthService
+from infrastructure.implementation.repository.mapper.student_repository_mapper import get_student_mapper
+from infrastructure.auth.auth_handler import AuthHandler
 
 
 class StudentRepositoryImpl(StudentRepository):
-    auth_service = AuthService()
+    auth_service = AuthHandler()
 
     @classmethod
     def get_student_by_uuid(cls, uuid: str) -> Student:
