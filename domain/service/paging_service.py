@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 from domain.entity.outing import Outing
 
 
-class pagingService(metaclass=ABCMeta):
+class PagingService(metaclass=ABCMeta):
     @classmethod
     @abstractmethod
     def paging_outings(

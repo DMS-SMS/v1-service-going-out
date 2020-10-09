@@ -18,7 +18,7 @@ class OpenTracingHandler:
         return self._tracer
 
 
-class openTracing:
+class OpenTracing:
     def __init__(self, tracer, span_context, x_request_id):
         self._split_span_context = span_context.split(":")
         self._trace_id = int(self._split_span_context[0], 16)

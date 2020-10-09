@@ -1,6 +1,6 @@
 from functools import wraps
 from infrastructure.open_tracing import open_tracing
-from infrastructure.open_tracing.open_tracing_handler import openTracing
+from infrastructure.open_tracing.open_tracing_handler import OpenTracing
 
 
 
@@ -21,7 +21,7 @@ def jagger_enable(fn):
                 flag += 1
         else: raise Exception
 
-        open_tracing_service = openTracing(open_tracing.tracer, parents_span, x_request_id)
+        open_tracing_service = OpenTracing(open_tracing.tracer, parents_span, x_request_id)
         return open_tracing_service.start_active_span(fn, *args, **kwargs)
 
     return wrapper

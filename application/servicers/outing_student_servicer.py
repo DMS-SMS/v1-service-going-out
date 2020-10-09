@@ -10,8 +10,8 @@ from domain.usecase.go_out_usecase import GoOutUseCase
 
 from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
 from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
-from infrastructure.implementation.service.paging_service_impl import pagingServiceImpl
-from infrastructure.implementation.service.uuid_service_impl import uuidServiceImpl
+from infrastructure.implementation.service.paging_service_impl import PagingServiceImpl
+from infrastructure.implementation.service.uuid_service_impl import UuidServiceImpl
 from infrastructure.implementation.service.sms_service_impl import SMSServiceImpl
 
 from proto.python.outing import outing_student_pb2_grpc
@@ -21,8 +21,8 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
     def __init__(self):
         self.outing_repository = OutingRepositoryImpl()
         self.student_repository = StudentRepositoryImpl()
-        self.paging_service = pagingServiceImpl()
-        self.uuid_service = uuidServiceImpl()
+        self.paging_service = PagingServiceImpl()
+        self.uuid_service = UuidServiceImpl()
         self.sms_service = SMSServiceImpl()
 
         self.service = StudentOutingService(

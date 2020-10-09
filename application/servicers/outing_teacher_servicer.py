@@ -8,13 +8,13 @@ from application.service.teacher_outing_service import TeacherOutingService
 from application.decorator.metadata import jagger_enable
 
 from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
-from infrastructure.implementation.service.paging_service_impl import pagingServiceImpl
+from infrastructure.implementation.service.paging_service_impl import PagingServiceImpl
 
 
 class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
     def __init__(self):
         self.outing_repository = OutingRepositoryImpl()
-        self.paging_service = pagingServiceImpl()
+        self.paging_service = PagingServiceImpl()
 
         self.service = TeacherOutingService(
             approve_outing_teacher_usecase=ApproveOutingTeacherUseCase(

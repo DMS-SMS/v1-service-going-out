@@ -1,13 +1,13 @@
 from domain.entity.outing import Outing
 from domain.entity.student import Student
-from domain.service.sms_service import smsService
+from domain.service.sms_service import SMSService
 
 from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
 from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
 from infrastructure.redis.redis_handler import RedisHandler
 
 
-class SMSServiceImpl(smsService):
+class SMSServiceImpl(SMSService):
     def send_to_parents(self, oid: str, o_code: str):
         outing: Outing = OutingRepositoryImpl().get_outing_by_oid(oid)
         student: Student = StudentRepositoryImpl().get_student_by_uuid(
