@@ -1,7 +1,7 @@
 from typing import List
 
 from domain.entity.outing import Outing
-from domain.service.outing_domain_service import OutingDomainService
+from domain.service.paging_service import OutingDomainService
 
 
 class MockOutingDomainService(OutingDomainService):
