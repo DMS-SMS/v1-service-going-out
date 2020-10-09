@@ -26,7 +26,6 @@ def jagger_enable(fn):
         else:
             if not x_request_id: raise BadXRequestId
             elif not parents_span: raise BadSpanContext
-            else: raise NotProxyAuth
 
         open_tracing_service = OpenTracing(open_tracing.tracer, parents_span, x_request_id)
         return open_tracing_service.start_active_span(fn, *args, **kwargs)
