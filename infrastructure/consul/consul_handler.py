@@ -49,3 +49,6 @@ class ConsulHandler:
 
     def get_db_info(self) -> dict:
         return json.loads(self.consul.kv.get("db/outing/local")[1]["Value"].decode())
+
+    def get_redis_info(self) -> dict:
+        return json.loads(self.consul.kv.get("redis/outing/local")[1]["Value"].decode())
