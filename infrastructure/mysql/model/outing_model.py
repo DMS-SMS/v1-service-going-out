@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum
 
-from infrastructure.extension import Base
+from infrastructure.mysql import sql
 
 
-class OutingModel(Base):
+class OutingModel(sql.base):
     __tablename__ = "outings"
 
     uuid = Column(String(20), primary_key=True)
