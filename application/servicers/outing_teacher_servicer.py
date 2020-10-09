@@ -7,14 +7,14 @@ from proto.python.outing import outing_teacher_pb2_grpc
 from application.service.teacher_outing_service import TeacherOutingService
 from application.decorator.metadata import jagger_enable
 
-from infrastructure.repository import OutingRepositoryImpl
-from infrastructure.service.outing_domain_service_impl import OutingDomainServiceImpl
+from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
+from infrastructure.implementation.service.paging_service_impl import pagingServiceImpl
 
 
 class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
     def __init__(self):
         self.outing_repository = OutingRepositoryImpl()
-        self.outing_domain_service = OutingDomainServiceImpl()
+        self.paging_service = pagingServiceImpl()
 
         self.service = TeacherOutingService(
             approve_outing_teacher_usecase=ApproveOutingTeacherUseCase(
@@ -28,7 +28,7 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
             ),
             get_outings_with_filter_usecase=GetOutingsWithFilterUseCase(
                 self.outing_repository,
-                self.outing_domain_service
+                self.paging_service
             )
         )
 
