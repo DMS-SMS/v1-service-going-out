@@ -19,7 +19,7 @@ from infrastructure.implementation.repository.mapper.outing_repository_mapper im
 )
 from domain.exception import (
     OutingExist,
-    NotFound,
+    OutingNotFound,
     NotApprovedByParents,
     AlreadyApprovedByParents,
     StillOut,
@@ -82,7 +82,7 @@ class OutingRepositoryImpl(OutingRepository):
         )
 
         if not outing:
-            raise NotFound
+            raise OutingNotFound
 
         return get_outing_mapper(outing)
 
@@ -96,7 +96,7 @@ class OutingRepositoryImpl(OutingRepository):
         )
 
         if not outings:
-            raise NotFound
+            raise OutingNotFound
 
         return get_outings_mapper(outings)
 
@@ -124,7 +124,7 @@ class OutingRepositoryImpl(OutingRepository):
         )
 
         if not outing:
-            raise NotFound
+            raise OutingNotFound
         if not outing.status == "0":
             raise AlreadyApprovedByParents
 
@@ -158,7 +158,7 @@ class OutingRepositoryImpl(OutingRepository):
         )
 
         if not outing:
-            raise NotFound
+            raise OutingNotFound
         if not outing.status == "0":
             raise AlreadyApprovedByParents
 
@@ -227,8 +227,9 @@ class OutingRepositoryImpl(OutingRepository):
             .first()
         )
 
-        if not outing.status == "2":
-            raise StillOut
+        if not outing: raise OutingNotFound
+
+        if not outing.status == "2": raise StillOut
 
         outing.status = "3"
         cls.sql.db_session.commit()
@@ -240,6 +241,7 @@ class OutingRepositoryImpl(OutingRepository):
             .filter(OutingModel.uuid == func.binary(oid))
             .first()
         )
+        if not outing: raise OutingNotFound
 
         if not outing.status == "3":
             raise StillOut
