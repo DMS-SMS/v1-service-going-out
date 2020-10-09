@@ -1,14 +1,14 @@
 from domain.repository import OutingRepository
-from domain.service.outing_domain_service import OutingDomainService
+from domain.service.paging_service import PagingService
 
 
 class GetOutingsWithFilterUseCase:
-    def __init__(self, outing_repository, outing_domain_service):
+    def __init__(self, outing_repository, paging_service):
         self.outing_repository: OutingRepository = outing_repository
-        self.outing_domain_service: OutingDomainService = outing_domain_service
+        self.paging_service: PagingService = paging_service
 
     def run(self, status, grade, group, start, count):
-        return self.outing_domain_service.paging_outings(
+        return self.paging_service.paging_outings(
             self.outing_repository.get_outings_with_filter(
                 status, grade, group
             ),
