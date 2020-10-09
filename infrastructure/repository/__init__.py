@@ -1,2 +1,0 @@
-from infrastructure.repository.student_repository_impl import StudentRepositoryImpl
-from infrastructure.repository.outing_repository_impl import OutingRepositoryImpl

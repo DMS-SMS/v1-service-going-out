@@ -1,7 +1,7 @@
 from application.service.parents_outing_service import ParentsOutingService
 from domain.usecase.approve_outing_usecase import ApproveOutingUseCase
 from domain.usecase.reject_outing_usecase import RejectOutingUseCase
-from infrastructure.repository import OutingRepositoryImpl
+from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
 
 from proto.python.outing import outing_parents_pb2_grpc
 from application.decorator.metadata import jagger_enable

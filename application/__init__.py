@@ -1,7 +1,7 @@
 import grpc
 from concurrent import futures
 
-from infrastructure.extension import Base, engine
+from infrastructure.mysql import sql
 from application.servicers import register_outing_servicers
 
 
@@ -16,7 +16,7 @@ class gRPCApplication:
         self.register_servicers()
 
     def register_db(self):
-        Base.metadata.create_all(engine)
+        sql.base.metadata.create_all(sql.engine)
 
     def register_servicers(self):
         register_outing_servicers(self._app)
