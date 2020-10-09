@@ -1,6 +1,6 @@
 from functools import wraps
 
-from infrastructure.exception.business_exception import BusinessException
+from domain.exception.business_exception import BusinessException
 
 
 def error_handling(response):
