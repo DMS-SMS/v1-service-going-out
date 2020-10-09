@@ -1,17 +1,19 @@
 from domain.entity.outing import Outing
 from domain.entity.student import Student
-from domain.service.sms_service import SMSService
+from domain.service.sms_service import smsService
 
-from infrastructure.repository import OutingRepositoryImpl, StudentRepositoryImpl
-from infrastructure.service.redis_service import delete_outing_code
+from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
+from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
+from infrastructure.redis.redis_handler import RedisHandler
 
 
-class SMSServiceImpl(SMSService):
+class SMSServiceImpl(smsService):
     def send_to_parents(self, oid: str, o_code: str):
         outing: Outing = OutingRepositoryImpl().get_outing_by_oid(oid)
         student: Student = StudentRepositoryImpl().get_student_by_uuid(
             outing._student_uuid
         )
+        redis = RedisHandler()
 
         student_name = student._name
         date = str(outing._date)[0:10]
@@ -26,7 +28,7 @@ class SMSServiceImpl(SMSService):
         )
         if outing._situation == "EMERGENCY":
             print(f"위 외출은 긴급 상황으로 판단되어 학부모에게 외출 확인을 받지 않습니다.")
-            delete_outing_code(o_code)
+            redis.delete_outing_code(o_code)
         else:
             print(f"외출 허가 : http://mallycrip/approve/{o_code}")
             print(f"외출 거부 : http://mallycrip/reject/{o_code}")
