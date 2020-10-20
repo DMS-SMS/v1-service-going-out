@@ -26,7 +26,7 @@ class ConsulHandler:
         self.consul_check.register(
             name=f"service '{self.consul_config.service_name}' check",
             check=Check.ttl("10000000s"),
-            check_id=f"service:${self.consul_config.check_id}",
+            check_id=f"service:{self.consul_config.check_id}",
             service_id=self.consul_config.service_id,
             token=self.consul_config.token,
         )
