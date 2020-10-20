@@ -26,7 +26,7 @@ class ConsulHandler:
         self.consul_check.register(
             name=f"service '{self.consul_config.service_name}' check",
             check=Check.ttl("10000000s"),
-            check_id=self.consul_config.check_id,
+            check_id=f"service:${self.consul_config.check_id}",
             service_id=self.consul_config.service_id,
             token=self.consul_config.token,
         )
@@ -39,13 +39,16 @@ class ConsulHandler:
 
     def get_address(self, service: str) -> Optional[str]:
         services = self.consul_agent.services()
+        checks = self.consul_agent.checks()
         for service_id in services:
             if services[service_id]["Service"] == service:
-                return (
-                    f"{services[service_id]['Address']}:{services[service_id]['Port']}"
-                )
+                if checks[f"service:{service_id}"]["Status"] == "passing":
+                    return (
+                        f"{services[service_id]['Address']}:{services[service_id]['Port']}"
+                    )
 
         return None
+
 
     def get_db_info(self) -> dict:
         return json.loads(self.consul.kv.get("db/outing/local")[1]["Value"].decode())
