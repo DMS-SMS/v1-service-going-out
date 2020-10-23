@@ -8,3 +8,6 @@ def generate_random_key(length: int) -> str:
 
 def generate_outing_uuid() -> str:
     return "outing-" + generate_random_key(12)
+
+def generate_confirm_code() -> str:
+    return "confirm-" + generate_random_key(12)
