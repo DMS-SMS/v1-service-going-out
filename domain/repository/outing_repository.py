@@ -1,71 +1,21 @@
-from abc import abstractmethod, ABCMeta
-from typing import List
+from abc import ABCMeta, abstractmethod
+from typing import List, Optional
 
-from domain.entity.outing import Outing
+from domain.entity import Outing
 
 
 class OutingRepository(metaclass=ABCMeta):
-    @classmethod
     @abstractmethod
-    def save_and_get_oid(cls, outing: Outing) -> str:
-        pass
+    def save(self, outing: Outing): pass
 
-    @classmethod
     @abstractmethod
-    def set_and_get_parents_outing_code(cls, oid: str) -> str:
-        pass
+    def find_by_id(self, id: str) -> Optional["Outing"]: pass
 
-    @classmethod
     @abstractmethod
-    def get_outing_by_oid(cls, oid: str) -> Outing:
-        pass
+    def find_all_by_student_uuid(self, student_id): pass
 
-    @classmethod
     @abstractmethod
-    def get_outings_by_student_id(cls, sid: str) -> List["Outing"]:
-        pass
+    def find_all_by_student_uuid_and_status(self, student_uuid: str, status: str) -> List["Outing"]: pass
 
-    @classmethod
     @abstractmethod
-    def approve_by_outing_for_teacher(cls, oid: str) -> None:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def approve_by_outing_for_parents(cls, o_code) -> None:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def reject_by_outing_for_teacher(cls, oid: str) -> None:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def reject_by_outing_for_parents(cls, o_code: str) -> None:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def certify_by_outing_for_teacher(cls, oid) -> None:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def get_outings_with_filter(cls, status, grade, group) -> List["Outing"]:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def get_is_late(cls, oid) -> bool:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def go_out(cls, oid) -> None:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def finish_go_out(cls, oid) -> None:
-        pass
+    def find_by_student_uuid_and_end_time(self, student_uuid: str, time: int) -> Optional["Outing"]: pass
