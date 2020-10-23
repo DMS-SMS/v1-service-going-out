@@ -1,5 +1,6 @@
 from functools import wraps
 
+from domain.exception.bad_request import BadRequestException
 from domain.exception.not_proxy_auth import NotProxyAuth
 from domain.exception.business_exception import BusinessException
 from domain.exception.grpc_exception import gRPCException
@@ -17,7 +18,10 @@ def error_handling(response):
                     raise e
                 except NotProxyAuth as e:
                     raise e
-                except Exception:
+                except BadRequestException as e:
+                    raise e
+                except Exception as e:
+                    print(e)
                     raise ServerErrorException
             except gRPCException as e:
                 return response(status=e.status, code=e.code, msg=e.msg)

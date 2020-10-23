@@ -2,7 +2,6 @@ from functools import wraps
 from infrastructure.open_tracing import open_tracing
 from infrastructure.open_tracing.open_tracing_handler import OpenTracing
 
-from domain.exception.not_proxy_auth import NotProxyAuth
 from domain.exception.not_proxy_auth.bad_span_context_exception import BadSpanContext
 from domain.exception.not_proxy_auth.bad_x_request_id_exception import BadXRequestId
 
