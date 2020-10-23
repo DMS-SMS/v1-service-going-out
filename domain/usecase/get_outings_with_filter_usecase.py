@@ -1,17 +1,25 @@
-from domain.repository import OutingRepository
-from domain.service.paging_service import PagingService
+from domain.exception import Unauthorized
+from domain.repository.outing_repository import OutingRepository
+from domain.repository.student_repository import StudentRepository
+from domain.repository.teacher_repository import TeacherRepository
 
 
 class GetOutingsWithFilterUseCase:
-    def __init__(self, outing_repository, paging_service):
+    def __init__(self, outing_repository, student_repository, teacher_repository):
         self.outing_repository: OutingRepository = outing_repository
-        self.paging_service: PagingService = paging_service
+        self.student_repository: StudentRepository = student_repository
+        self.teacher_repository: TeacherRepository = teacher_repository
 
-    def run(self, status, grade, group, start, count):
-        return self.paging_service.paging_outings(
-            self.outing_repository.get_outings_with_filter(
-                status, grade, group
-            ),
-            start,
-            count,
-        )
+    def run(self, uuid, x_request_id, status, grade, group):
+        if self.teacher_repository.find_by_uuid(uuid, uuid, x_request_id) is None: raise Unauthorized()
+
+        outings = []
+        student_uuids = self.student_repository.find_all_by_inform(uuid, x_request_id, grade, group)
+
+        for student_uuid in student_uuids:
+            outings += self.outing_repository.find_all_by_student_uuid_and_status(student_uuid, status)
+
+        outings = sorted(outings, key=lambda x: x.start_time, reverse=True)
+
+
+        return outings

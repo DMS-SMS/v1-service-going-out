@@ -1,20 +1,18 @@
-from domain.repository import OutingRepository
+from domain.exception import Unauthorized
+from domain.repository.outing_repository import OutingRepository
+from domain.repository.student_repository import StudentRepository
 from domain.service.uuid_service import UuidService
-from domain.service.paging_service import PagingService
 
 
 class GetMyOutingsUseCase:
-    def __init__(self, outing_repository, paging_service, uuid_service):
+    def __init__(self, outing_repository, student_repository):
         self.outing_repository: OutingRepository = outing_repository
-        self.paging_service: PagingService = paging_service
-        self.uuid_service: UuidService = uuid_service
+        self.student_repository: StudentRepository = student_repository
 
 
-    def run(self, uuid, s_id, start, count):
-        self.uuid_service.compare_uuid_and_sid(uuid, s_id)
+    def run(self, uuid, student_id, x_request_id):
+        if self.student_repository.find_by_uuid(uuid, x_request_id) is None: raise Unauthorized()
+        else:
+            if uuid != student_id: raise Unauthorized()
 
-        return self.paging_service.paging_outings(
-            self.outing_repository.get_outings_by_student_id(s_id),
-            start,
-            count,
-        )
+        return self.outing_repository.find_all_by_student_uuid(student_id)

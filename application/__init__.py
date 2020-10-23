@@ -4,7 +4,6 @@ from concurrent import futures
 from infrastructure.mysql import sql
 from application.servicers import register_outing_servicers
 
-
 class gRPCApplication:
     def __init__(self, config, consul):
         self._config = config

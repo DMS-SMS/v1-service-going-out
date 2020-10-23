@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from domain.repository.student_repository import StudentRepository
 from domain.entity.student import Student
 
@@ -6,8 +8,16 @@ from infrastructure.auth.auth_handler import AuthHandler
 
 
 class StudentRepositoryImpl(StudentRepository):
-    auth_service = AuthHandler()
+    def __init__(self):
+        self.auth = AuthHandler()
 
-    @classmethod
-    def get_student_by_uuid(cls, uuid: str) -> Student:
-        return get_student_mapper(uuid, cls.auth_service.get_student_inform(uuid, uuid))
+    def find_by_uuid(self, uuid: str, x_request_id: str) -> Student:
+        return get_student_mapper(uuid, self.auth.get_student_inform(uuid, uuid, x_request_id))
+
+    def find_all_by_inform(
+            self, uuid: str, x_request_id: str, grade: Optional["int"] = None, group: Optional["int"] = None
+    ) -> ["str"]:
+        student_uuids = self.auth.get_uuid_with_inform(uuid, x_request_id, grade=grade, group=group)
+        if student_uuids is None: return []
+
+        return student_uuids

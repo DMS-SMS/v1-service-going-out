@@ -9,7 +9,7 @@ class Student:
         phone_number=None,
         profile_image_uri=None,
     ):
-        self._stuent_uuid: str = student_uuid
+        self._student_uuid: str = student_uuid
         self._grade: int = grade
         self._group: int = group
         self._student_number: int = student_number

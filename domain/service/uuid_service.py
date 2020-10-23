@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
 class UuidService(metaclass=ABCMeta):
-    @classmethod
     @abstractmethod
-    def compare_uuid_and_sid(cls, uuid, sid):
-        pass
+    def generate_outing_uuid(self) -> str: pass
+
+    @abstractmethod
+    def generate_confirm_code(self) -> str: pass

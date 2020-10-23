@@ -1,1 +1,0 @@
-from application.mapper.outing_mapper import create_outing_mapper, get_outings_mapper

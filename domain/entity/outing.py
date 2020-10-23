@@ -1,31 +1,20 @@
-from typing import Optional
+from sqlalchemy import Column, Integer, String, DateTime, Enum
+
+from infrastructure.mysql import sql
 
 
-class Outing:
-    def __init__(
-        self,
-        outing_uuid=None,
-        student_uuid=None,
-        status=None,
-        situation=None,
-        accept_teacher=None,
-        date=None,
-        start_time=None,
-        end_time=None,
-        place=None,
-        reason=None,
-        arrival_date=None,
-        arrival_time=None,
-    ):
-        self._outing_uuid: str = outing_uuid
-        self._student_uuid: str = student_uuid
-        self._status: str = status
-        self._situation: str = situation
-        self._accept_teacher: Optional[int] = accept_teacher
-        self._date: str = date
-        self._start_time: str = start_time
-        self._end_time: str = end_time
-        self._place: str = place
-        self._reason: str = reason
-        self._arrival_date: Optional[str] = arrival_date
-        self._arrival_time: Optional[int] = arrival_time
+class Outing(sql.base):
+    __tablename__ = "tbl_outing"
+
+    outing_uuid = Column(String(20), primary_key=True)
+    student_uuid = Column(String(20), nullable=False)
+    status = Column(Enum("-2", "-1", "0", "1", "2", "3", "4", "5"), nullable=False)
+    # 0: 외출증 생성 , 1: 학부모 승인, -1: 학부모 거부, 2: 담임 확인, -2: 담임 거부, 3: 외출, 4: 외출 종료, 5: 사후제출
+    situation = Column(Enum("NORMAL", "EMERGENCY"), nullable=False)
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
+    place = Column(String(50), nullable=False)
+    reason = Column(String(150), nullable=False)
+
+    arrival_time = Column(DateTime, nullable=True)
+    accepted_teacher = Column(String(20), nullable=True)

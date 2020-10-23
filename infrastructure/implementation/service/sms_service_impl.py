@@ -8,27 +8,30 @@ from infrastructure.redis.redis_handler import RedisHandler
 
 
 class SMSServiceImpl(SMSService):
-    def send_to_parents(self, oid: str, o_code: str):
-        outing: Outing = OutingRepositoryImpl().get_outing_by_oid(oid)
-        student: Student = StudentRepositoryImpl().get_student_by_uuid(
-            outing._student_uuid
+    def __init__(self):
+        self.redis = RedisHandler()
+        self.outing_repository = OutingRepositoryImpl()
+        self.student_repository = StudentRepositoryImpl()
+
+    def send_to_parents(self, outing_id: str, confirm_code: str, x_request_id: str):
+        outing: Outing = self.outing_repository.find_by_id(outing_id)
+        student: Student = self.student_repository.find_by_uuid(
+            outing.student_uuid,
+            x_request_id
         )
-        redis = RedisHandler()
 
         student_name = student._name
-        date = str(outing._date)[0:10]
-        time = str(
-            f"{outing._start_time[0:2]}:{outing._start_time[2:4]} ~ {outing._end_time[0:2]}:{outing._end_time[2:4]}"
-        )
+        time = outing.start_time
+        e_time = outing.end_time
 
         print("--------[문자서비스로 갈 내용]-------")
 
         print(
-            f"{student_name} 학생이 외출을 신청하였습니다.\n 날짜 : {date}\n 시간 : {time}\n 장소 : {outing._place}\n 사유 : {outing._reason}\n"
+            f"{student_name} 학생이 외출을 신청하였습니다.\n 날짜 : {e_time}\n 시간 : {time}\n 장소 : {outing.place}\n 사유 : {outing.reason}\n"
         )
-        if outing._situation == "EMERGENCY":
+        if outing.situation == "EMERGENCY":
             print(f"위 외출은 긴급 상황으로 판단되어 학부모에게 외출 확인을 받지 않습니다.")
-            redis.delete_outing_code(o_code)
+            self.redis.delete_by_key(confirm_code)
         else:
-            print(f"외출 허가 : http://mallycrip/approve/{o_code}")
-            print(f"외출 거부 : http://mallycrip/reject/{o_code}")
+            print(f"외출 허가 : http://mallycrip/approve/{confirm_code}")
+            print(f"외출 거부 : http://mallycrip/reject/{confirm_code}")
