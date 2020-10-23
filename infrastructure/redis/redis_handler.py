@@ -19,15 +19,15 @@ class RedisHandler:
     def redis(self):
         return self._redis
 
-    def save_parents_outing_code(self, oid: str, o_code: str):
-        self._redis.set(o_code, oid)
+    def save(self, key: str, value: str):
+        self._redis.set(key, value)
 
-    def get_oid_by_parents_outing_code(self, o_code: str) -> Optional[str]:
+    def find_by_key(self, key: str) -> Optional[str]:
         try:
-            oid = self._redis.get(o_code).decode()
+            value = self._redis.get(key).decode()
         except:
-            oid = None
-        return oid
+            value = None
+        return value
 
-    def delete_outing_code(self, o_code: str):
-        self._redis.delete(o_code)
+    def delete_by_key(self, key: str):
+        self._redis.delete(key)
