@@ -11,7 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+        
+      - name: add the proto Submodule
+        run: git submodule add https://github.com/DMS-SMS/v1-protocol-buffer proto
+        
+      - name: add the const Submodule
+        run: git submodule add https://github.com/DMS-SMS/v1-utils const
+        
       - name: build docker image
         run: docker build -t migsking/dms-sms-service-outing .
 
