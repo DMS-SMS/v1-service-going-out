@@ -6,6 +6,7 @@ jaeger-client==4.3.0
 mysqlclient==2.0.1
 opentracing==2.3.0
 protobuf==3.13.0
+PyMySQL==0.10.1
 python-consul==1.1.0
 redis==3.5.3
 requests==2.24.0
