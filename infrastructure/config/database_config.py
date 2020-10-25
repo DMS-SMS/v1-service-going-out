@@ -19,7 +19,7 @@ class DatabaseConfig:
     @property
     def address(self) -> str:
         return str(
-            f"{self._sql}://{self._user}:{self._password}@{self._host}/{self._db}?charset=utf8"
+            f"{self._sql}://{self._user}:{self._password}@{self._host}/{self._db}?charset=utf8&auth_plugin=mysql_native_password"
         )
 
     @property
