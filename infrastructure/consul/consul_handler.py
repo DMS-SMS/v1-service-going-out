@@ -14,7 +14,7 @@ class ConsulHandler:
         self.consul_agent = self.consul.Agent(self.consul)
         self.consul_service = self.consul_agent.Service(self.consul)
         self.consul_check = self.consul_agent.Check(self.consul)
-        ConsulConfig.service_host = "127.0.0.1"
+        ConsulConfig.service_host = "service-outing"
         ConsulConfig.service_port = self.create_service_port()
         ConsulConfig.service_id = self.create_service_id()
 

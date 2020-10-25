@@ -12,8 +12,7 @@ from const.topic.python.service_names import auth_service_name
 class AuthHandler:
     def __init__(self):
         self._consul = ConsulHandler()
-        self._address = "127.0.0.1:10027"
-        # self._address = self._consul.get_address(auth_service_name)
+        self._address = self._consul.get_address(auth_service_name)
         self._channel = grpc.insecure_channel(self._address)
         self._student_stub = auth_student_pb2_grpc.AuthStudentStub(self._channel)
         self._teacher_stub = auth_teacher_pb2_grpc.AuthTeacherStub(self._channel)
