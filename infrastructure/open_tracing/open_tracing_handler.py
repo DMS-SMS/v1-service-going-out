@@ -1,13 +1,23 @@
+import os
+
+from functools import wraps
+
 from jaeger_client import Config
 from jaeger_client.span_context import SpanContext
 
 
 class OpenTracingHandler:
     def __init__(self):
+        self._jaeger_address = os.getenv("JAEGER_ADDR").split(":")
         self._config = Config(
             config={
+                'local_agent': {
+                    'reporting_host': self._jaeger_address[0],
+                    'reporting_port': int(self._jaeger_address[1]),
+                },
                 'logging': True,
             },
+
             service_name='outing-service',
             validate=True,
         )
@@ -41,3 +51,15 @@ class OpenTracing:
             return_value = fn(args[0], args[1], args[2])
             span.close()
             return return_value
+
+
+def trace_service(service_name, tracer):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            with tracer.tracer.start_active_span(service_name, child_of=tracer.tracer.active_span) as span:
+                return_value = fn(*args, **kwargs)
+                span.close()
+            return return_value
+        return wrapper
+    return decorator

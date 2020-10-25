@@ -1,3 +1,4 @@
+import os
 import grpc
 from concurrent import futures
 
@@ -6,11 +7,11 @@ from application.servicers import register_outing_servicers
 
 class gRPCApplication:
     def __init__(self, config, consul):
-        self._config = config
-        self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=config.max_workers))
         self._consul = consul
+        self._config = config
+        self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=self._config.max_workers))
 
-        self._app.add_insecure_port(config.address)
+        self._app.add_insecure_port(self._config.address)
         self.register_db()
         self.register_servicers()
 
@@ -24,8 +25,9 @@ class gRPCApplication:
         try:
             self._app.start()
             self._consul.register_consul()
-            print("* gRPC Application is served")
+            print(f"* gRPC Application is served in {self._config.address}")
             self._app.wait_for_termination()
-        except:
+        except Exception as e:
+            print(e)
             self._consul.deregister_consul()
             print("* gRPC Application is down")

@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 from infrastructure.consul.consul_handler import ConsulHandler
 
@@ -8,7 +9,7 @@ class CacheConfig:
         self._redis_info = self._consul.get_redis_info()
         self._host: str = self._redis_info["host"]
         self._port: int = self._redis_info["port"]
-        self._password: Optional[str] = None
+        self._password: Optional[str] = os.getenv("REDIS_PASSWORD")
         self._db: int = self._redis_info["db"]
 
     @property

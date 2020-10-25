@@ -1,3 +1,5 @@
+import os
+
 from infrastructure.consul.consul_handler import ConsulHandler
 
 
@@ -9,7 +11,7 @@ class DatabaseConfig:
         self._db: str = self._db_info["db"]
         self._host: str = self._db_info["host"]
         self._user: str = self._db_info["user"]
-        self._password: str = "mingi0130"
+        self._password: str = os.getenv("DB_PASSWORD")
 
         self._autocommit: bool = False
         self._autoflush: bool = False
