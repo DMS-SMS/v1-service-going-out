@@ -1,11 +1,11 @@
 import json
 import random
+import uuid
 
 from typing import Optional
 from consul import Consul, Check
 
 from infrastructure.config.consul_config import ConsulConfig
-from infrastructure.util.random_key import generate_random_key_only_hex
 
 
 class ConsulHandler:
@@ -16,7 +16,7 @@ class ConsulHandler:
         self.consul_check = self.consul_agent.Check(self.consul)
         ConsulConfig.service_host = "0.0.0.0"
         ConsulConfig.service_port = self.create_service_port()
-        ConsulConfig.service_id = self.create_service_id()
+        ConsulConfig.service_id = f"{ConsulConfig.service_name}-{uuid.uuid4()}"
 
     def register_consul(self):
 
@@ -74,21 +74,3 @@ class ConsulHandler:
 
     def generate_service_port(self) -> int:
         return random.randrange(10101, 10200)
-
-    def create_service_id(self) -> str:
-        service_id = self.generate_service_id()
-        while self.check_service_id(service_id): service_id = self.generate_service_id()
-        return service_id
-
-    def check_service_id(self, service_id) -> bool:
-        try: self.consul_agent.services()[service_id]
-        except: return False
-        return True
-
-    def generate_service_id(self) -> str:
-        return f"{ConsulConfig.service_name}" \
-               f"-{generate_random_key_only_hex(8)}" \
-               f"-{generate_random_key_only_hex(4)}" \
-               f"-{generate_random_key_only_hex(4)}" \
-               f"-{generate_random_key_only_hex(4)}" \
-               f"-{generate_random_key_only_hex(12)}"
