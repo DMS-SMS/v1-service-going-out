@@ -4,15 +4,13 @@ services:
     image: migsking/dms-sms-service-outing:${VERSION}
     container_name: service-outing
     networks:
-      - dms_sms_local
-    ports:
-      - 10101-10200:10101-10200
+      - dms-sms-local
     environment:
       - DB_PASSWORD=${DB_PASSWORD}
       - CONSUL_ADDR=${CONSUL_ADDRESS}
       - JAEGER_ADDR=${JAEGER_ADDRESS}
 
 networks:
-  dms_sms_local:
-    name: dms_sms_local
+  dms-sms-local:
+    name: dms-sms-local
     driver: bridge
