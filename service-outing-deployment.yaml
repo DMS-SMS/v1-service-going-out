@@ -32,7 +32,7 @@ spec:
               value: "$DB_PASSWORD"
             - name: JAEGER_ADDR
               value: "$JAEGER_ADDR"
-          image: 'jinhong0719/dms-sms-service-outing:$VERSION'
+          image: 'migsking/dms-sms-service-outing:$VERSION'
           name: service-outing
           resources: {}
       restartPolicy: Always
