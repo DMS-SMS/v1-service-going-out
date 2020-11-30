@@ -2,6 +2,7 @@ import json
 import random
 import uuid
 
+from socket import gethostname, gethostbyname
 from typing import Optional
 from consul import Consul, Check
 
@@ -14,7 +15,7 @@ class ConsulHandler:
         self.consul_agent = self.consul.Agent(self.consul)
         self.consul_service = self.consul_agent.Service(self.consul)
         self.consul_check = self.consul_agent.Check(self.consul)
-        ConsulConfig.service_host = "service-outing"
+        ConsulConfig.service_host = gethostbyname(gethostname())
         ConsulConfig.service_port = self.create_service_port()
         ConsulConfig.service_id = f"{ConsulConfig.service_name}-{uuid.uuid4()}"
 
