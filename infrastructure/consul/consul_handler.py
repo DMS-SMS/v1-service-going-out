@@ -19,13 +19,12 @@ class ConsulHandler:
         ConsulConfig.service_port = self.create_service_port()
         ConsulConfig.service_id = f"{ConsulConfig.service_name}-{uuid.uuid4()}"
 
-    def register_consul(self):
-
+    def register_consul(self, port):
         self.consul_service.register(
             name=ConsulConfig.service_name,
             service_id=ConsulConfig.service_id,
             address=ConsulConfig.service_host,
-            port=ConsulConfig.service_port,
+            port=port,
             token=ConsulConfig.token,
         )
 
