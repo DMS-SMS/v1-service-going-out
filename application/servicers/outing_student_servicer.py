@@ -64,6 +64,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
     @error_handling(outing_student_pb2.CreateOutingResponse)
     @jagger_enable
     def CreateOuting(self, request, context):
+        print("1")
         return self.service.create_outing(request, context)
 
     @error_handling(outing_student_pb2.GetCardAboutOutingResponse)
@@ -79,6 +80,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
     @error_handling(outing_student_pb2.GetStudentOutingsResponse)
     @jagger_enable
     def GetStudentOutings(self, request, context):
+        print("1")
         return self.service.get_student_outings(request, context)
 
     @error_handling(outing_student_pb2.GoOutResponse)
