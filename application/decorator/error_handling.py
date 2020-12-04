@@ -23,7 +23,6 @@ def error_handling(response):
                 except BadRequestException as e:
                     raise e
                 except Exception as e:
-                    logging.ERROR(e)
                     raise ServerErrorException(e)
             except gRPCException as e:
                 return response(status=e.status, code=e.code, msg=e.msg)
