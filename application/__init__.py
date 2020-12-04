@@ -27,13 +27,7 @@ class gRPCApplication:
         print("* gRPC Application is down")
 
     def serve(self):
-        print("openopen")
-        print("openopen")
-        print("openopen")
-        print("openopen")
-        print("openopen")
         try:
-            print("openopen")
             self._app.start()
             self._consul.register_consul(self._config.port)
             print(f"* gRPC Application is served in {self._config.address}")
