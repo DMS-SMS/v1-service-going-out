@@ -1,5 +1,6 @@
 import atexit
 import grpc
+import logging
 from concurrent import futures
 
 from infrastructure.mysql import sql
@@ -10,6 +11,8 @@ class gRPCApplication:
         self._consul = consul
         self._config = config
         self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=self._config.max_workers))
+        _LOGGER = logging.getLogger(__name__)
+        _LOGGER.setLevel(logging.INFO)
         atexit.register(self.stop)
 
         self._app.add_insecure_port(self._config.address)
