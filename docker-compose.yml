@@ -5,6 +5,8 @@ services:
     container_name: service-outing
     networks:
       - dms-sms-local
+    ports:
+      - 10101-10200:10101-10200
     environment:
       - DB_PASSWORD=${DB_PASSWORD}
       - CONSUL_ADDR=${CONSUL_ADDRESS}
