@@ -1,3 +1,5 @@
+import logging
+
 from functools import wraps
 
 from domain.exception.bad_request import BadRequestException
@@ -21,8 +23,8 @@ def error_handling(response):
                 except BadRequestException as e:
                     raise e
                 except Exception as e:
-                    print(e)
-                    raise ServerErrorException
+                    logging.ERROR(e)
+                    raise ServerErrorException(e)
             except gRPCException as e:
                 return response(status=e.status, code=e.code, msg=e.msg)
 
