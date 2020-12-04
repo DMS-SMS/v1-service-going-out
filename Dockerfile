@@ -5,6 +5,7 @@ COPY . .
 WORKDIR .
 
 RUN pip install -r requirements.txt
+ENV PYTHONUNBUFFERED=0
 
 ENTRYPOINT ["python"]
 CMD ["run.py"]
