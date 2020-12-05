@@ -11,7 +11,7 @@ class StudentRepositoryImpl(StudentRepository):
     def __init__(self):
         self.auth = AuthHandler()
 
-    def find_by_uuid(self, uuid: str, x_request_id: str) -> Student:
+    def find_by_uuid(self, uuid: str, x_request_id: str) -> Optional[Student]:
         return get_student_mapper(uuid, self.auth.get_student_inform(uuid, uuid, x_request_id))
 
     def find_all_by_inform(

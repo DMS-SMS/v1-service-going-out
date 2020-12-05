@@ -8,6 +8,7 @@ from domain.entity.student import Student
 def get_student_mapper(
         student_uuid, student_proto: Optional["auth_student_pb2.GetStudentInformWithUUIDResponse"]
     ) -> Optional["Student"]:
+    if student_proto is None: return None
     return Student(
         student_uuid=student_uuid,
         grade=student_proto.Grade,
