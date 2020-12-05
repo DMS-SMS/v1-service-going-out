@@ -63,6 +63,7 @@ class StudentOutingService:
         return proto.GetOutingInformResponse(
             status=200,
 
+            outing_id=outing.outing_uuid,
             place=outing.place,
             reason=outing.reason,
             start_time=int(mktime(outing.start_time.timetuple())),

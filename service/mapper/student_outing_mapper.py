@@ -13,6 +13,7 @@ class StudentOutingMapper:
         for outing in outings[start:end]:
             outing_proto = StudentOuting()
 
+            outing_proto.outing_id = outing.outing_uuid
             outing_proto.place = outing.place
             outing_proto.reason = outing.reason
             outing_proto.start_time = int(time.mktime(outing.start_time.timetuple()))
