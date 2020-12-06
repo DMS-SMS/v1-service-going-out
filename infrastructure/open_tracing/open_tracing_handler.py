@@ -18,7 +18,7 @@ class OpenTracingHandler:
                 'logging': True,
             },
 
-            service_name='outing-service',
+            service_name='DMS.SMS.v1.service.outing',
             validate=True,
         )
         self._tracer = self._config.initialize_tracer()
