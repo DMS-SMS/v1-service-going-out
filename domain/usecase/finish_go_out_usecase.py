@@ -1,6 +1,8 @@
 import datetime
 
-from domain.exception import Unauthorized, ConfirmFailed
+from const.code.python.outing import *
+
+from domain.exception import Unauthorized, OutingFlowException
 from domain.repository.outing_repository import OutingRepository
 from domain.repository.student_repository import StudentRepository
 
@@ -15,7 +17,13 @@ class FinishGoOutUseCase:
 
         outing = self.outing_repository.find_by_id(outing_id)
         if outing.student_uuid != uuid: raise Unauthorized()
-        if outing.status != "3": raise ConfirmFailed()
+        if outing.status != "3":
+            if outing.status == "0": raise OutingFlowException(code=not_approved_by_parents)
+            if outing.status == "-1": raise OutingFlowException(code=rejected_by_parents)
+            if outing.status == "1": raise OutingFlowException(code=not_approved_by_teacher)
+            if outing.status == "-2": raise OutingFlowException(code=rejected_by_teacher)
+            if outing.status == "2": raise OutingFlowException(code=not_out)
+            if int(outing.status) >= 4: raise OutingFlowException(code=already_finish_out)
 
         outing.status = "4"
         outing.arrival_time = datetime.datetime.now()
