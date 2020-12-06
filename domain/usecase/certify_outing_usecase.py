@@ -1,4 +1,6 @@
-from domain.exception import Unauthorized, ConfirmFailed, OutingNotFound
+from const.code.python.outing import *
+
+from domain.exception import Unauthorized, OutingNotFound, OutingFlowException
 from domain.repository.outing_repository import OutingRepository
 from domain.repository.teacher_repository import TeacherRepository
 
@@ -13,7 +15,14 @@ class CertifyOutingUseCase:
 
         outing = self.outing_repository.find_by_id(outing_id)
         if outing is None: raise OutingNotFound()
-        if outing.status != "4": raise ConfirmFailed()
+        if outing.status != "4":
+            if outing.status == "0": OutingFlowException(code=not_approved_by_parents)
+            if outing.status == "-1": OutingFlowException(code=rejected_by_parents)
+            if outing.status == "1": OutingFlowException(code=not_approved_by_teacher)
+            if outing.status == "-2": OutingFlowException(code=rejected_by_teacher)
+            if outing.status == "2": OutingFlowException(code=not_out)
+            if outing.status == "3": OutingFlowException(code=not_finish_out)
+            if outing.status == "5": OutingFlowException(code=already_confirm_out_by_teacher)
 
         outing.status = "5"
         outing.accepted_teacher = uuid

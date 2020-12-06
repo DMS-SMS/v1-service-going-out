@@ -1,4 +1,6 @@
-from domain.exception import ConfirmFailed, ConfirmCodeNotFound
+from const.code.python.outing import *
+
+from domain.exception import ConfirmCodeNotFound, OutingFlowException
 from domain.repository.confirm_code_repository import ConfirmCodeRepository
 from domain.repository.outing_repository import OutingRepository
 
@@ -13,7 +15,7 @@ class RejectOutingUseCase:
         if outing_id == None: raise ConfirmCodeNotFound()
 
         outing = self.outing_repository.find_by_id(outing_id)
-        if outing.status != "0": raise ConfirmFailed()
+        if outing.status != "0": raise OutingFlowException(code=already_confirm_by_parents)
 
         outing.status = "-1"
         self.outing_repository.save(outing)
