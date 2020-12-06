@@ -1,4 +1,6 @@
-from domain.exception import Unauthorized, ConfirmFailed, OutingNotFound
+from const.code.python.outing import *
+
+from domain.exception import Unauthorized, OutingNotFound, OutingFlowException
 from domain.repository.outing_repository import OutingRepository
 from domain.repository.student_repository import StudentRepository
 
@@ -15,7 +17,12 @@ class GoOutUseCase:
         if outing is None: raise OutingNotFound()
 
         if outing.student_uuid != uuid: raise Unauthorized()
-        if outing.status != "2": raise ConfirmFailed()
+        if outing.status != "2":
+            if outing.status == "0": raise OutingFlowException(code=not_approved_by_parents)
+            if outing.status == "-1": raise OutingFlowException(code=rejected_by_parents)
+            if outing.status == "1": raise OutingFlowException(code=not_approved_by_teacher)
+            if outing.status == "-2": raise OutingFlowException(code=rejected_by_teacher)
+            if outing.status == "3": raise OutingFlowException(code=already_out)
 
         outing.status = "3"
         self.outing_repository.save(outing)
