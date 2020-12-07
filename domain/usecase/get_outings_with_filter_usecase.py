@@ -6,7 +6,7 @@ from domain.repository.teacher_repository import TeacherRepository
 
 
 class GetOutingsWithFilterUseCase:
-    def __init__(self, outing_repository, student_repository, club_repository, teacher_repository):
+    def __init__(self, outing_repository, student_repository, teacher_repository, club_repository):
         self.outing_repository: OutingRepository = outing_repository
         self.student_repository: StudentRepository = student_repository
         self.teacher_repository: TeacherRepository = teacher_repository
