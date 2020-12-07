@@ -20,6 +20,7 @@ class GetOutingsWithFilterUseCase:
         if not grade == 0:
             student_uuids = self.student_repository.find_all_by_inform(uuid, x_request_id, grade, group)
         else:
+            raise Exception()
             student_uuids = []
             for club in self.club_repository.find_all_by_floor(uuid, floor):
                 student_uuids.extend(club._members)
