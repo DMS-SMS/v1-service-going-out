@@ -19,6 +19,7 @@ class ApproveOutingTeacherUseCase:
             if outing.status == "0": raise OutingFlowException(code=not_approved_by_parents)
             if outing.status == "-1": raise OutingFlowException(code=rejected_by_parents)
             if int(outing.status) > 1: raise OutingFlowException(code=already_confirm_by_teacher)
+            else: raise OutingFlowException()
 
         outing.status = "2"
 

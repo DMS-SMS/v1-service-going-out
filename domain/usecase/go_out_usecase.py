@@ -23,6 +23,7 @@ class GoOutUseCase:
             if outing.status == "1": raise OutingFlowException(code=not_approved_by_teacher)
             if outing.status == "-2": raise OutingFlowException(code=rejected_by_teacher)
             if outing.status == "3": raise OutingFlowException(code=already_out)
+            else: raise OutingFlowException()
 
         outing.status = "3"
         self.outing_repository.save(outing)

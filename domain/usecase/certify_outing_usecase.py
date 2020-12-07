@@ -23,6 +23,7 @@ class CertifyOutingUseCase:
             if outing.status == "2": OutingFlowException(code=not_out)
             if outing.status == "3": OutingFlowException(code=not_finish_out)
             if outing.status == "5": OutingFlowException(code=already_confirm_out_by_teacher)
+            else: OutingFlowException()
 
         outing.status = "5"
         outing.accepted_teacher = uuid
