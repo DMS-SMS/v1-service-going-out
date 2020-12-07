@@ -61,3 +61,15 @@ class AuthHandler:
 
         return response
 
+    def get_parents_with_student_uuid(self, uuid, student_uuid, x_request_id):
+        self.metadata = (("x-request-id", x_request_id),
+                         ("span-context", str(open_tracing.tracer.active_span).split()[0]))
+
+        response = self._student_stub.GetParentWithStudentUUID(auth_student_pb2.GetParentWithStudentUUIDRequest(
+            UUID=uuid,
+            StudentUUID=student_uuid
+        ), metadata=self.metadata)
+
+        if response.Status != 200: return None
+
+        return response
