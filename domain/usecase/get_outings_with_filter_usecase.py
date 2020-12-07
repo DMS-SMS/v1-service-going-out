@@ -21,7 +21,7 @@ class GetOutingsWithFilterUseCase:
             student_uuids = self.student_repository.find_all_by_inform(uuid, x_request_id, grade, group)
         else:
             student_uuids = []
-            for club in self.club_repository.find_all_by_floor(uuid, floor):
+            for club in self.club_repository.find_all_by_floor(uuid, floor, x_request_id):
                 student_uuids.extend(club._members)
 
         for student_uuid in student_uuids:

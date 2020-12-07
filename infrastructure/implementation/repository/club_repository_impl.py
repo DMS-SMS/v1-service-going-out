@@ -10,5 +10,5 @@ class ClubRepositoryImpl(ClubRepository):
     def __init__(self):
         self.club = ClubHandler()
 
-    def find_all_by_floor(self, uuid: str, floor: int) -> List["Club"]:
-        return get_club_list_mapper(self.club.get_club_informs_with_floor(uuid, floor))
+    def find_all_by_floor(self, uuid: str, floor: int, x_request_id: str) -> List["Club"]:
+        return get_club_list_mapper(self.club.get_club_informs_with_floor(uuid, floor, x_request_id))
