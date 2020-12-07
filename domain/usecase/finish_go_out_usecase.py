@@ -23,7 +23,7 @@ class FinishGoOutUseCase:
             if outing.status == "1": raise OutingFlowException(code=not_approved_by_teacher)
             if outing.status == "-2": raise OutingFlowException(code=rejected_by_teacher)
             if outing.status == "2": raise OutingFlowException(code=not_out)
-            if int(outing.status) >= 4: raise OutingFlowException(code=already_finish_out)
+            else: raise OutingFlowException(code=already_finish_out)
 
         outing.status = "4"
         outing.arrival_time = datetime.datetime.now()

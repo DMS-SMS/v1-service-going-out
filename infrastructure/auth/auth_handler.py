@@ -6,6 +6,7 @@ from infrastructure.open_tracing import open_tracing
 
 from proto.python.auth import auth_student_pb2, auth_student_pb2_grpc
 from proto.python.auth import auth_teacher_pb2, auth_teacher_pb2_grpc
+from proto.python.auth import auth_parent_pb2, auth_parent_pb2_grpc
 from const.topic.python.service_names import auth_service_name
 
 
@@ -16,6 +17,7 @@ class AuthHandler:
         self._channel = grpc.insecure_channel(self._address)
         self._student_stub = auth_student_pb2_grpc.AuthStudentStub(self._channel)
         self._teacher_stub = auth_teacher_pb2_grpc.AuthTeacherStub(self._channel)
+        self._parents_stub = auth_parent_pb2_grpc.AuthParentStub(self._channel)
 
 
     @trace_service("Auth Handler (get_student_inform)", open_tracing)
@@ -61,6 +63,7 @@ class AuthHandler:
 
         return response
 
+    @trace_service("Auth Handler (get_parents_with_student_uuid)", open_tracing)
     def get_parents_with_student_uuid(self, uuid, student_uuid, x_request_id):
         self.metadata = (("x-request-id", x_request_id),
                          ("span-context", str(open_tracing.tracer.active_span).split()[0]))
@@ -68,6 +71,20 @@ class AuthHandler:
         response = self._student_stub.GetParentWithStudentUUID(auth_student_pb2.GetParentWithStudentUUIDRequest(
             UUID=uuid,
             StudentUUID=student_uuid
+        ), metadata=self.metadata)
+
+        if response.Status != 200: return None
+
+        return response
+
+    @trace_service("Auth Handler (get_parents_inform)", open_tracing)
+    def get_parents_inform(self, uuid, parents_uuid, x_request_id):
+        self.metadata = (("x-request-id", x_request_id),
+                         ("span-context", str(open_tracing.tracer.active_span).split()[0]))
+
+        response = self._parents_stub.GetParentInformWithUUID(auth_parent_pb2.GetParentInformWithUUIDRequest(
+            UUID=uuid,
+            ParentUUID=parents_uuid,
         ), metadata=self.metadata)
 
         if response.Status != 200: return None
