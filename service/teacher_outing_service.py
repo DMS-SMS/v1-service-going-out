@@ -50,7 +50,7 @@ class TeacherOutingService:
     def get_outings_with_filter(self, request, context):
         x_request_id = get_x_request_id(context)
         outings = self.get_outings_with_filter_usecase.run(
-            request.uuid, x_request_id, request.status, request.grade, request.group)
+            request.uuid, x_request_id, request.status, request.grade, request.group, request.floor)
 
         response = proto.OutingResponse()
         response.status = 200
