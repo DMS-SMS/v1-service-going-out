@@ -22,7 +22,9 @@ class OutingRepositoryImpl(OutingRepository):
 
     @trace_service("SQL (find)", open_tracing)
     def find_all_by_student_uuid(self, student_id):
-        return self.sql.db_session.query(Outing).filter(Outing.student_uuid == func.binary(student_id)).all()
+        return self.sql.db_session.query(Outing)\
+            .filter(Outing.student_uuid == func.binary(student_id))\
+            .order_by(Outing.end_time.desc()).all()
 
     @trace_service("SQL (find)", open_tracing)
     def find_all_by_student_uuid_and_status(self, student_uuid, status) -> List["Outing"]:
