@@ -1,3 +1,9 @@
 [submodule "const"]
 	path = const
 	url = https://github.com/DMS-SMS/v1-utils
+[submodule "https://github.com/DMS-SMS/v1-protocol-buffer"]
+	path = https://github.com/DMS-SMS/v1-protocol-buffer
+	url = proto
+[submodule "proto"]
+	path = proto
+	url = https://github.com/DMS-SMS/v1-protocol-buffer
