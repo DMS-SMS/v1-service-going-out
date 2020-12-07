@@ -15,7 +15,7 @@ from domain.usecase.go_out_usecase import GoOutUseCase
 from infrastructure.implementation.repository.outing_repository_impl import OutingRepositoryImpl
 from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
 from infrastructure.implementation.service.uuid_service_impl import UuidServiceImpl
-from infrastructure.implementation.service.sms_service_impl import SMSServiceImpl
+from infrastructure.sms.sms_service_impl import SMSServiceImpl
 
 from proto.python.outing import outing_student_pb2_grpc, outing_student_pb2
 

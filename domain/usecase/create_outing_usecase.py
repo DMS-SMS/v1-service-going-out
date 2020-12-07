@@ -19,7 +19,8 @@ class CreateOutingUseCase:
         self.sms_service: SMSService = sms_service
 
     def run(self, uuid, situation, start_time, end_time, place, reason, x_request_id):
-        if self.student_repository.find_by_uuid(uuid, x_request_id) is None: raise Unauthorized()
+        student = self.student_repository.find_by_uuid(uuid, x_request_id)
+        if student is None: raise Unauthorized()
 
         outing_uuid = self.uuid_service.generate_outing_uuid()
         confirm_code = self.uuid_service.generate_confirm_code()
@@ -42,6 +43,21 @@ class CreateOutingUseCase:
         )
 
         self.confirm_code_repository.save(outing_uuid, confirm_code)
-        self.sms_service.send_to_parents(outing_uuid, confirm_code, x_request_id)
+        self.sms_service.send("number", self._generate_message(
+            student._name,
+            datetime.datetime.fromtimestamp(start_time),
+            datetime.datetime.fromtimestamp(end_time),
+            reason,
+            place,
+            "http://{BASEURL}",
+            confirm_code
+        ), x_request_id)
 
         return outing_uuid
+
+    def _generate_message(self, name, start_time, end_time, reason, place, base_confirm_url,confirm_code) -> str:
+        return f"{name}학생이 {start_time}~{end_time}까지의 외출을 신청하였습니다.\n" \
+               f" 사유 : {reason} \n " \
+               f" 장소 : {place} \n" \
+               f" 허가 : {base_confirm_url}/confirm=?{confirm_code} \n" \
+               f" 거부 : {base_confirm_url}/confirm=?{confirm_code}"
