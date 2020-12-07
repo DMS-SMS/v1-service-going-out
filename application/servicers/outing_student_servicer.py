@@ -46,6 +46,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
             get_outing_inform_usecase=GetOutingInformUseCase(
                 self.outing_repository,
                 self.student_repository,
+                self.parents_repository,
                 self.uuid_service
             ),
             get_card_usecase=GetCardUseCase(
