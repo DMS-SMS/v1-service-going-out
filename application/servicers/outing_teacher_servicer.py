@@ -2,6 +2,7 @@ from domain.usecase.approve_outing_teacher_usecase import ApproveOutingTeacherUs
 from domain.usecase.certify_outing_usecase import CertifyOutingUseCase
 from domain.usecase.get_outings_with_filter_usecase import GetOutingsWithFilterUseCase
 from domain.usecase.reject_outing_teacher_usecase import RejectOutingTeacherUseCase
+from infrastructure.implementation.repository.club_repository_impl import ClubRepositoryImpl
 from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
 from infrastructure.implementation.repository.teacher_repository_impl import TeacherRepositoryImpl
 from proto.python.outing import outing_teacher_pb2_grpc, outing_teacher_pb2
@@ -19,6 +20,7 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
         self.outing_repository = OutingRepositoryImpl()
         self.student_repository = StudentRepositoryImpl()
         self.teacher_repository = TeacherRepositoryImpl()
+        self.club_repository = ClubRepositoryImpl()
 
         self.service = TeacherOutingService(
             approve_outing_teacher_usecase=ApproveOutingTeacherUseCase(
@@ -36,7 +38,8 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
             get_outings_with_filter_usecase=GetOutingsWithFilterUseCase(
                 self.outing_repository,
                 self.student_repository,
-                self.teacher_repository
+                self.teacher_repository,
+                self.club_repository
             ),
             teacher_outing_mapper=TeacherOutingMapper()
         )
