@@ -5,9 +5,7 @@ COPY . .
 WORKDIR .
 
 RUN pip install -r requirements.txt
-#ENV PYTHONUNBUFFERED=0
-#ENV GRPC_VERBOSITY=DEBUG
-#ENV GRPC_TRACE=all
+ENV PYTHONUNBUFFERED=0
 
 ENTRYPOINT ["python"]
 CMD ["run.py"]
