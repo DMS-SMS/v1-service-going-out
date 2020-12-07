@@ -5,16 +5,18 @@ from domain.exception.bad_request import BadRequestException
 from domain.repository.confirm_code_repository import ConfirmCodeRepository
 from domain.repository.outing_repository import OutingRepository
 from domain.entity.outing import Outing
+from domain.repository.parents_repository import ParentsRepository
 from domain.repository.student_repository import StudentRepository
 from domain.service.sms_service import SMSService
 from domain.service.uuid_service import UuidService
 
 
 class CreateOutingUseCase:
-    def __init__(self, outing_repository, confirm_code_repository, student_repository, uuid_service, sms_service):
+    def __init__(self, outing_repository, confirm_code_repository, student_repository, parents_repository, uuid_service, sms_service):
         self.outing_repository: OutingRepository = outing_repository
         self.confirm_code_repository: ConfirmCodeRepository = confirm_code_repository
         self.student_repository: StudentRepository = student_repository
+        self.parents_repository: ParentsRepository = parents_repository
         self.uuid_service: UuidService = uuid_service
         self.sms_service: SMSService = sms_service
 
@@ -43,15 +45,17 @@ class CreateOutingUseCase:
         )
 
         self.confirm_code_repository.save(outing_uuid, confirm_code)
-        self.sms_service.send("number", self._generate_message(
-            student._name,
-            datetime.datetime.fromtimestamp(start_time),
-            datetime.datetime.fromtimestamp(end_time),
-            reason,
-            place,
-            "http://{BASEURL}",
-            confirm_code
-        ), x_request_id)
+        self.sms_service.send(
+            self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)._phone_number,
+            self._generate_message(
+                student._name,
+                datetime.datetime.fromtimestamp(start_time),
+                datetime.datetime.fromtimestamp(end_time),
+                reason,
+                place,
+                "http://{BASEURL}",
+                confirm_code),
+            x_request_id)
 
         return outing_uuid
 
