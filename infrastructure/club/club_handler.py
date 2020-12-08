@@ -31,8 +31,6 @@ class ClubHandler:
             ClubUUIDs=club_response.ClubUUIDs
         ), metadata=self.metadata)
 
-        raise Exception(response.Message)
-
         if response.Status != 200: return None
 
         return response
