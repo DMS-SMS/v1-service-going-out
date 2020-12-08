@@ -26,12 +26,12 @@ class ClubHandler:
             floor=str(floor)
         ), metadata=self.metadata)
 
-        raise Exception(club_response.ClubUUIDs)
-
         response = self._student_stub.GetClubInformsWithUUIDs(club_student_pb2.GetClubInformsWithUUIDsRequest(
             UUID=uuid,
             ClubUUIDs=club_response.ClubUUIDs
         ), metadata=self.metadata)
+
+        raise Exception(response.Message)
 
         if response.Status != 200: return None
 
