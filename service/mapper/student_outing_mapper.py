@@ -10,7 +10,7 @@ class StudentOutingMapper:
     def get_student_outings_mapper(self, outings: List["Outing"], start: int, end: int):
         outings_proto = []
 
-        for outing in outings[start:end]:
+        for outing in outings[start:start+end]:
             outing_proto = StudentOuting()
 
             outing_proto.outing_id = outing.outing_uuid
