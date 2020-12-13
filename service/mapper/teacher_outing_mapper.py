@@ -13,7 +13,7 @@ class TeacherOutingMapper:
         outings_proto = []
         student_repository: StudentRepository = StudentRepositoryImpl()
 
-        for outing in outings[start:count]:
+        for outing in outings[start:start+count]:
             outing_proto = OutingProto()
             student = student_repository.find_by_uuid(outing.student_uuid, x_request_id)
 
