@@ -9,8 +9,12 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - CONSUL_ADDR=${CONSUL_ADDRESS}
       - JAEGER_ADDR=${JAEGER_ADDRESS}
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels: [APP=service-outing]
 
 networks:
   dms-sms-local:
     name: dms-sms-local
-    driver: bridge
+    driver: overlay
