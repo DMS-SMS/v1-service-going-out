@@ -8,7 +8,7 @@ from infrastructure.config.database_config import DatabaseConfig
 class MySQLHandler:
     def __init__(self):
         self._config = DatabaseConfig()
-        self._engine = create_engine(self._config.address, encoding="utf-8", pool_recycle=-1)
+        self._engine = create_engine(self._config.address, encoding="utf-8", pool_recycle=1800, pool_pre_ping=True)
         self._db_session = scoped_session(
             sessionmaker(
                 autocommit=self._config.autocommit,
