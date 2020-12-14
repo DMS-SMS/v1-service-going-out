@@ -14,6 +14,7 @@ class MySQLHandler:
                 autocommit=self._config.autocommit,
                 autoflush=self._config.autoflush,
                 bind=self.engine,
+                expire_on_commit=False
             )
         )
         self._base = declarative_base()
