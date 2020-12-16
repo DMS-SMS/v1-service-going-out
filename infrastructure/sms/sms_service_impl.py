@@ -1,3 +1,5 @@
+import os
+
 from domain.service.sms_service import SMSService
 from infrastructure.open_tracing import open_tracing
 from infrastructure.open_tracing.open_tracing_handler import trace_service
@@ -6,19 +8,15 @@ from infrastructure.open_tracing.open_tracing_handler import trace_service
 class SMSServiceImpl(SMSService):
     @trace_service("SMS (send)", open_tracing)
     def send(self, target_number: str, message: str, x_request_id):
-        # Temporary
-        import os
-        import smtplib
-        from email.mime.text import MIMEText
+        import boto3
+        client = boto3.client(
+            "sns",
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
+            region_name="ap-northeast-1"  # 도쿄
+        )
 
-        smtp = smtplib.SMTP('smtp.gmail.com', 587)
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.login('frametemporary123@gmail.com', os.getenv("EMAIL_PASSWORD"))
-
-        msg = MIMEText(message)
-        msg['Subject'] = 'SMS 테스트'
-        msg['To'] = 'dltjdqhr55@gmail.com'
-        smtp.sendmail('frametemporary123@gmail.com', 'dltjdqhr55@gmail.com', msg.as_string())
-
-        smtp.quit()
+        client.publish(
+            PhoneNumber="+82"+target_number,
+            Message=message
+        )
