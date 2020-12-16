@@ -49,19 +49,12 @@ class CreateOutingUseCase:
             self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)._phone_number,
             self._generate_message(
                 student._name,
-                datetime.datetime.fromtimestamp(start_time),
-                datetime.datetime.fromtimestamp(end_time),
-                reason,
-                place,
-                "http://54.180.165.105/v1/outings/uuid",
-                confirm_code, outing_uuid),
+                "54.180.165.105/che",
+                confirm_code),
             x_request_id)
 
         return outing_uuid
 
-    def _generate_message(self, name, start_time, end_time, reason, place, base_confirm_url, confirm_code, outing_uuid) -> str:
-        return f"{name}학생이 {start_time}~{end_time}까지의 외출을 신청하였습니다.\n" \
-               f" 사유 : {reason} \n " \
-               f" 장소 : {place} \n" \
-               f" 허가 : {base_confirm_url}/{outing_uuid}/actions/parent-approve?code={confirm_code} \n" \
-               f" 거부 : {base_confirm_url}/{outing_uuid}/actions/parent-reject?code={confirm_code}"
+    def _generate_message(self, name, base_confirm_url, confirm_code) -> str:
+        return f"{name}학생 외출 신청\n" \
+               f" 확인 : {base_confirm_url}?c={confirm_code}"
