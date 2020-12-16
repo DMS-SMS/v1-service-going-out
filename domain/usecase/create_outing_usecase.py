@@ -53,15 +53,15 @@ class CreateOutingUseCase:
                 datetime.datetime.fromtimestamp(end_time),
                 reason,
                 place,
-                "http://{BASEURL}",
-                confirm_code),
+                "http://54.180.165.105/v1/outings/uuid",
+                confirm_code, outing_uuid),
             x_request_id)
 
         return outing_uuid
 
-    def _generate_message(self, name, start_time, end_time, reason, place, base_confirm_url,confirm_code) -> str:
+    def _generate_message(self, name, start_time, end_time, reason, place, base_confirm_url, confirm_code, outing_uuid) -> str:
         return f"{name}학생이 {start_time}~{end_time}까지의 외출을 신청하였습니다.\n" \
                f" 사유 : {reason} \n " \
                f" 장소 : {place} \n" \
-               f" 허가 : {base_confirm_url}/confirm=?{confirm_code} \n" \
-               f" 거부 : {base_confirm_url}/confirm=?{confirm_code}"
+               f" 허가 : {base_confirm_url}/{outing_uuid}/actions/parent-approve?code={confirm_code} \n" \
+               f" 거부 : {base_confirm_url}/{outing_uuid}/actions/parent-reject?code={confirm_code}"
