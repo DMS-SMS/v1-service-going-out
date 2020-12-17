@@ -8,3 +8,6 @@ class ConfirmCodeRepository(metaclass=ABCMeta):
 
     @abstractmethod
     def find_by_code(self, confirm_code: str) -> Optional["str"]: pass
+
+    @abstractmethod
+    def delete_by_code(self, confirm_code: str): pass

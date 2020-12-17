@@ -13,3 +13,6 @@ class ConfirmCodeRepositoryImpl(ConfirmCodeRepository):
 
     def find_by_code(self, confirm_code: str) -> Optional["str"]:
         return self.redis.find_by_key(confirm_code)
+
+    def delete_by_code(self, confirm_code: str):
+        self.redis.delete_by_key(confirm_code)

@@ -19,3 +19,4 @@ class RejectOutingUseCase:
 
         outing.status = "-1"
         self.outing_repository.save(outing)
+        self.confirm_code_repository.delete_by_code(confirm_code)
