@@ -18,4 +18,4 @@ class OutingRepository(metaclass=ABCMeta):
     def find_all_by_student_uuid_and_status(self, student_uuid: str, status: str) -> List["Outing"]: pass
 
     @abstractmethod
-    def find_by_student_uuid_and_end_time(self, student_uuid: str, time: int) -> Optional["Outing"]: pass
+    def find_by_student_uuid_and_time(self, student_uuid: str, time: int) -> Optional["Outing"]: pass

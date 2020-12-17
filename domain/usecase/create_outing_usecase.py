@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from domain.exception import OutingExist, Unauthorized
 from domain.exception.bad_request import BadRequestException
@@ -27,9 +28,11 @@ class CreateOutingUseCase:
         outing_uuid = self.uuid_service.generate_outing_uuid()
         confirm_code = self.uuid_service.generate_confirm_code()
 
+        if time.time() > start_time: raise BadRequestException()
+        if time.time() + 604800 <= start_time: raise BadRequestException()
         if start_time >= end_time: raise BadRequestException()
-
-        if self.outing_repository.find_by_student_uuid_and_end_time(uuid, end_time) is not None: raise OutingExist()
+        if self.outing_repository.find_by_student_uuid_and_time(uuid, end_time) is not None: raise OutingExist()
+        if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None: raise OutingExist()
 
         self.outing_repository.save(
             Outing(

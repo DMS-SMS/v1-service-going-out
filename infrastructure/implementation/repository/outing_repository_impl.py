@@ -48,7 +48,7 @@ class OutingRepositoryImpl(OutingRepository):
         return model
 
     @trace_service("SQL (find)", open_tracing)
-    def find_by_student_uuid_and_end_time(self, student_uuid: str, time: float) -> Outing:
+    def find_by_student_uuid_and_time(self, student_uuid: str, time: float) -> Outing:
         model = (self.sql._db_session.query(Outing)
                 .filter(and_(Outing.start_time <= datetime.datetime.fromtimestamp(time),
                              Outing.end_time >= datetime.datetime.fromtimestamp(time))).first())
