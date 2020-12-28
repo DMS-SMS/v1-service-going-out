@@ -86,6 +86,7 @@ class StudentOutingService:
             start_time=int(mktime(outing.start_time.timetuple())),
             end_time=int(mktime(outing.end_time.timetuple())),
             outing_status=outing.status,
+            reason=outing.reason,
 
             name=student._name,
             grade=student._grade,
