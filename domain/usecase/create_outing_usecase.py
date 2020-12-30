@@ -28,6 +28,12 @@ class CreateOutingUseCase:
         outing_uuid = self.uuid_service.generate_outing_uuid()
         confirm_code = self.uuid_service.generate_confirm_code()
 
+        start_datetime = datetime.datetime.fromtimestamp(start_time+32400)
+        start_date_one_day_later = datetime.datetime(start_datetime.year, start_datetime.month, start_datetime.day) \
+                     + datetime.timedelta(days=1)
+
+
+        if datetime.datetime.fromtimestamp(end_time+32400) > start_date_one_day_later: raise BadRequestException()
         if time.time() > start_time: raise BadRequestException()
         if time.time() + 604800 <= start_time: raise BadRequestException()
         if start_time >= end_time: raise BadRequestException()
