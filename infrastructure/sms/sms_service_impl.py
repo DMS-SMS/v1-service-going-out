@@ -15,12 +15,13 @@ class SMSServiceImpl(SMSService):
             aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
             region_name="ap-northeast-1"  # 도쿄
         )
-
+        
         client.publish(
             PhoneNumber="+82"+target_number,
             Message=message,
             MessageAttributes={
                 'AWS.SNS.SMS.SMSType': {
+                    'DataType': 'String',
                     'StringValue': 'Transactional'
                 }
             }
