@@ -66,8 +66,8 @@ class StudentOutingService:
             outing_id=outing.outing_uuid,
             place=outing.place,
             reason=outing.reason,
-            start_time=int(mktime(outing.start_time.timetuple())),
-            end_time=int(mktime(outing.end_time.timetuple())),
+            start_time=int(mktime(outing.start_time.timetuple()))-32400,
+            end_time=int(mktime(outing.end_time.timetuple()))-32400,
             outing_status=outing.status,
             outing_situation=outing.situation
         )
@@ -83,8 +83,8 @@ class StudentOutingService:
             status=200,
 
             place=outing.place,
-            start_time=int(mktime(outing.start_time.timetuple())),
-            end_time=int(mktime(outing.end_time.timetuple())),
+            start_time=int(mktime(outing.start_time.timetuple()))-32400,
+            end_time=int(mktime(outing.end_time.timetuple()))-32400,
             outing_status=outing.status,
             reason=outing.reason,
 

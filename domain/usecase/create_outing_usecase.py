@@ -37,7 +37,6 @@ class CreateOutingUseCase:
         if time.time() > start_time: raise BadRequestException()
         if time.time() + 604800 <= start_time: raise BadRequestException()
         if start_time >= end_time: raise BadRequestException()
-        if self.outing_repository.find_by_student_uuid_and_time(uuid, end_time) is not None: raise OutingExist()
         if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None: raise OutingExist()
 
         self.outing_repository.save(
@@ -46,8 +45,8 @@ class CreateOutingUseCase:
                 student_uuid=uuid,
                 status="1" if situation == "EMERGENCY" else "0",
                 situation=situation,
-                start_time=datetime.datetime.fromtimestamp(start_time),
-                end_time=datetime.datetime.fromtimestamp(end_time),
+                start_time=datetime.datetime.fromtimestamp(start_time+32400),
+                end_time=datetime.datetime.fromtimestamp(end_time+32400),
                 place=place,
                 reason=reason,
             )

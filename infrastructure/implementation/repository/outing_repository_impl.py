@@ -49,9 +49,11 @@ class OutingRepositoryImpl(OutingRepository):
 
     @trace_service("SQL (find)", open_tracing)
     def find_by_student_uuid_and_time(self, student_uuid: str, time: float) -> Outing:
+        generated_time = datetime.datetime.fromtimestamp(time+32400)
+        current_day = datetime.datetime(generated_time.year, generated_time.month, generated_time.day)
         model = (self.sql._db_session.query(Outing)
-                .filter(and_(Outing.start_time <= datetime.datetime.fromtimestamp(time),
-                             Outing.end_time >= datetime.datetime.fromtimestamp(time))).first())
+                .filter(and_(Outing.start_time <= current_day,
+                             Outing.end_time >= current_day)).first())
         self.sql._db_session.commit()
         self.sql._db_session.close()
         return model

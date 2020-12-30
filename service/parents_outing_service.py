@@ -32,8 +32,8 @@ class ParentsOutingService:
             status = 200,
             name=student._name,
             outing_id=outing.outing_uuid,
-            start_time=int(time.mktime(outing.start_time.timetuple())),
-            end_time=int(time.mktime(outing.end_time.timetuple())),
+            start_time=int(time.mktime(outing.start_time.timetuple()))-32400,
+            end_time=int(time.mktime(outing.end_time.timetuple()))-32400,
             place=outing.place,
             reason=outing.reason,
             situation=outing.situation

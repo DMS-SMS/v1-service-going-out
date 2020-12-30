@@ -25,8 +25,8 @@ class TeacherOutingMapper:
 
             outing_proto.place = outing.place
             outing_proto.reason = outing.reason
-            outing_proto.start_time = int(time.mktime(outing.start_time.timetuple()))
-            outing_proto.end_time = int(time.mktime(outing.end_time.timetuple()))
+            outing_proto.start_time = int(time.mktime(outing.start_time.timetuple()))-32400
+            outing_proto.end_time = int(time.mktime(outing.end_time.timetuple()))-32400
             outing_proto.situation = outing.situation
             outing_proto.status = outing.status
 
