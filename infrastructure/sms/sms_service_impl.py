@@ -18,5 +18,11 @@ class SMSServiceImpl(SMSService):
 
         client.publish(
             PhoneNumber="+82"+target_number,
-            Message=message
+            Message=message,
+            MessageAttributes={
+                'AWS.SNS.SMS.SMSType': {
+                    'StringValue': 'Transactional'
+                }
+            }
         )
+
