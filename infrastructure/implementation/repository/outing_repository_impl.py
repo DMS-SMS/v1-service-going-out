@@ -53,7 +53,7 @@ class OutingRepositoryImpl(OutingRepository):
         current_day = datetime.datetime(generated_time.year, generated_time.month, generated_time.day)
         model = (self.sql._db_session.query(Outing)
                 .filter(and_(Outing.start_time >= current_day,
-                             Outing.end_time <= current_day)).first())
+                             Outing.end_time < current_day + datetime.timedelta(days=1))).first())
         self.sql._db_session.commit()
         self.sql._db_session.close()
         return model
