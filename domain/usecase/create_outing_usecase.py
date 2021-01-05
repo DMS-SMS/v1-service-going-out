@@ -43,7 +43,7 @@ class CreateOutingUseCase:
             Outing(
                 outing_uuid=outing_uuid,
                 student_uuid=uuid,
-                status="1" if situation == "EMERGENCY" else "0",
+                status="1" if situation == "emergency" else "0",
                 situation=situation,
                 start_time=datetime.datetime.fromtimestamp(start_time+32400),
                 end_time=datetime.datetime.fromtimestamp(end_time+32400),
