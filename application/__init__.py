@@ -11,8 +11,8 @@ class gRPCApplication:
         self._consul = consul
         self._config = config
         self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=self._config.max_workers))
-        signal.signal(signal.SIGTERM, self.stop)
-        signal.signal(signal.SIGKILL, self.stop)
+        signal.signal(signal.SIGTERM, self.stop_sig_handler)
+        signal.signal(signal.SIGKILL, self.stop_sig_handler)
 
         self._app.add_insecure_port(self._config.address)
         self.register_db()
@@ -37,3 +37,6 @@ class gRPCApplication:
         except Exception as e:
             print(e)
             self.stop()
+
+    def stop_sig_handler(self, signum, frame):
+        self.stop()
