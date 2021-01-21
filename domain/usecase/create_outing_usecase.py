@@ -57,7 +57,7 @@ class CreateOutingUseCase:
             self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)._phone_number,
             self._generate_message(
                 student._name,
-                "https://dsm-sms.com/parent/",
+                "dsm-sms.com/parent/",
                 confirm_code,
                 True if situation == "EMERGENCY" else False
             ),
