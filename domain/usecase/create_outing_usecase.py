@@ -13,7 +13,8 @@ from domain.service.uuid_service import UuidService
 
 
 class CreateOutingUseCase:
-    def __init__(self, outing_repository, confirm_code_repository, student_repository, parents_repository, uuid_service, sms_service):
+    def __init__(self, outing_repository, confirm_code_repository, student_repository, parents_repository, uuid_service,
+                 sms_service):
         self.outing_repository: OutingRepository = outing_repository
         self.confirm_code_repository: ConfirmCodeRepository = confirm_code_repository
         self.student_repository: StudentRepository = student_repository
@@ -28,12 +29,11 @@ class CreateOutingUseCase:
         outing_uuid = self.uuid_service.generate_outing_uuid()
         confirm_code = self.uuid_service.generate_confirm_code()
 
-        start_datetime = datetime.datetime.fromtimestamp(start_time+32400)
+        start_datetime = datetime.datetime.fromtimestamp(start_time + 32400)
         start_date_one_day_later = datetime.datetime(start_datetime.year, start_datetime.month, start_datetime.day) \
-                     + datetime.timedelta(days=1)
+                                   + datetime.timedelta(days=1)
 
-
-        if datetime.datetime.fromtimestamp(end_time+32400) > start_date_one_day_later: raise BadRequestException()
+        if datetime.datetime.fromtimestamp(end_time + 32400) > start_date_one_day_later: raise BadRequestException()
         if time.time() > start_time: raise BadRequestException()
         if time.time() + 604800 <= start_time: raise BadRequestException()
         if start_time >= end_time: raise BadRequestException()
@@ -45,20 +45,19 @@ class CreateOutingUseCase:
                 student_uuid=uuid,
                 status="1" if situation == "emergency" else "0",
                 situation=situation,
-                start_time=datetime.datetime.fromtimestamp(start_time+32400),
-                end_time=datetime.datetime.fromtimestamp(end_time+32400),
+                start_time=datetime.datetime.fromtimestamp(start_time + 32400),
+                end_time=datetime.datetime.fromtimestamp(end_time + 32400),
                 place=place,
                 reason=reason,
             )
         )
-
 
         self.confirm_code_repository.save(outing_uuid, confirm_code)
         self.sms_service.send(
             self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)._phone_number,
             self._generate_message(
                 student._name,
-                "54.180.165.105/check",
+                "https://dsm-sms.com/parent/",
                 confirm_code,
                 True if situation == "EMERGENCY" else False
             ),
@@ -68,7 +67,7 @@ class CreateOutingUseCase:
 
     def _generate_message(self, name, base_confirm_url, confirm_code, emergency=False) -> str:
         if emergency: return f"{name}학생 긴급 외출 신청\n" \
-               f" 확인 : {base_confirm_url}?c={confirm_code}"
+                             f" 확인 : {base_confirm_url}{confirm_code}"
 
         return f"{name}학생 외출 신청\n" \
-               f" 확인 : {base_confirm_url}?c={confirm_code}"
+               f" 확인 : {base_confirm_url}{confirm_code}"
