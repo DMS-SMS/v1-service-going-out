@@ -16,7 +16,7 @@ class gRPCApplication:
         self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=self._config.max_workers))
         signal.signal(signal.SIGTERM, self.stop_sig_handler)
 
-        logging.basicConfig()
+        logging.basicConfig(level=logging.DEBUG)
         self._logger = logging.getLogger(__name__)
 
         self._app.add_insecure_port(self._config.address)
