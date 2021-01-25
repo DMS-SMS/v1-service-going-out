@@ -32,9 +32,9 @@ class gRPCApplication:
     def serve(self):
         try:
             self._app.start()
-            self._consul.register_consul(self._config.port)
             self._sqs_service.purge()
             self._sqs_service.listen()
+            self._consul.register_consul(self._config.port)
             logging.info(f"* gRPC Application is served in {self._config.address}")
             self._app.wait_for_termination()
         except Exception as e:
