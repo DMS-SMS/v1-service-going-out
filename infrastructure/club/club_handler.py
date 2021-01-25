@@ -6,16 +6,11 @@ from infrastructure.open_tracing import open_tracing
 
 from proto.python.club import club_student_pb2, club_student_pb2_grpc
 
-from const.topic.python.service_names import club_service_name
-
 
 class ClubHandler:
-    def __init__(self):
-        self._consul = ConsulHandler()
-
     @trace_service("Club Handler (get_club_informs_with_floor)", open_tracing)
     def get_club_informs_with_floor(self, uuid, floor, x_request_id):
-        address = self._consul.get_address(club_service_name)
+        address = ConsulHandler().club_address
         channel = grpc.insecure_channel(address)
         student_stub = club_student_pb2_grpc.ClubStudentStub(channel)
 

@@ -11,12 +11,9 @@ from const.topic.python.service_names import auth_service_name
 
 
 class AuthHandler:
-    def __init__(self):
-        self._consul = ConsulHandler()
-
     @trace_service("Auth Handler (get_student_inform)", open_tracing)
     def get_student_inform(self, uuid, student_uuid, x_request_id):
-        address = self._consul.get_address(auth_service_name)
+        address = ConsulHandler().auth_address
         channel = grpc.insecure_channel(address)
         student_stub = auth_student_pb2_grpc.AuthStudentStub(channel)
 
@@ -34,7 +31,7 @@ class AuthHandler:
 
     @trace_service("Auth Handler (get_uuid_with_inform)", open_tracing)
     def get_uuid_with_inform(self, uuid, x_request_id, grade=None, group=None):
-        address = self._consul.get_address(auth_service_name)
+        address = ConsulHandler().auth_address
         channel = grpc.insecure_channel(address)
         student_stub = auth_student_pb2_grpc.AuthStudentStub(channel)
 
@@ -53,7 +50,7 @@ class AuthHandler:
 
     @trace_service("Auth Handler (get_teacher_inform)", open_tracing)
     def get_teacher_inform(self, uuid, teacher_uuid, x_request_id):
-        address = self._consul.get_address(auth_service_name)
+        address = ConsulHandler().auth_address
         channel = grpc.insecure_channel(address)
         teacher_stub = auth_teacher_pb2_grpc.AuthTeacherStub(channel)
 
@@ -71,7 +68,7 @@ class AuthHandler:
 
     @trace_service("Auth Handler (get_parents_with_student_uuid)", open_tracing)
     def get_parents_with_student_uuid(self, uuid, student_uuid, x_request_id):
-        address = self._consul.get_address(auth_service_name)
+        address = ConsulHandler().auth_address
         channel = grpc.insecure_channel(address)
         student_stub = auth_student_pb2_grpc.AuthStudentStub(channel)
 
@@ -89,7 +86,7 @@ class AuthHandler:
 
     @trace_service("Auth Handler (get_parents_inform)", open_tracing)
     def get_parents_inform(self, uuid, parents_uuid, x_request_id):
-        address = self._consul.get_address(auth_service_name)
+        address = ConsulHandler().auth_address
         channel = grpc.insecure_channel(address)
         parents_stub = auth_parent_pb2_grpc.AuthParentStub(channel)
 

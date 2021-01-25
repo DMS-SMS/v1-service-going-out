@@ -8,8 +8,13 @@ from consul import Consul, Check
 
 from infrastructure.config.consul_config import ConsulConfig
 
+from const.topic.python.service_names import club_service_name, auth_service_name
+
 
 class ConsulHandler:
+    auth_address = ""
+    club_address = ""
+
     def __init__(self):
         self.consul = Consul(host=ConsulConfig.host, port=ConsulConfig.port)
         self.consul_agent = self.consul.Agent(self.consul)
@@ -42,6 +47,10 @@ class ConsulHandler:
     def deregister_consul(self):
         self.consul_check.deregister(ConsulConfig.check_id)
         self.consul_service.deregister(ConsulConfig.service_id)
+
+    def update_address(self):
+        ConsulHandler.auth_address = self.get_address(auth_service_name)
+        ConsulHandler.club_address = self.get_address(club_service_name)
 
     def get_address(self, service: str) -> Optional[str]:
         services = self.consul_agent.services()

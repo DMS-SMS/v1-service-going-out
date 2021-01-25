@@ -3,6 +3,7 @@ import logging
 import signal
 from concurrent import futures
 
+from infrastructure.mq.aws_sqs_service import AwsSqsService
 from infrastructure.mysql import sql
 from application.servicers import register_outing_servicers
 
@@ -10,6 +11,7 @@ class gRPCApplication:
     def __init__(self, config, consul):
         self._consul = consul
         self._config = config
+        self._sqs_service = AwsSqsService(self._consul)
         self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=self._config.max_workers))
         signal.signal(signal.SIGTERM, self.stop_sig_handler)
 
@@ -31,6 +33,8 @@ class gRPCApplication:
         try:
             self._app.start()
             self._consul.register_consul(self._config.port)
+            self._sqs_service.purge()
+            self._sqs_service.listen()
             logging.info(f"* gRPC Application is served in {self._config.address}")
             self._app.wait_for_termination()
         except Exception as e:
