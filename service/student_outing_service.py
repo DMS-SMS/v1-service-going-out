@@ -69,7 +69,8 @@ class StudentOutingService:
             start_time=int(mktime(outing.start_time.timetuple()))-32400,
             end_time=int(mktime(outing.end_time.timetuple()))-32400,
             outing_status=outing.status,
-            outing_situation=outing.situation
+            outing_situation=outing.situation,
+            student_uuid=outing.student_uuid
         )
 
     def get_card_about_outing(self, request: proto.GetCardAboutOutingRequest, context):
