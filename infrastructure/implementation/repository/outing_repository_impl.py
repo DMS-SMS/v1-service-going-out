@@ -21,6 +21,13 @@ class OutingRepositoryImpl(OutingRepository):
         self.sql._db_session.commit()
         self.sql._db_session.close()
 
+    @trace_service("SQL (save)", open_tracing)
+    def find_all(self) -> List["Outing"]:
+        model = self.sql._db_session.query(Outing).all()
+        self.sql._db_session.commit()
+        self.sql._db_session.close()
+        return model
+
     @trace_service("SQL (find)", open_tracing)
     def find_all_by_student_uuid(self, student_id):
         model = self.sql._db_session.query(Outing)\

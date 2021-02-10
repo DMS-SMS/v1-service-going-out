@@ -19,12 +19,14 @@ class GetOutingsWithFilterUseCase:
 
         if not grade == 0:
             student_uuids = self.student_repository.find_all_by_inform(uuid, x_request_id, grade, group)
-        else:
+        elif not floor == 0:
             student_uuids = []
             for club in self.club_repository.find_all_by_floor(uuid, floor, x_request_id):
                 student_uuids.extend(club._members)
+        else:
+            outings = self.outing_repository.find_all()
 
-        for student_uuid in student_uuids:
+        for student_uuid in list(set(student_uuids)):
             outings += self.outing_repository.find_all_by_student_uuid_and_status(student_uuid, status)
 
         outings = sorted(outings, key=lambda x: x.start_time, reverse=True)
