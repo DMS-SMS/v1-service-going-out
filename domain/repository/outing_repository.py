@@ -12,7 +12,7 @@ class OutingRepository(metaclass=ABCMeta):
     def find_by_id(self, id: str) -> Optional["Outing"]: pass
 
     @abstractmethod
-    def find_all(self) -> List["Outing"]: pass
+    def find_all_by_status(self, status: str) -> List["Outing"]: pass
 
     @abstractmethod
     def find_all_by_student_uuid(self, student_id): pass
