@@ -32,7 +32,7 @@ class StudentOutingService:
         self.student_outing_mapper: StudentOutingMapper = student_outing_mapper
 
     def create_outing(self, request: proto.CreateOutingRequest, context):
-        outing_uuid = self.create_outing_usecase.run(
+        outing_uuid, parents = self.create_outing_usecase.run(
             request.uuid,
             request.situation,
             request.start_time,
@@ -40,7 +40,7 @@ class StudentOutingService:
             request.place,
             request.reason,
             get_x_request_id(context))
-        return proto.CreateOutingResponse(status=201, outing_id=outing_uuid)
+        return proto.CreateOutingResponse(status=201, outing_id=outing_uuid, code=0 if parents else -1)
 
     def get_student_outings(self, request: proto.GetStudentOutingsRequest, context):
         outings = self.get_my_outings_usecase.run(

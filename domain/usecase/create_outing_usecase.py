@@ -39,11 +39,13 @@ class CreateOutingUseCase:
         if start_time >= end_time: raise BadRequestException()
         if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None: raise OutingExist()
 
+        parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
+
         self.outing_repository.save(
             Outing(
                 outing_uuid=outing_uuid,
                 student_uuid=uuid,
-                status="1" if situation == "emergency" else "0",
+                status="1" if situation == "emergency" or not parents else "0",
                 situation=situation,
                 start_time=datetime.datetime.fromtimestamp(start_time + 32400),
                 end_time=datetime.datetime.fromtimestamp(end_time + 32400),
@@ -52,18 +54,19 @@ class CreateOutingUseCase:
             )
         )
 
-        self.confirm_code_repository.save(outing_uuid, confirm_code)
-        self.sms_service.send(
-            self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)._phone_number,
-            self._generate_message(
-                student._name,
-                "dsm-sms.com/parent/",
-                confirm_code,
-                True if situation == "EMERGENCY" else False
-            ),
-            x_request_id)
+        if parents:
+            self.confirm_code_repository.save(outing_uuid, confirm_code)
+            self.sms_service.send(
+                parents._phone_number,
+                self._generate_message(
+                    student._name,
+                    "dsm-sms.com/parent/",
+                    confirm_code,
+                    True if situation == "EMERGENCY" else False
+                ),
+                x_request_id)
 
-        return outing_uuid
+        return outing_uuid, parents
 
     def _generate_message(self, name, base_confirm_url, confirm_code, emergency=False) -> str:
         if emergency: return f"{name}학생 긴급 외출 신청\n" \
