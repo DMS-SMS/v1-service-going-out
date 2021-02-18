@@ -1,5 +1,7 @@
-import grpc
 import logging
+logging.basicConfig(level=logging.DEBUG)
+
+import grpc
 import signal
 from concurrent import futures
 
@@ -16,7 +18,6 @@ class gRPCApplication:
         self._app = grpc.server(futures.ThreadPoolExecutor(max_workers=self._config.max_workers))
         signal.signal(signal.SIGTERM, self.stop_sig_handler)
 
-        logging.basicConfig(level=logging.DEBUG)
         self._logger = logging.getLogger(__name__)
 
         self._app.add_insecure_port(self._config.address)
@@ -31,7 +32,7 @@ class gRPCApplication:
 
     def stop(self):
         self._consul.deregister_consul()
-        self._logger.info("* gRPC Application is down")
+        self._logger.error("* gRPC Application is down")
 
     def serve(self):
         try:
@@ -40,7 +41,7 @@ class gRPCApplication:
             self._sqs_service.purge()
             self._sqs_service.listen()
             self._consul.register_consul(self._config.port)
-            self._logger.info(f"* gRPC Application is served in {self._config.address}")
+            self._logger.error(f"* gRPC Application is served in {self._config.address}")
             self._app.wait_for_termination()
         except Exception as e:
             self.stop()
