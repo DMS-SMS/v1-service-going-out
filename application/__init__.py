@@ -28,10 +28,11 @@ class gRPCApplication:
         sql.base.metadata.create_all(sql.engine)
 
     def register_servicers(self):
-        register_outing_servicers(self._app)
+        register_outing_servicers(self._app, self._consul)
 
     def stop(self):
         self._consul.deregister_consul()
+        self._logger.info("* Service is down")
 
     def serve(self):
         try:

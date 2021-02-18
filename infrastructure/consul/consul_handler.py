@@ -45,8 +45,8 @@ class ConsulHandler:
 
 
     def deregister_consul(self):
-        self.consul_check.deregister(ConsulConfig.check_id)
         self.consul_service.deregister(ConsulConfig.service_id)
+        self.consul_check.deregister(ConsulConfig.check_id)
 
     def update_address(self):
         ConsulHandler.auth_address = self.get_address(auth_service_name)
