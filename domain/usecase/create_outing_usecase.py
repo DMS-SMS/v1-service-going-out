@@ -29,13 +29,17 @@ class CreateOutingUseCase:
         outing_uuid = self.uuid_service.generate_outing_uuid()
         confirm_code = self.uuid_service.generate_confirm_code()
 
+        time_now = time.time()
+
         start_datetime = datetime.datetime.fromtimestamp(start_time + 32400)
         start_date_one_day_later = datetime.datetime(start_datetime.year, start_datetime.month, start_datetime.day) \
                                    + datetime.timedelta(days=1)
 
-        if datetime.datetime.fromtimestamp(end_time + 32400) > start_date_one_day_later: raise BadRequestException()
-        if time.time() > start_time: raise BadRequestException()
-        if time.time() + 604800 <= start_time: raise BadRequestException()
+        end_datetime = datetime.datetime.fromtimestamp(end_time + 32400)
+
+        if end_datetime > start_date_one_day_later: raise BadRequestException()
+        if time_now > start_time: raise BadRequestException()
+        if not datetime.datetime.fromtimestamp(time_now + 32400).date() == start_datetime.date(): raise BadRequestException()
         if start_time >= end_time: raise BadRequestException()
         if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None: raise OutingExist()
 
@@ -47,8 +51,8 @@ class CreateOutingUseCase:
                 student_uuid=uuid,
                 status="1" if situation == "emergency" or not parents else "0",
                 situation=situation,
-                start_time=datetime.datetime.fromtimestamp(start_time + 32400),
-                end_time=datetime.datetime.fromtimestamp(end_time + 32400),
+                start_time=start_datetime,
+                end_time=end_datetime,
                 place=place,
                 reason=reason,
             )
