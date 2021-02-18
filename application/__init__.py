@@ -32,7 +32,7 @@ class gRPCApplication:
 
     def stop(self):
         self._consul.deregister_consul()
-        self._logger.error("* gRPC Application is down")
+        self._logger.info("* gRPC Application is down")
 
     def serve(self):
         try:

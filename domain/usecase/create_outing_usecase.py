@@ -37,11 +37,16 @@ class CreateOutingUseCase:
 
         end_datetime = datetime.datetime.fromtimestamp(end_time + 32400)
 
-        if end_datetime > start_date_one_day_later: raise BadRequestException()
-        if time_now > start_time: raise BadRequestException()
-        if not datetime.datetime.fromtimestamp(time_now + 32400).date() == start_datetime.date(): raise BadRequestException()
-        if start_time >= end_time: raise BadRequestException()
-        if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None: raise OutingExist()
+        if end_datetime > start_date_one_day_later:
+            raise BadRequestException(message="The end time cannot be the day after the start time.")
+        if time_now > start_time:
+            raise BadRequestException(message="The start time must be earlier than the current time.")
+        if not datetime.datetime.fromtimestamp(time_now + 32400).date() == start_datetime.date():
+            raise BadRequestException(message="Start time should be today.")
+        if start_time >= end_time:
+            raise BadRequestException(message="The start time cannot be bigger than the end time.")
+        if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None:
+            raise OutingExist()
 
         parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
 
