@@ -32,8 +32,8 @@ class OutingRepositoryImpl(OutingRepository):
 
     @trace_service("SQL (find)", open_tracing)
     def find_all_by_student_uuid(self, student_id):
-        model = self.sql._db_session.query(Outing)\
-            .filter(Outing.student_uuid == func.binary(student_id))\
+        model = self.sql._db_session.query(Outing) \
+            .filter(Outing.student_uuid == func.binary(student_id)) \
             .order_by(Outing.end_time.desc()).all()
         self.sql._db_session.commit()
         self.sql._db_session.close()
@@ -51,18 +51,19 @@ class OutingRepositoryImpl(OutingRepository):
     @trace_service("SQL (find)", open_tracing)
     def find_by_id(self, id: str) -> Outing:
         model = (self.sql._db_session.query(Outing)
-                .filter(Outing.outing_uuid == func.binary(id)).first())
+                 .filter(Outing.outing_uuid == func.binary(id)).first())
         self.sql._db_session.commit()
         self.sql._db_session.close()
         return model
 
     @trace_service("SQL (find)", open_tracing)
     def find_by_student_uuid_and_time(self, student_uuid: str, time: float) -> Outing:
-        generated_time = datetime.datetime.fromtimestamp(time+32400)
+        generated_time = datetime.datetime.fromtimestamp(time + 32400)
         current_day = datetime.datetime(generated_time.year, generated_time.month, generated_time.day)
         model = (self.sql._db_session.query(Outing)
-                .filter(and_(Outing.start_time >= current_day,
-                             Outing.end_time < current_day + datetime.timedelta(days=1))).first())
+                 .filter(Outing.student_uuid == func.binary(student_uuid))
+                 .filter(and_(Outing.start_time >= current_day,
+                              Outing.end_time < current_day + datetime.timedelta(days=1))).first())
         self.sql._db_session.commit()
         self.sql._db_session.close()
         return model
