@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 import grpc
 import signal
@@ -41,7 +41,7 @@ class gRPCApplication:
             self._sqs_service.purge()
             self._sqs_service.listen()
             self._consul.register_consul(self._config.port)
-            self._logger.error(f"* gRPC Application is served in {self._config.address}")
+            self._logger.info(f"* gRPC Application is served in {self._config.address}")
             self._app.wait_for_termination()
         except Exception as e:
             self.stop()
