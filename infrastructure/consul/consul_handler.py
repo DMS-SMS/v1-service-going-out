@@ -43,7 +43,6 @@ class ConsulHandler:
 
         self.consul_check.ttl_pass(ConsulConfig.check_id)
 
-
     def deregister_consul(self):
         self.consul_service.deregister(ConsulConfig.service_id)
         self.consul_check.deregister(ConsulConfig.check_id)
@@ -79,7 +78,8 @@ class ConsulHandler:
         services = self.consul_agent.services()
         for service in services:
             if services[service]["Port"] == port: return True
-        else: return False
+        else:
+            return False
 
     def generate_service_port(self) -> int:
         return random.randrange(10101, 10200)
