@@ -2,6 +2,8 @@ from domain.usecase.get_account_by_uuid_usecase import GetAccountByUuidUseCase
 from domain.usecase.get_outing_by_o_code_usecase import GetOutingByOCodeUseCase
 from infrastructure.implementation.repository.confirm_code_repository_impl import ConfirmCodeRepositoryImpl
 from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
+from infrastructure.implementation.repository.teacher_repository_impl import TeacherRepositoryImpl
+from infrastructure.sms.sms_service_impl import SMSServiceImpl
 from service.parents_outing_service import ParentsOutingService
 from domain.usecase.approve_outing_usecase import ApproveOutingUseCase
 from domain.usecase.reject_outing_usecase import RejectOutingUseCase
@@ -16,11 +18,17 @@ class ParentsOutingServicer(outing_parents_pb2_grpc.OutingParentsServicer):
     def __init__(self):
         self.confirm_code_repository = ConfirmCodeRepositoryImpl()
         self.student_repository = StudentRepositoryImpl()
+        self.teacher_repository = TeacherRepositoryImpl()
         self.outing_repository = OutingRepositoryImpl()
+        self.sms_service = SMSServiceImpl()
+
         self.service = ParentsOutingService(
             approve_outing_usecase=ApproveOutingUseCase(
                 self.outing_repository,
-                self.confirm_code_repository
+                self.confirm_code_repository,
+                self.student_repository,
+                self.teacher_repository,
+                self.sms_service
             ),
             reject_outing_usecase=RejectOutingUseCase(
                 self.outing_repository,

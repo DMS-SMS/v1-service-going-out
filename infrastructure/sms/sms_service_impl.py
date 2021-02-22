@@ -9,7 +9,7 @@ from infrastructure.open_tracing.open_tracing_handler import trace_service
 
 class SMSServiceImpl(SMSService):
     @trace_service("SMS (send)", open_tracing)
-    def send(self, target_number: str, message: str, x_request_id):
+    def send(self, target_number: str, message: str):
         send_url = 'https://apis.aligo.in/send/'
 
         sms_data = {

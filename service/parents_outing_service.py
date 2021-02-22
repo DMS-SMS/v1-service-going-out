@@ -17,7 +17,7 @@ class ParentsOutingService:
         self.get_account_by_uuid_usecase: GetAccountByUuidUseCase = get_account_by_uuid_usecase
 
     def approve_outing(self, request, context):
-        self.approve_outing_usecase.run(request.confirm_code)
+        self.approve_outing_usecase.run(request.confirm_code, get_x_request_id(context))
         return proto.ConfirmOutingByOCodeResponse(status=200)
 
     def reject_outing(self, request, context):

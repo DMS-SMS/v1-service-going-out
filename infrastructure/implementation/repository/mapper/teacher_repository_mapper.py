@@ -14,4 +14,5 @@ def get_teacher_mapper(
         grade=teacher_proto.Grade,
         group=teacher_proto.Group,
         name=teacher_proto.Name,
+        phone_number=teacher_proto.PhoneNumber
     )

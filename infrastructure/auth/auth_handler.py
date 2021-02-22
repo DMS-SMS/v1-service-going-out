@@ -66,6 +66,25 @@ class AuthHandler:
 
         return response
 
+    @trace_service("Auth Handler (get_teacher_uuids_with_inform)", open_tracing)
+    def get_teacher_uuids_with_inform(self, uuid, grade, group, x_request_id):
+        address = ConsulHandler().auth_address
+        channel = grpc.insecure_channel(address)
+        teacher_stub = auth_teacher_pb2_grpc.AuthTeacherStub(channel)
+
+        metadata = (("x-request-id", x_request_id),
+                    ("span-context", str(open_tracing.tracer.active_span).split()[0]))
+
+        response = teacher_stub.GetTeacherUUIDsWithInform(auth_teacher_pb2.GetTeacherUUIDsWithInformRequest(
+            UUID=uuid,
+            Grade=grade,
+            Group=group
+        ), metadata=metadata)
+
+        if response.Status != 200: return []
+
+        return response.TeacherUUIDs
+
     @trace_service("Auth Handler (get_parents_with_student_uuid)", open_tracing)
     def get_parents_with_student_uuid(self, uuid, student_uuid, x_request_id):
         address = ConsulHandler().auth_address

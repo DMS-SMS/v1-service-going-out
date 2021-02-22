@@ -72,8 +72,7 @@ class CreateOutingUseCase:
                     "dsm-sms.com/parent/",
                     confirm_code,
                     True if situation == "EMERGENCY" else False
-                ),
-                x_request_id)
+                ))
 
         return outing_uuid, parents
 
