@@ -74,10 +74,10 @@ class CreateOutingUseCase:
                     student._name,
                     "dsm-sms.com/parent/",
                     confirm_code,
-                    True if situation == "EMERGENCY" else False
+                    True if situation == "emergency" else False
                 ))
 
-        if not parents or situation == "EMERGENCY":
+        if not parents or situation == "emergency":
             teacher_uuids = self.teacher_repository.find_by_grade_and_group(
                 uuid, student._grade, student._group, x_request_id=x_request_id
             )
