@@ -33,7 +33,9 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
             ),
             reject_outing_teacher_usecase=RejectOutingTeacherUseCase(
                 self.outing_repository,
-                self.teacher_repository
+                self.student_repository,
+                self.teacher_repository,
+                self.sms_service
             ),
             certify_outing_usecase=CertifyOutingUseCase(
                 self.outing_repository,
