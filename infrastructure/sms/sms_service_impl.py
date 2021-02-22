@@ -1,5 +1,6 @@
 import os
 import requests
+import logging
 
 from domain.service.sms_service import SMSService
 from infrastructure.open_tracing import open_tracing
@@ -22,4 +23,4 @@ class SMSServiceImpl(SMSService):
         }
 
         send_response = requests.post(send_url, data=sms_data)
-        print(send_response.json())
+        logging.info(send_response.json())
