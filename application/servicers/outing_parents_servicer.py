@@ -32,7 +32,9 @@ class ParentsOutingServicer(outing_parents_pb2_grpc.OutingParentsServicer):
             ),
             reject_outing_usecase=RejectOutingUseCase(
                 self.outing_repository,
-                self.confirm_code_repository
+                self.confirm_code_repository,
+                self.student_repository,
+                self.sms_service
             ),
             get_account_by_uuid_usecase=GetAccountByUuidUseCase(
                 self.student_repository

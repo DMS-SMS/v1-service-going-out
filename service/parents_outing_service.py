@@ -21,7 +21,7 @@ class ParentsOutingService:
         return proto.ConfirmOutingByOCodeResponse(status=200)
 
     def reject_outing(self, request, context):
-        self.reject_outing_usecase.run(request.confirm_code)
+        self.reject_outing_usecase.run(request.confirm_code, get_x_request_id(context))
         return proto.ConfirmOutingByOCodeResponse(status=200)
 
     def get_outing(self, request, context):
