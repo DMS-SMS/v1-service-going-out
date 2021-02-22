@@ -19,7 +19,7 @@ class SMSServiceImpl(SMSService):
             'receiver': target_number,
             'msg': message,
             'msg_type': 'SMS',
-            'testmode_yn': 'Y'
+            'testmode_yn': 'N'
         }
 
         send_response = requests.post(send_url, data=sms_data)
