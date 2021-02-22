@@ -2,6 +2,7 @@ from application.decorator.metadata import jagger_enable
 from application.decorator.error_handling import error_handling
 from infrastructure.implementation.repository.confirm_code_repository_impl import ConfirmCodeRepositoryImpl
 from infrastructure.implementation.repository.parents_repository_impl import ParentsRepositoryImpl
+from infrastructure.implementation.repository.teacher_repository_impl import TeacherRepositoryImpl
 from service.mapper.student_outing_mapper import StudentOutingMapper
 
 from service.student_outing_service import StudentOutingService
@@ -26,6 +27,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
         self.outing_repository = OutingRepositoryImpl()
         self.confirm_code_repository = ConfirmCodeRepositoryImpl()
         self.student_repository = StudentRepositoryImpl()
+        self.teacher_repository = TeacherRepositoryImpl()
         self.parents_repository = ParentsRepositoryImpl()
         self.uuid_service = UuidServiceImpl()
         self.sms_service = SMSServiceImpl()
@@ -35,6 +37,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
                 self.outing_repository,
                 self.confirm_code_repository,
                 self.student_repository,
+                self.teacher_repository,
                 self.parents_repository,
                 self.uuid_service,
                 self.sms_service

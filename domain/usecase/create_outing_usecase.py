@@ -1,6 +1,7 @@
 import datetime
 import time
 
+from domain.entity.teacher import Teacher
 from domain.exception import OutingExist, Unauthorized
 from domain.exception.bad_request import BadRequestException
 from domain.repository.confirm_code_repository import ConfirmCodeRepository
@@ -8,16 +9,18 @@ from domain.repository.outing_repository import OutingRepository
 from domain.entity.outing import Outing
 from domain.repository.parents_repository import ParentsRepository
 from domain.repository.student_repository import StudentRepository
+from domain.repository.teacher_repository import TeacherRepository
 from domain.service.sms_service import SMSService
 from domain.service.uuid_service import UuidService
 
 
 class CreateOutingUseCase:
-    def __init__(self, outing_repository, confirm_code_repository, student_repository, parents_repository, uuid_service,
-                 sms_service):
+    def __init__(self, outing_repository, confirm_code_repository, student_repository, teacher_repository,
+                 parents_repository, uuid_service, sms_service):
         self.outing_repository: OutingRepository = outing_repository
         self.confirm_code_repository: ConfirmCodeRepository = confirm_code_repository
         self.student_repository: StudentRepository = student_repository
+        self.teacher_repository: TeacherRepository = teacher_repository
         self.parents_repository: ParentsRepository = parents_repository
         self.uuid_service: UuidService = uuid_service
         self.sms_service: SMSService = sms_service
@@ -73,6 +76,21 @@ class CreateOutingUseCase:
                     confirm_code,
                     True if situation == "EMERGENCY" else False
                 ))
+
+        if not parents or situation == "EMERGENCY":
+            teacher_uuids = self.teacher_repository.find_by_grade_and_group(
+                uuid, student._grade, student._group, x_request_id=x_request_id
+            )
+
+            if teacher_uuids:
+                teacher: Teacher = self.teacher_repository.find_by_uuid(
+                    uuid,
+                    teacher_uuids[0],
+                    x_request_id=x_request_id
+                )
+
+                self.sms_service.send(teacher._phone_number, f"{student._name}학생의 외출증이 허가 되었습니다.")
+
 
         return outing_uuid, parents
 
