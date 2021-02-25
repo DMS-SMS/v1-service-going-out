@@ -40,7 +40,8 @@ class StudentOutingService:
             request.place,
             request.reason,
             get_x_request_id(context))
-        return proto.CreateOutingResponse(status=201, outing_id=outing_uuid, code=0 if parents else -1)
+        return proto.CreateOutingResponse(
+            status=201, outing_id=outing_uuid, code=-1 if not parents else 0 if parents._phone_number else -2)
 
     def get_student_outings(self, request: proto.GetStudentOutingsRequest, context):
         outings = self.get_my_outings_usecase.run(
