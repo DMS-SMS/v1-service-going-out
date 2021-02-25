@@ -66,7 +66,7 @@ class CreateOutingUseCase:
             )
         )
 
-        if parents:
+        if parents and parents._phone_number:
             self.confirm_code_repository.save(outing_uuid, confirm_code)
             self.sms_service.send(
                 parents._phone_number,
@@ -77,7 +77,7 @@ class CreateOutingUseCase:
                     True if situation == "emergency" else False
                 ))
 
-        if not parents or situation == "emergency":
+        if not parents or situation == "emergency" or not parents._phone_number:
             teacher_uuids = self.teacher_repository.find_by_grade_and_group(
                 uuid, student._grade, student._group, x_request_id=x_request_id
             )
