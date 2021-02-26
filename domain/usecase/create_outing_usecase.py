@@ -1,5 +1,6 @@
 import datetime
 import time
+from typing import Optional
 
 from domain.entity.teacher import Teacher
 from domain.exception import OutingExist, Unauthorized
@@ -53,6 +54,18 @@ class CreateOutingUseCase:
 
         parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
 
+        teacher_uuids = self.teacher_repository.find_by_grade_and_group(
+            uuid, student._grade, student._group, x_request_id=x_request_id
+        )
+
+        teacher = None
+        if teacher_uuids:
+            teacher: Optional["Teacher"] = self.teacher_repository.find_by_uuid(
+                uuid,
+                teacher_uuids[0],
+                x_request_id=x_request_id
+            )
+
         self.outing_repository.save(
             Outing(
                 outing_uuid=outing_uuid,
@@ -77,26 +90,35 @@ class CreateOutingUseCase:
                     True if situation == "emergency" else False
                 ))
 
-        if not parents or situation == "emergency" or not parents._phone_number:
-            teacher_uuids = self.teacher_repository.find_by_grade_and_group(
-                uuid, student._grade, student._group, x_request_id=x_request_id
+        elif teacher:
+            self.sms_service.send(
+                teacher._phone_number,
+                f'''[{student._name} 학생 외출 신청]
+                PC를 통해 아래 링크에 접속해 확인해주세요.
+                
+                teacher.dsm-sms.com'''
             )
 
-            if teacher_uuids:
-                teacher: Teacher = self.teacher_repository.find_by_uuid(
-                    uuid,
-                    teacher_uuids[0],
-                    x_request_id=x_request_id
-                )
+        if situation == "emergency" and teacher:
+            self.sms_service.send(
+                teacher._phone_number,
+                f'''[{student._name} 학생 긴급 외출 신청]
+                PC를 통해 아래 링크에 접속해 확인해주세요.
 
-                self.sms_service.send(teacher._phone_number, f"{student._name}학생의 외출증이 허가 되었습니다.")
+                teacher.dsm-sms.com'''
+            )
 
 
         return outing_uuid, parents
 
     def _generate_message(self, name, base_confirm_url, confirm_code, emergency=False) -> str:
-        if emergency: return f"{name}학생 긴급 외출 신청\n" \
-                             f"확인 : {base_confirm_url}{confirm_code}"
+        if emergency:
+            return f'''[{name} 학생 긴급 외출]
+            아래 링크를 통해 확인해주세요.
+            
+            {base_confirm_url}{confirm_code}'''
 
-        return f"{name}학생 외출 신청\n" \
-               f"확인 : {base_confirm_url}{confirm_code}"
+        return f'''[{name} 학생 외출 신청]
+        아래 링크를 통해 확인해주세요.
+        
+        {base_confirm_url}{confirm_code}'''

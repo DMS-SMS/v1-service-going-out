@@ -32,4 +32,10 @@ class RejectOutingTeacherUseCase:
 
         student = self.student_repository.find_by_uuid(outing.student_uuid, x_request_id=x_request_id)
 
-        self.sms_service.send(student._phone_number, f"{student._name}학생의 외출증이 선생님에 의해 거절 되었습니다.")
+        self.sms_service.send(
+            student._phone_number,
+            f'''[{student._name} 학생 외출 거절]
+            
+            선생님에 의해 거절 되었습니다.
+            * 당일에는 추가 외출 신청 불가'''
+        )

@@ -43,4 +43,10 @@ class ApproveOutingUseCase:
                 x_request_id=x_request_id
             )
 
-            self.sms_service.send(teacher._phone_number, f"{student._name}학생의 외출증이 허가 되었습니다.")
+            self.sms_service.send(
+                teacher._phone_number,
+                f'''[{student._name} 학생 외출 신청]
+                PC를 통해 아래 링크에 접속해 확인해주세요.
+
+                teacher.dsm-sms.com'''
+            )

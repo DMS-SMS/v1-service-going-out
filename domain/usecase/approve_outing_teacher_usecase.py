@@ -33,4 +33,10 @@ class ApproveOutingTeacherUseCase:
 
         student = self.student_repository.find_by_uuid(outing.student_uuid, x_request_id=x_request_id)
 
-        self.sms_service.send(student._phone_number, f"{student._name}학생의 외출증이 최종 허가 되었습니다.")
+        self.sms_service.send(
+            student._phone_number,
+            f'''[{student._name} 학생 외출증 승인]
+            
+            정문에서 '모바일 > 오늘의 외출증'을 보여드린 후 시작해주세요.'''
+        )
+
