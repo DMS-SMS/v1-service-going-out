@@ -110,10 +110,10 @@ class CreateOutingUseCase:
 
     def _generate_message(self, name, base_confirm_url, confirm_code, emergency=False) -> str:
         if emergency:
-            return f"{name} 학생 긴급 외출]\n" \
+            return f"[{name} 학생 긴급 외출]\n" \
                    "아래 링크를 통해 확인해주세요.\n\n" \
                    f"{base_confirm_url}{confirm_code}"
 
-        return f"{name} 학생 외출 신청]\n" \
+        return f"[{name} 학생 외출 신청]\n" \
                "아래 링크를 통해 확인해주세요.\n\n" \
                f"{base_confirm_url}{confirm_code}"
