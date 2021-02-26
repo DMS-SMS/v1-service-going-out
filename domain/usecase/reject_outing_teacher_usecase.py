@@ -34,8 +34,8 @@ class RejectOutingTeacherUseCase:
 
         self.sms_service.send(
             student._phone_number,
-            f'''[{student._name} 학생 외출 거절]
+            f"[{student._name} 학생 외출 거절]\n\n"
             
-            선생님에 의해 거절 되었습니다.
-            * 당일에는 추가 외출 신청 불가'''
+            "선생님에 의해 거절 되었습니다.\n"
+            "* 당일에는 추가 외출 신청 불가"
         )

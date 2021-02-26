@@ -35,8 +35,7 @@ class ApproveOutingTeacherUseCase:
 
         self.sms_service.send(
             student._phone_number,
-            f'''[{student._name} 학생 외출증 승인]
-            
-            정문에서 '모바일 > 오늘의 외출증'을 보여드린 후 시작해주세요.'''
+            f"[{student._name} 학생 외출증 승인]\n"
+            "정문에서 '모바일 > 오늘의 외출증'을 보여드린 후 시작해주세요."
         )
 

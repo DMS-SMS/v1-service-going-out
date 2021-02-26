@@ -93,32 +93,27 @@ class CreateOutingUseCase:
         elif teacher:
             self.sms_service.send(
                 teacher._phone_number,
-                f'''[{student._name} 학생 외출 신청]
-                PC를 통해 아래 링크에 접속해 확인해주세요.
-                
-                teacher.dsm-sms.com'''
+                f"[{student._name} 학생 외출 신청]\n"
+                "PC를 통해 아래 링크에 접속해 확인해주세요.\n\n"
+                "teacher.dsm-sms.com"
             )
 
         if situation == "emergency" and teacher:
             self.sms_service.send(
                 teacher._phone_number,
-                f'''[{student._name} 학생 긴급 외출 신청]
-                PC를 통해 아래 링크에 접속해 확인해주세요.
-
-                teacher.dsm-sms.com'''
+                f"[{student._name} 학생 긴급 외출 신청]\n"
+                "PC를 통해 아래 링크에 접속해 확인해주세요.\n\n"
+                "teacher.dsm-sms.com"
             )
-
 
         return outing_uuid, parents
 
     def _generate_message(self, name, base_confirm_url, confirm_code, emergency=False) -> str:
         if emergency:
-            return f'''[{name} 학생 긴급 외출]
-            아래 링크를 통해 확인해주세요.
-            
-            {base_confirm_url}{confirm_code}'''
+            return f"{name} 학생 긴급 외출]\n" \
+                   "아래 링크를 통해 확인해주세요.\n\n" \
+                   f"{base_confirm_url}{confirm_code}"
 
-        return f'''[{name} 학생 외출 신청]
-        아래 링크를 통해 확인해주세요.
-        
-        {base_confirm_url}{confirm_code}'''
+        return f"{name} 학생 외출 신청]\n" \
+               "아래 링크를 통해 확인해주세요.\n\n" \
+               f"{base_confirm_url}{confirm_code}"
