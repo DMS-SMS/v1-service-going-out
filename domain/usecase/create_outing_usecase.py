@@ -72,8 +72,8 @@ class CreateOutingUseCase:
                 parents._phone_number,
                 self._generate_message(
                     student._name,
-                    "dsm-sms.com/parent/",
-                    confirm_code,
+                    "parent.dsm-sms.com/",
+                    confirm_code[8:],
                     True if situation == "emergency" else False
                 ))
 
