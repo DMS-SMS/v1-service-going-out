@@ -35,6 +35,6 @@ class ApproveOutingUseCase:
 
         self.sms_service.send(
             student._phone_number,
-            f"[{student._name} 학생 외출증 승인]\n"
-            "외출증 선생님 승인을 받아주세요."
+            f"[{student._name}학생 외출증 학부모승인]\n"
+            "담임선생님께 직접 방문하여 선생님 승인을 받아주세요."
         )
