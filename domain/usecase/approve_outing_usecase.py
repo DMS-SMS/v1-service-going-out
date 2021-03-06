@@ -32,21 +32,9 @@ class ApproveOutingUseCase:
         self.confirm_code_repository.delete_by_code(confirm_code)
 
         student: Student = self.student_repository.find_by_uuid(outing.student_uuid, x_request_id=x_request_id)
-        teacher_uuids = self.teacher_repository.find_by_grade_and_group(
-            outing.student_uuid, student._grade, student._group, x_request_id=x_request_id
+
+        self.sms_service.send(
+            student._phone_number,
+            f"[{student._name} 학생 외출증 승인]\n"
+            "외출증 선생님 승인을 받아주세요."
         )
-
-        if teacher_uuids:
-            teacher: Teacher = self.teacher_repository.find_by_uuid(
-                outing.student_uuid,
-                teacher_uuids[0],
-                x_request_id=x_request_id
-            )
-
-            self.sms_service.send(
-                teacher._phone_number,
-                f"[{student._name} 학생 외출 신청]\n"
-                "PC를 통해 아래 링크에 접속해 확인해주세요.\n\n"
-                
-                "teacher.dsm-sms.com"
-            )

@@ -92,18 +92,16 @@ class CreateOutingUseCase:
 
         elif teacher:
             self.sms_service.send(
-                teacher._phone_number,
-                f"[{student._name} 학생 외출 신청]\n"
-                "PC를 통해 아래 링크에 접속해 확인해주세요.\n\n"
-                "teacher.dsm-sms.com"
+                student._phone_number,
+                f"[{student._name} 학생 외출증 승인]\n"
+                "외출증 선생님 승인을 받아주세요."
             )
 
         if situation == "emergency" and teacher:
             self.sms_service.send(
-                teacher._phone_number,
-                f"[{student._name} 학생 긴급 외출 신청]\n"
-                "PC를 통해 아래 링크에 접속해 확인해주세요.\n\n"
-                "teacher.dsm-sms.com"
+                student._phone_number,
+                f"[{student._name} 학생 외출증 승인]\n"
+                "외출증 선생님 승인을 받아주세요."
             )
 
         return outing_uuid, parents
