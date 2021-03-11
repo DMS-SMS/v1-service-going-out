@@ -29,6 +29,7 @@ class TeacherOutingMapper:
             outing_proto.end_time = int(time.mktime(outing.end_time.timetuple()))-32400
             outing_proto.situation = outing.situation
             outing_proto.status = outing.status
+            outing_proto.arrival_time = outing.arrival_time
 
             if int(outing.status) >= 4:
                 if outing.arrival_time > outing.end_time: outing_proto.is_late = True
