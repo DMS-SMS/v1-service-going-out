@@ -20,7 +20,8 @@ class StudentOutingMapper:
             outing_proto.end_time = int(time.mktime(outing.end_time.timetuple()))-32400
             outing_proto.situation = outing.situation
             outing_proto.status = outing.status
-            outing_proto.arrival_time = int(time.mktime(outing.arrival_time.timetuple()))-32400
+            outing_proto.arrival_time = int(time.mktime(outing.arrival_time.timetuple()))-32400 \
+                if outing.arrival_time else 0
 
             outings_proto.append(outing_proto)
 
