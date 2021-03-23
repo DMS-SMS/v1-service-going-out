@@ -15,7 +15,7 @@ class FinishGoOutUseCase:
         self.teacher_repository: TeacherRepository = teacher_repository
 
     def run(self, uuid, outing_id, x_request_id):
-        if self.teacher_repository.find_by_uuid(uuid, x_request_id) is None: raise Unauthorized()
+        if self.teacher_repository.find_by_uuid(uuid, uuid, x_request_id) is None: raise Unauthorized()
 
         outing = self.outing_repository.find_by_id(outing_id)
         if outing.status != "3":

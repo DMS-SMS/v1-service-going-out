@@ -48,8 +48,6 @@ class CreateOutingUseCase:
         if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None:
             raise OutingExist()
 
-        # parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
-
         self.outing_repository.save(
             Outing(
                 outing_uuid=outing_uuid,
