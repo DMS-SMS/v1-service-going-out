@@ -34,36 +34,39 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
 
         self.service = StudentOutingService(
             create_outing_usecase=CreateOutingUseCase(
-                self.outing_repository,
-                self.confirm_code_repository,
-                self.student_repository,
-                self.teacher_repository,
-                self.parents_repository,
-                self.uuid_service,
-                self.sms_service
+                outing_repository=self.outing_repository,
+                confirm_code_repository=self.confirm_code_repository,
+                student_repository=self.student_repository,
+                teacher_repository=self.teacher_repository,
+                parents_repository=self.parents_repository,
+                uuid_service=self.uuid_service,
+                sms_service=self.sms_service
             ),
             get_my_outings_usecase=GetMyOutingsUseCase(
-                self.outing_repository,
-                self.student_repository
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository
             ),
             get_outing_inform_usecase=GetOutingInformUseCase(
-                self.outing_repository,
-                self.student_repository,
-                self.parents_repository,
-                self.uuid_service
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                parents_repository=self.parents_repository,
+                uuid_service=self.uuid_service
             ),
             get_card_usecase=GetCardUseCase(
-                self.outing_repository,
-                self.student_repository,
-                self.uuid_service
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                uuid_service=self.uuid_service
             ),
             go_out_usecase=GoOutUseCase(
-                self.outing_repository,
-                self.student_repository
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                parents_repository=self.parents_repository,
+                sms_service=self.sms_service
             ),
             finish_go_out_usecase=FinishGoOutUseCase(
-                self.outing_repository,
-                self.student_repository
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                teacher_repository=self.teacher_repository
             ),
             student_outing_mapper=StudentOutingMapper()
         )

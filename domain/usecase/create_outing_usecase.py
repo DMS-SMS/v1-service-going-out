@@ -1,8 +1,5 @@
 import datetime
 import time
-from typing import Optional
-
-from domain.entity.teacher import Teacher
 from domain.exception import OutingExist, Unauthorized
 from domain.exception.bad_request import BadRequestException
 from domain.repository.confirm_code_repository import ConfirmCodeRepository
@@ -31,7 +28,6 @@ class CreateOutingUseCase:
         if student is None: raise Unauthorized()
 
         outing_uuid = self.uuid_service.generate_outing_uuid()
-        confirm_code = self.uuid_service.generate_confirm_code()
 
         time_now = time.time()
 
@@ -52,25 +48,13 @@ class CreateOutingUseCase:
         if self.outing_repository.find_by_student_uuid_and_time(uuid, start_time) is not None:
             raise OutingExist()
 
-        parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
-
-        teacher_uuids = self.teacher_repository.find_by_grade_and_group(
-            uuid, student._grade, student._group, x_request_id=x_request_id
-        )
-
-        teacher = None
-        if teacher_uuids:
-            teacher: Optional["Teacher"] = self.teacher_repository.find_by_uuid(
-                uuid,
-                teacher_uuids[0],
-                x_request_id=x_request_id
-            )
+        # parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
 
         self.outing_repository.save(
             Outing(
                 outing_uuid=outing_uuid,
                 student_uuid=uuid,
-                status="1" if situation == "emergency" or not parents else "0",
+                status="1",
                 situation=situation,
                 start_time=start_datetime,
                 end_time=end_datetime,
@@ -79,39 +63,4 @@ class CreateOutingUseCase:
             )
         )
 
-        if parents and parents._phone_number:
-            self.confirm_code_repository.save(outing_uuid, confirm_code)
-            self.sms_service.send(
-                parents._phone_number,
-                self._generate_message(
-                    student._name,
-                    "parent.dsm-sms.com/",
-                    confirm_code[8:],
-                    True if situation == "emergency" else False
-                ))
-
-        elif teacher:
-            self.sms_service.send(
-                student._phone_number,
-                f"[{student._name} 학생 외출증 승인]\n"
-                "외출증 선생님 승인을 받아주세요."
-            )
-
-        if situation == "emergency" and teacher:
-            self.sms_service.send(
-                student._phone_number,
-                f"[{student._name} 학생 외출증 승인]\n"
-                "외출증 선생님 승인을 받아주세요."
-            )
-
-        return outing_uuid, parents
-
-    def _generate_message(self, name, base_confirm_url, confirm_code, emergency=False) -> str:
-        if emergency:
-            return f"[{name} 학생 긴급 외출]\n" \
-                   "아래 링크를 통해 확인해주세요.\n\n" \
-                   f"{base_confirm_url}{confirm_code}"
-
-        return f"[{name} 학생 외출 신청]\n" \
-               "아래 링크를 통해 확인해주세요.\n\n" \
-               f"{base_confirm_url}{confirm_code}"
+        return outing_uuid

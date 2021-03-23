@@ -24,24 +24,24 @@ class ParentsOutingServicer(outing_parents_pb2_grpc.OutingParentsServicer):
 
         self.service = ParentsOutingService(
             approve_outing_usecase=ApproveOutingUseCase(
-                self.outing_repository,
-                self.confirm_code_repository,
-                self.student_repository,
-                self.teacher_repository,
-                self.sms_service
+                outing_repository=self.outing_repository,
+                confirm_code_repository=self.confirm_code_repository,
+                student_repository=self.student_repository,
+                teacher_repository=self.teacher_repository,
+                sms_service=self.sms_service
             ),
             reject_outing_usecase=RejectOutingUseCase(
-                self.outing_repository,
-                self.confirm_code_repository,
-                self.student_repository,
-                self.sms_service
+                outing_repository=self.outing_repository,
+                confirm_code_repository=self.confirm_code_repository,
+                student_repository=self.student_repository,
+                sms_service=self.sms_service
             ),
             get_account_by_uuid_usecase=GetAccountByUuidUseCase(
-                self.student_repository
+                student_repository=self.student_repository
             ),
             get_outing_by_o_code_usecase=GetOutingByOCodeUseCase(
-                self.outing_repository,
-                self.confirm_code_repository
+                outing_repository=self.outing_repository,
+                confirm_code_repository=self.confirm_code_repository
             )
         )
 

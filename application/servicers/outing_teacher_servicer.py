@@ -26,26 +26,26 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
 
         self.service = TeacherOutingService(
             approve_outing_teacher_usecase=ApproveOutingTeacherUseCase(
-                self.outing_repository,
-                self.student_repository,
-                self.teacher_repository,
-                self.sms_service
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                teacher_repository=self.teacher_repository,
+                sms_service=self.sms_service
             ),
             reject_outing_teacher_usecase=RejectOutingTeacherUseCase(
-                self.outing_repository,
-                self.student_repository,
-                self.teacher_repository,
-                self.sms_service
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                teacher_repository=self.teacher_repository,
+                sms_service=self.sms_service
             ),
             certify_outing_usecase=CertifyOutingUseCase(
-                self.outing_repository,
-                self.teacher_repository
+                outing_repository=self.outing_repository,
+                teacher_repository=self.teacher_repository
             ),
             get_outings_with_filter_usecase=GetOutingsWithFilterUseCase(
-                self.outing_repository,
-                self.student_repository,
-                self.teacher_repository,
-                self.club_repository
+                outing_repository=self.outing_repository,
+                student_repository=self.student_repository,
+                teacher_repository=self.teacher_repository,
+                club_repository=self.club_repository
             ),
             teacher_outing_mapper=TeacherOutingMapper()
         )

@@ -2,16 +2,21 @@ from const.code.python.outing import *
 
 from domain.exception import Unauthorized, OutingNotFound, OutingFlowException
 from domain.repository.outing_repository import OutingRepository
+from domain.repository.parents_repository import ParentsRepository
 from domain.repository.student_repository import StudentRepository
+from domain.service.sms_service import SMSService
 
 
 class GoOutUseCase:
-    def __init__(self, outing_repository, student_repository):
+    def __init__(self, outing_repository, student_repository, parents_repository, sms_service):
         self.outing_repository: OutingRepository = outing_repository
         self.student_repository: StudentRepository = student_repository
+        self.parents_repository: ParentsRepository = parents_repository
+        self.sms_service: SMSService = sms_service
 
     def run(self, uuid, outing_id, x_request_id):
-        if self.student_repository.find_by_uuid(uuid, x_request_id) is None: raise Unauthorized()
+        student = self.student_repository.find_by_uuid(uuid, x_request_id)
+        if student is None: raise Unauthorized()
 
         outing = self.outing_repository.find_by_id(outing_id)
         if outing is None: raise OutingNotFound()
@@ -27,3 +32,11 @@ class GoOutUseCase:
 
         outing.status = "3"
         self.outing_repository.save(outing)
+
+        parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
+
+        self.sms_service.send(
+            parents._phone_number,
+            f"[{student._name} 학생 외출 시작]\n"
+            f"{student._name}학생이 외출을 시작하였습니다."
+        )
