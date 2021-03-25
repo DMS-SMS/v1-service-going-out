@@ -1,6 +1,7 @@
 from domain.usecase.approve_outing_teacher_usecase import ApproveOutingTeacherUseCase
 from domain.usecase.certify_outing_usecase import CertifyOutingUseCase
 from domain.usecase.get_outings_with_filter_usecase import GetOutingsWithFilterUseCase
+from domain.usecase.modify_outing_usecase import ModifyOutingUseCase
 from domain.usecase.reject_outing_teacher_usecase import RejectOutingTeacherUseCase
 from proto.python.outing import outing_teacher_pb2 as proto
 from service.mapper.teacher_outing_mapper import TeacherOutingMapper
@@ -14,12 +15,14 @@ class TeacherOutingService:
             reject_outing_teacher_usecase,
             certify_outing_usecase,
             get_outings_with_filter_usecase,
+            modify_outing_usecase,
             teacher_outing_mapper
     ):
         self.approve_outing_teacher_usecase: ApproveOutingTeacherUseCase = approve_outing_teacher_usecase
         self.reject_outing_teacher_usecase: RejectOutingTeacherUseCase = reject_outing_teacher_usecase
         self.certify_outing_usecase: CertifyOutingUseCase = certify_outing_usecase
         self.get_outings_with_filter_usecase: GetOutingsWithFilterUseCase = get_outings_with_filter_usecase
+        self.modify_outing_usecase: ModifyOutingUseCase = modify_outing_usecase
         self.teacher_outing_mapper: TeacherOutingMapper = teacher_outing_mapper
 
 
@@ -57,4 +60,11 @@ class TeacherOutingService:
         response.outing.extend(
             self.teacher_outing_mapper.get_outings_for_teacher_mapper(outings, x_request_id, request.start, request.count))
 
+        return response
+
+    def modify_outing(self, request, context):
+        x_request_id = get_x_request_id(context)
+        self.modify_outing_usecase.execute(request.uuid, request.outing_id, request.end_time, x_request_id)
+        response = proto.ConfirmOutingResponse()
+        response.status = 200
         return response

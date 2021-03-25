@@ -1,6 +1,7 @@
 from domain.usecase.approve_outing_teacher_usecase import ApproveOutingTeacherUseCase
 from domain.usecase.certify_outing_usecase import CertifyOutingUseCase
 from domain.usecase.get_outings_with_filter_usecase import GetOutingsWithFilterUseCase
+from domain.usecase.modify_outing_usecase import ModifyOutingUseCase
 from domain.usecase.reject_outing_teacher_usecase import RejectOutingTeacherUseCase
 from infrastructure.implementation.repository.club_repository_impl import ClubRepositoryImpl
 from infrastructure.implementation.repository.student_repository_impl import StudentRepositoryImpl
@@ -47,6 +48,10 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
                 teacher_repository=self.teacher_repository,
                 club_repository=self.club_repository
             ),
+            modify_outing_usecase=ModifyOutingUseCase(
+              outing_repository=self.outing_repository,
+              teacher_repository=self.teacher_repository
+            ),
             teacher_outing_mapper=TeacherOutingMapper()
         )
 
@@ -69,3 +74,8 @@ class TeacherOutingServicer(outing_teacher_pb2_grpc.OutingTeacherServicer):
     @jagger_enable
     def CertifyOuting(self, request, context):
         return self.service.certify_outing(request, context)
+
+    @error_handling(outing_teacher_pb2.ConfirmOutingResponse)
+    @jagger_enable
+    def ModifyOuting(self, request, context):
+        return self.service.modify_outing(request, context)
