@@ -32,7 +32,7 @@ class StudentOutingService:
         self.student_outing_mapper: StudentOutingMapper = student_outing_mapper
 
     def create_outing(self, request: proto.CreateOutingRequest, context):
-        outing_uuid, parents = self.create_outing_usecase.run(
+        outing_uuid = self.create_outing_usecase.run(
             request.uuid,
             request.situation,
             request.start_time,

@@ -47,7 +47,6 @@ class ApproveOutingTeacherUseCase:
                 uuid, student._grade, student._group, x_request_id=x_request_id
             )
 
-            homeroom_teacher = None
             if teacher_uuids:
                 homeroom_teacher: Optional["Teacher"] = self.teacher_repository.find_by_uuid(
                     uuid,
@@ -55,8 +54,8 @@ class ApproveOutingTeacherUseCase:
                     x_request_id=x_request_id
                 )
 
-            self.sms_service.send(
-                homeroom_teacher._phone_number,
-                f"[{student._name} 학생 외출증 승인]\n"
-                f"{teacher._name}선생님에 의해 외출증이 승인 되었습니다."
-            )
+                self.sms_service.send(
+                    homeroom_teacher._phone_number,
+                    f"[{student._name} 학생 외출증 승인]\n"
+                    f"{teacher._name}선생님에 의해 외출증이 승인 되었습니다."
+                )
