@@ -25,7 +25,6 @@ class TeacherOutingService:
         self.modify_outing_usecase: ModifyOutingUseCase = modify_outing_usecase
         self.teacher_outing_mapper: TeacherOutingMapper = teacher_outing_mapper
 
-
     def approve_outing(self, request, context):
         self.approve_outing_teacher_usecase.run(
             request.uuid,
@@ -58,7 +57,8 @@ class TeacherOutingService:
         response = proto.OutingResponse()
         response.status = 200
         response.outing.extend(
-            self.teacher_outing_mapper.get_outings_for_teacher_mapper(outings, x_request_id, request.start, request.count))
+            self.teacher_outing_mapper.get_outings_for_teacher_mapper(
+                outings, x_request_id, request.start, request.count))
 
         return response
 

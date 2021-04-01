@@ -67,3 +67,31 @@ class OutingRepositoryImpl(OutingRepository):
         self.sql._db_session.commit()
         self.sql._db_session.close()
         return model
+
+    @trace_service("SQL (find)", open_tracing)
+    def find_all_by_status_and_term(self, status: str, start_time: str, end_time: int):
+        generated_start_time = datetime.datetime.fromtimestamp(start_time + 32400)
+        generated_end_time = datetime.datetime.fromtimestamp(end_time + 32400)
+
+        model = (self.sql._db_session.query(Outing)
+                 .filter(Outing.status == func.binary(status))
+                 .filter(and_(Outing.start_time >= generated_start_time,
+                              Outing.start_time <= generated_end_time)).first())
+        self.sql._db_session.commit()
+        self.sql._db_session.close()
+        return model
+
+    @trace_service("SQL (find)", open_tracing)
+    def find_all_by_student_uuid_and_status_and_term(
+            self, student_uuid: str, status: str, start_time: int, end_time: int):
+        generated_start_time = datetime.datetime.fromtimestamp(start_time + 32400)
+        generated_end_time = datetime.datetime.fromtimestamp(end_time + 32400)
+
+        model = (self.sql._db_session.query(Outing)
+                 .filter(Outing.status == func.binary(status))
+                 .filter(Outing.student_uuid == func.binary(student_uuid))
+                 .filter(and_(Outing.start_time >= generated_start_time,
+                              Outing.start_time <= generated_end_time)).first())
+        self.sql._db_session.commit()
+        self.sql._db_session.close()
+        return model
