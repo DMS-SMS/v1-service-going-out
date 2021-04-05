@@ -36,22 +36,21 @@ class PickServiceImpl(PickService):
 
         response = requests.post(self.absent_uri, json=absent_payload, headers=headers)
         if not response.status_code == 200:
-            raise ServerErrorException(f"{response.status_code} error in Pick Service with {response.text}")
+            raise ServerErrorException(f"{response.status_code} error in Pick Service with {response.text}. \n"
+                                       f"stdnum : {student_number}, date : {start_and_end_date}")
 
     @staticmethod
     def convert_to_period(datetime):
         hour = datetime.hour
         minute = datetime.minute
 
-        if hour >= 20:
-            period = 10
+        if hour >= 20: period = "10"
         elif hour == 19:
-            if minute > 40: period = 10
-            else: period = 9
+            if minute > 40: period = "10"
+            else: period = "9"
         elif hour == 18:
-            if minute > 40: period = 9
-            else: period = 8
-        else:
-            period = 8
+            if minute > 40: period = "9"
+            else: period = "8"
+        else: period = "8"
 
         return period

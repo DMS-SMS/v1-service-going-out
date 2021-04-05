@@ -15,7 +15,7 @@ from domain.service.uuid_service import UuidService
 
 class CreateOutingUseCase:
     def __init__(self, outing_repository, confirm_code_repository, student_repository, teacher_repository,
-                 parents_repository, uuid_service, sms_service, pick_service):
+                 parents_repository, uuid_service, sms_service):
         self.outing_repository: OutingRepository = outing_repository
         self.confirm_code_repository: ConfirmCodeRepository = confirm_code_repository
         self.student_repository: StudentRepository = student_repository
@@ -23,7 +23,6 @@ class CreateOutingUseCase:
         self.parents_repository: ParentsRepository = parents_repository
         self.uuid_service: UuidService = uuid_service
         self.sms_service: SMSService = sms_service
-        self.pick_service: PickService = pick_service
 
     def run(self, uuid, situation, start_time, end_time, place, reason, x_request_id):
         student = self.student_repository.find_by_uuid(uuid, x_request_id)
@@ -62,7 +61,5 @@ class CreateOutingUseCase:
                 reason=reason,
             )
         )
-
-        self.pick_service.absent(student._student_number, start_datetime, end_datetime)
 
         return outing_uuid

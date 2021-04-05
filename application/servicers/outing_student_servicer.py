@@ -42,8 +42,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
                 teacher_repository=self.teacher_repository,
                 parents_repository=self.parents_repository,
                 uuid_service=self.uuid_service,
-                sms_service=self.sms_service,
-                pick_service=self.pick_service
+                sms_service=self.sms_service
             ),
             get_my_outings_usecase=GetMyOutingsUseCase(
                 outing_repository=self.outing_repository,
@@ -64,7 +63,8 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
                 outing_repository=self.outing_repository,
                 student_repository=self.student_repository,
                 parents_repository=self.parents_repository,
-                sms_service=self.sms_service
+                sms_service=self.sms_service,
+                pick_service=self.pick_service
             ),
             finish_go_out_usecase=FinishGoOutUseCase(
                 outing_repository=self.outing_repository,
