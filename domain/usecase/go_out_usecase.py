@@ -40,10 +40,11 @@ class GoOutUseCase:
 
         parents = self.parents_repository.find_by_student_uuid(uuid, uuid, x_request_id)
 
-        self.sms_service.send(
-            parents._phone_number,
-            f"[{student._name} 학생 외출 시작]\n"
-            f"{student._name}학생이 외출을 시작하였습니다."
-        )
+        if parents and parents._phone_number:
+            self.sms_service.send(
+                parents._phone_number,
+                f"[{student._name} 학생 외출 시작]\n"
+                f"{student._name}학생이 외출을 시작하였습니다."
+            )
 
         self.pick_service.absent(student._student_number, datetime.fromtimestamp(time.time()), outing.end_time)
