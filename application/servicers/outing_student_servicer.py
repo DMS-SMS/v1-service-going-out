@@ -3,6 +3,7 @@ from application.decorator.error_handling import error_handling
 from infrastructure.implementation.repository.confirm_code_repository_impl import ConfirmCodeRepositoryImpl
 from infrastructure.implementation.repository.parents_repository_impl import ParentsRepositoryImpl
 from infrastructure.implementation.repository.teacher_repository_impl import TeacherRepositoryImpl
+from infrastructure.pick.pick_service_impl import PickServiceImpl
 from service.mapper.student_outing_mapper import StudentOutingMapper
 
 from service.student_outing_service import StudentOutingService
@@ -31,6 +32,7 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
         self.parents_repository = ParentsRepositoryImpl()
         self.uuid_service = UuidServiceImpl()
         self.sms_service = SMSServiceImpl()
+        self.pick_service = PickServiceImpl()
 
         self.service = StudentOutingService(
             create_outing_usecase=CreateOutingUseCase(
@@ -40,7 +42,8 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
                 teacher_repository=self.teacher_repository,
                 parents_repository=self.parents_repository,
                 uuid_service=self.uuid_service,
-                sms_service=self.sms_service
+                sms_service=self.sms_service,
+                pick_service=self.pick_service
             ),
             get_my_outings_usecase=GetMyOutingsUseCase(
                 outing_repository=self.outing_repository,
