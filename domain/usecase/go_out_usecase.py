@@ -47,4 +47,6 @@ class GoOutUseCase:
                 f"{student._name}학생이 외출을 시작하였습니다."
             )
 
-        self.pick_service.absent(student._student_number, datetime.fromtimestamp(time.time()), outing.end_time)
+        self.pick_service.absent(
+            int(f"{student._grade}{student._group}{student._student_number}"),
+            datetime.fromtimestamp(time.time()), outing.end_time)
