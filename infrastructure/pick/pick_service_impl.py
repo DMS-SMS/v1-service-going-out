@@ -7,12 +7,12 @@ from domain.service.pick_service import PickService
 
 class PickServiceImpl(PickService):
     def __init__(self):
-        self.base_url = os.getenv("pick_base_url")
-        self.login_uri = f"{self.base_url}{os.getenv('pick_login_uri')}"
-        self.absent_uri = f"{self.base_url}{os.getenv('pick_absent_uri')}"
-        self.x_api_key = os.getenv("pick_x_api_key")
-        self.pick_id = os.getenv("pick_id")
-        self.pick_pw = os.getenv("pick_pw")
+        self.base_url = os.getenv("PICK_BASE_URL")
+        self.login_uri = f"{self.base_url}{os.getenv('PICK_LOGIN_URI')}"
+        self.absent_uri = f"{self.base_url}{os.getenv('PICK_ABSENT_URI')}"
+        self.x_api_key = os.getenv("PICK_X_API_KEY")
+        self.pick_id = os.getenv("PICK_ID")
+        self.pick_pw = os.getenv("PICK_PW")
 
     def login(self):
         login_payload = {"id": self.pick_id, "pw": self.pick_pw}
