@@ -12,8 +12,9 @@ class TeacherOutingMapper:
     def get_outings_for_teacher_mapper(self, outings: List["Outing"], x_request_id, start, count):
         outings_proto = []
         student_repository: StudentRepository = StudentRepositoryImpl()
-        if count == 0: start, count = None, None
-        for outing in outings[start:start+count]:
+        sc = start + count
+        if count == 0: sc = None
+        for outing in outings[start:sc]:
             outing_proto = OutingProto()
             student = student_repository.find_by_uuid(outing.student_uuid, x_request_id)
 
