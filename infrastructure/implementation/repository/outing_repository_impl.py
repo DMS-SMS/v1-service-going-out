@@ -77,6 +77,8 @@ class OutingRepositoryImpl(OutingRepository):
                  .filter(Outing.status == func.binary(status))
                  .filter(and_(Outing.start_time >= generated_start_time,
                               Outing.start_time <= generated_end_time)).all())
+        self.sql._db_session.commit()
+        self.sql._db_session.close()
         return model
 
     @trace_service("SQL (find)", open_tracing)
@@ -90,5 +92,6 @@ class OutingRepositoryImpl(OutingRepository):
                  .filter(Outing.student_uuid == func.binary(student_uuid))
                  .filter(and_(Outing.start_time >= generated_start_time,
                               Outing.start_time <= generated_end_time)).all())
-
+        self.sql._db_session.commit()
+        self.sql._db_session.close()
         return model
