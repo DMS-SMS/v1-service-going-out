@@ -48,5 +48,5 @@ class GoOutUseCase:
             )
 
         self.pick_service.absent(
-            int(f"{student._grade}{student._group}{student._student_number}"),
+            int(f"{student._grade}{student._group}{str(student._student_number).zfill(2)}"),
             datetime.fromtimestamp(time.time()), outing.end_time)
