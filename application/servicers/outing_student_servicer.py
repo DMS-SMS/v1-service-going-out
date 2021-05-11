@@ -1,4 +1,4 @@
-from application.decorator.metadata import jagger_enable
+from application.decorator.metadata import jaeger_enable
 from application.decorator.error_handling import error_handling
 from infrastructure.implementation.repository.confirm_code_repository_impl import ConfirmCodeRepositoryImpl
 from infrastructure.implementation.repository.parents_repository_impl import ParentsRepositoryImpl
@@ -75,31 +75,31 @@ class StudentOutingServicer(outing_student_pb2_grpc.OutingStudentServicer):
         )
 
     @error_handling(outing_student_pb2.CreateOutingResponse)
-    @jagger_enable
+    @jaeger_enable
     def CreateOuting(self, request, context):
         return self.service.create_outing(request, context)
 
     @error_handling(outing_student_pb2.GetCardAboutOutingResponse)
-    @jagger_enable
+    @jaeger_enable
     def GetCardAboutOuting(self, request, context):
         return self.service.get_card_about_outing(request, context)
 
     @error_handling(outing_student_pb2.GetOutingInformResponse)
-    @jagger_enable
+    @jaeger_enable
     def GetOutingInform(self, request, context):
         return self.service.get_outing_inform(request, context)
 
     @error_handling(outing_student_pb2.GetStudentOutingsResponse)
-    @jagger_enable
+    @jaeger_enable
     def GetStudentOutings(self, request, context):
         return self.service.get_student_outings(request, context)
 
     @error_handling(outing_student_pb2.GoOutResponse)
-    @jagger_enable
+    @jaeger_enable
     def StartGoOut(self, request, context):
         return self.service.go_out(request, context)
 
     @error_handling(outing_student_pb2.GoOutResponse)
-    @jagger_enable
+    @jaeger_enable
     def FinishGoOut(self, request, context):
         return self.service.finish_go_out(request, context)

@@ -6,8 +6,7 @@ from domain.exception.not_proxy_auth.bad_span_context_exception import BadSpanCo
 from domain.exception.not_proxy_auth.bad_x_request_id_exception import BadXRequestId
 
 
-
-def jagger_enable(fn):
+def jaeger_enable(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         flag = 0
@@ -23,8 +22,10 @@ def jagger_enable(fn):
                 parents_span = v
                 flag += 1
         else:
-            if not x_request_id: raise BadXRequestId
-            elif not parents_span: raise BadSpanContext
+            if not x_request_id:
+                raise BadXRequestId
+            elif not parents_span:
+                raise BadSpanContext
 
         open_tracing_service = OpenTracing(open_tracing.tracer, parents_span, x_request_id)
         return open_tracing_service.start_active_span(fn, *args, **kwargs)
